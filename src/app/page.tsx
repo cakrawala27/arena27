@@ -1,123 +1,62 @@
-// src/app/admin/page.tsx
-'use client';
+﻿import Link from 'next/link';
 
-import { useState } from 'react';
-import Link from 'next/link';
-
-export default function AdminDashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+export default function HomePage() {
+  // Data berita dummy buat tampilan awal
+  const dummyNews = [
+    { 
+      id: 1, 
+      title: 'Persib Bandung Juara Liga 1 Setelah Penantian Panjang', 
+      category: 'Sepak Bola', 
+      image: 'https://images.unsplash.com/photo-1522778119026-d647f0596081?w=800' 
+    },
+    { 
+      id: 2, 
+      title: 'LeBron James Cetak Rekor Baru di NBA Musim Ini', 
+      category: 'Basket', 
+      image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800' 
+    },
+    { 
+      id: 3, 
+      title: 'Marc Marquez Kembali ke Podium Utama MotoGP', 
+      category: 'MotoGP', 
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800' 
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="max-w-5xl mx-auto">
       
-      {/* OVERLAY UNTUK MOBILE */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
+      {/* HERO SECTION */}
+      <div className="bg-slate-900 text-white p-6 md:p-8 rounded-2xl mb-8 shadow-xl border border-slate-800">
+        <span className="bg-orange-500 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Headline</span>
+        <h1 className="text-2xl md:text-4xl font-black mt-4 mb-2">Selamat Datang di Arena27! 🏟️</h1>
+        <p className="text-slate-300 text-sm md:text-base">Portal berita sport terlengkap, tercepat, dan terpercaya dari seluruh dunia.</p>
+      </div>
 
-      {/* SIDEBAR NAVIGASI */}
-      <aside 
-        className={`
-          fixed md:static inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          md:translate-x-0
-        `}
-      >
-        <div className="p-4 border-b border-slate-700 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-orange-500">Arena27 Admin</h2>
-          <button 
-            onClick={toggleSidebar}
-            className="md:hidden text-white hover:text-orange-500"
-          >
-            ✕
-          </button>
-        </div>
-
-        <nav className="p-4 space-y-2">
-          <Link href="/admin" className="block p-3 rounded-lg bg-orange-500 text-white font-medium">
-            📊 Dashboard
-          </Link>
-          <Link href="/admin/articles" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            📝 Articles
-          </Link>
-          <Link href="/admin/articles/new" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-             Add New Article
-          </Link>
-          <Link href="/admin/categories" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            📁 Categories
-          </Link>
-          <Link href="/admin/tags" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            🏷️ Tags
-          </Link>
-          <Link href="/" className="block p-3 rounded-lg hover:bg-slate-800 transition mt-8 border-t border-slate-700 pt-4">
-            🌐 View Site
-          </Link>
-        </nav>
-      </aside>
-
-      {/* KONTEN UTAMA */}
-      <main className="flex-1 flex flex-col min-h-screen">
-        
-        {/* HEADER MOBILE DENGAN HAMBURGER MENU */}
-        <header className="bg-white shadow-sm p-4 flex items-center justify-between md:hidden">
-          <button 
-            onClick={toggleSidebar}
-            className="text-slate-900 text-2xl focus:outline-none"
-          >
-            ☰
-          </button>
-          <h1 className="text-lg font-bold text-slate-900">Admin Dashboard</h1>
-          <div className="w-8"></div> {/* Spacer biar tengah */}
-        </header>
-
-        {/* KONTEN DASHBOARD */}
-        <div className="flex-1 p-4 md:p-8">
-          <div className="max-w-4xl mx-auto">
-            
-            {/* WELCOME CARD */}
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Welcome back, Admin! 👋</h1>
-              <p className="text-slate-600">Kelola konten portal berita Arena27 dengan mudah.</p>
+      {/* DAFTAR BERITA */}
+      <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-4 flex items-center gap-2">
+        🔥 Berita Terkini
+      </h2>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {dummyNews.map((news) => (
+          <div key={news.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition duration-300 border border-gray-100">
+            <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <span className="text-xs font-bold text-orange-500 uppercase tracking-wide">{news.category}</span>
+              <h3 className="text-lg font-bold text-slate-900 mt-1 mb-3 line-clamp-2">{news.title}</h3>
+              <Link href="#" className="text-sm text-orange-500 font-bold hover:underline flex items-center gap-1">
+                Baca Selengkapnya <span>→</span>
+              </Link>
             </div>
-
-            {/* STATS CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500">
-                <h3 className="text-sm font-medium text-slate-500 uppercase">Total Articles</h3>
-                <p className="text-3xl font-bold text-slate-900 mt-2">12</p>
-              </div>
-              <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
-                <h3 className="text-sm font-medium text-slate-500 uppercase">Categories</h3>
-                <p className="text-3xl font-bold text-slate-900 mt-2">5</p>
-              </div>
-              <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
-                <h3 className="text-sm font-medium text-slate-500 uppercase">Published Today</h3>
-                <p className="text-3xl font-bold text-slate-900 mt-2">3</p>
-              </div>
-            </div>
-
-            {/* QUICK ACTIONS */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Link href="/admin/articles/new" className="block p-4 rounded-lg bg-orange-500 text-white text-center font-medium hover:bg-orange-600 transition">
-                  ➕ Write New Article
-                </Link>
-                <Link href="/admin/categories" className="block p-4 rounded-lg bg-slate-100 text-slate-900 text-center font-medium hover:bg-slate-200 transition">
-                  📁 Manage Categories
-                </Link>
-              </div>
-            </div>
-
           </div>
-        </div>
+        ))}
+      </div>
 
-      </main>
+      {/* FOOTER INFO */}
+      <div className="mt-12 text-center text-slate-400 text-sm">
+        <p>Ini adalah halaman depan untuk pembaca. (Halaman Admin ada di /admin)</p>
+      </div>
     </div>
   );
 }
