@@ -1,2 +1,5 @@
-﻿import ArticleForm from './form';
-export default function Page() { return <ArticleForm />; }
+import ArticleForm from '../form';
+
+export default function NewPage() {
+  return <ArticleForm />;
+}

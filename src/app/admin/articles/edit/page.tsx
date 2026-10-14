@@ -1,2 +1,5 @@
-﻿import ArticleForm from './form';
-export default function Page() { return <ArticleForm isEdit={true} />; }
+import ArticleForm from '../form';
+
+export default function EditPage() {
+  return <ArticleForm isEdit={true} />;
+}
