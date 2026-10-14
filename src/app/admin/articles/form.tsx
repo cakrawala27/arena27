@@ -4,7 +4,16 @@ import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const CATEGORIES = ['Sepak Bola', 'Basket', 'MotoGP', 'F1', 'Badminton', 'Tinju', 'Esports', 'Lainnya'];
+const CATEGORY_TREE: { name: string; subs: string[] }[] = [
+  { name: 'Sepak Bola', subs: ['Premier League', 'Serie A', 'La Liga', 'Bundesliga', 'Liga Champions', 'FA Cup', 'FIFA Calendar', 'Timnas'] },
+  { name: 'Sport', subs: ['MotoGP', 'F1'] },
+  { name: 'Sudut Mata', subs: ['Teknologi', 'Opini'] },
+  { name: 'Basket', subs: ['NBA', 'IBL'] },
+  { name: 'Badminton', subs: ['BWF', 'Olympic'] },
+  { name: 'Tinju', subs: [] },
+  { name: 'Esports', subs: ['Mobile Legends', 'PUBG', 'Valorant'] },
+  { name: 'Publik Arena', subs: ['Sekitar Kita'] },
+];
 
 type Props = { isEdit?: boolean };
 
@@ -13,9 +22,12 @@ export default function ArticleForm({ isEdit = false }: Props) {
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('Sepak Bola');
+  const [subcategory, setSubcategory] = useState('');
   const [content, setContent] = useState('');
   const [imageBase64, setImageBase64] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const currentSubs = CATEGORY_TREE.find((c) => c.name === category)?.subs || [];
 
   useEffect(() => {
     const urlId = new URLSearchParams(window.location.search).get('id') || '';
@@ -28,6 +40,7 @@ export default function ArticleForm({ isEdit = false }: Props) {
           if (found) {
             setTitle(found.title || '');
             setCategory(found.category || 'Sepak Bola');
+            setSubcategory(found.subcategory || '');
             setContent(found.content || '');
             setImageBase64(found.image || '');
           }
@@ -35,6 +48,13 @@ export default function ArticleForm({ isEdit = false }: Props) {
       } catch (e) {}
     }
   }, [isEdit]);
+
+  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const next = e.target.value;
+    setCategory(next);
+    const subs = CATEGORY_TREE.find((c) => c.name === next)?.subs || [];
+    setSubcategory(subs.length > 0 ? subs[0] : '');
+  };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -65,9 +85,9 @@ export default function ArticleForm({ isEdit = false }: Props) {
     const list = JSON.parse(localStorage.getItem('arena27_articles') || '[]');
     if (isEdit && id) {
       const idx = list.findIndex((a: any) => String(a.id) === id);
-      if (idx !== -1) list[idx] = { ...list[idx], title, category, content, image: imageBase64 };
+      if (idx !== -1) list[idx] = { ...list[idx], title, category, subcategory, content, image: imageBase64 };
     } else {
-      list.unshift({ id: Date.now(), title, category, content, image: imageBase64, created_at: new Date().toISOString() });
+      list.unshift({ id: Date.now(), title, category, subcategory, content, image: imageBase64, created_at: new Date().toISOString() });
     }
     localStorage.setItem('arena27_articles', JSON.stringify(list));
     alert('✅ Berhasil disimpan!');
@@ -82,11 +102,19 @@ export default function ArticleForm({ isEdit = false }: Props) {
           <label className="block text-sm font-bold text-slate-700 mb-2">Judul</label>
           <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" />
         </div>
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Kategori</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white">
-            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
-          </select>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Kategori</label>
+            <select value={category} onChange={handleCategoryChange} className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white">
+              {CATEGORY_TREE.map((c) => <option key={c.name}>{c.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
+            <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)} disabled={currentSubs.length === 0} className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white disabled:bg-slate-100 disabled:text-slate-400">
+              {currentSubs.length === 0 ? <option>Umum</option> : currentSubs.map((s) => <option key={s}>{s}</option>)}
+            </select>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2">Upload Gambar dari HP</label>

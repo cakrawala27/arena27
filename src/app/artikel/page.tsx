@@ -33,7 +33,9 @@ export default function ArticleDetailPage() {
   return (
     <article className="max-w-3xl mx-auto p-4">
       {article.image && <img src={article.image} alt={article.title} className="w-full h-64 md:h-96 object-cover rounded-2xl shadow-lg mb-6" />}
-      <span className="inline-block bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">{article.category}</span>
+      <span className="inline-block bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+        {article.category}{article.subcategory ? ' • ' + article.subcategory : ''}
+      </span>
       <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-4 leading-tight">{article.title}</h1>
       <div className="whitespace-pre-line text-slate-700 text-base md:text-lg leading-relaxed bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         {article.content}
