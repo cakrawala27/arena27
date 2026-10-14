@@ -8,6 +8,7 @@ export default function ArticlePage() {
   const router = useRouter();
   const [article, setArticle] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showShare, setShowShare] = useState(false);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -123,6 +124,30 @@ export default function ArticlePage() {
             <p key={idx}>{para}</p>
           ))}
         </div>
+      </div>
+
+
+      {/* TOMBOL SHARE MELAYANG */}
+      <div style={{position: 'fixed', bottom: 24, right: 24, zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10}}>
+        {showShare && article && (
+          <div style={{background: '#1e1e1e', borderRadius: 12, padding: 10, display: 'flex', flexDirection: 'column', gap: 8, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', minWidth: 160}}>
+            <a href={"https://wa.me/?text=" + encodeURIComponent(article.title + " " + window.location.href)} target="_blank" style={{color: '#fff', textDecoration: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#25D366', fontWeight: 700, transition: 'transform 0.1s'}}>
+              <span>📱</span> WhatsApp
+            </a>
+            <a href={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href)} target="_blank" style={{color: '#fff', textDecoration: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#1877F2', fontWeight: 700}}>
+              <span>📘</span> Facebook
+            </a>
+            <a href={"https://twitter.com/intent/tweet?text=" + encodeURIComponent(article.title) + "&url=" + encodeURIComponent(window.location.href)} target="_blank" style={{color: '#fff', textDecoration: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#000', fontWeight: 700, border: '1px solid rgba(255,255,255,0.2)'}}>
+              <span>🐦</span> Twitter/X
+            </a>
+            <button onClick={() => { navigator.clipboard.writeText(window.location.href); alert('Link berhasil disalin!'); }} style={{color: '#fff', border: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#e53935', cursor: 'pointer', fontWeight: 700}}>
+              <span>🔗</span> Salin Link
+            </button>
+          </div>
+        )}
+        <button onClick={() => setShowShare(!showShare)} style={{width: 60, height: 60, borderRadius: '50%', background: '#e53935', color: '#fff', border: 'none', fontSize: 26, boxShadow: '0 6px 20px rgba(229,57,53,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s'}}>
+          {showShare ? '✕' : '🔗'}
+        </button>
       </div>
 
       <footer className="article-footer">
