@@ -488,7 +488,7 @@ export default function HomePage() {
 
       <div className="arena-wrap">
         {/* HEADER DIAM PERMANEN - TIDAK ADA STICKY/FIXED */}
-        <div className="arena-topbar" style={{position: "static", top: "auto", zIndex: "auto"}} style={{position: "static", top: "auto", left: "auto", right: "auto", transform: "none", animation: "none", transition: "none"}}>
+        <div className="arena-topbar" style={{position: "static", top: "auto", zIndex: "auto"}} style={{position: "sticky", top: "0", left: "0", right: "0", zIndex: "999", transform: "none", animation: "none", transition: "none"}}>
           <span onClick={handleLogoClick} className="arena-topbar-logo">
             <span>ARENA</span>27
             {clickCount > 0 && clickCount < 5 && <span className="arena-topbar-counter">{clickCount}/5</span>}
