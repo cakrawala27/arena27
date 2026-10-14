@@ -115,20 +115,20 @@ export default function HomePage() {
         .kbs-page * { box-sizing: border-box; }
         .kbs-wrap { max-width: 720px; margin: 0 auto; padding: 0 0 40px; }
 
-        /* TOPBAR STICKY */
-        .kbs-topbar { background: #0a0a0a; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(229,57,53,0.15); position: sticky; top: 0; z-index: 999; }
-        .kbs-topbar-home { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; cursor: pointer; background: none; border: none; padding: 0; }
-        .kbs-topbar-home:hover { color: #e53935; }
-        .kbs-topbar-logo { font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #fff; }
+        /* TOPBAR - TIDAK STICKY LAGI */
+        .kbs-topbar { background: #0a0a0a; padding: 10px 16px; display: flex; align-items: center; justify-content: flex-end; border-bottom: 1px solid rgba(229,57,53,0.15); }
+        .kbs-topbar-logo { font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #fff; cursor: pointer; user-select: none; transition: transform 0.1s; }
+        .kbs-topbar-logo:active { transform: scale(0.95); }
         .kbs-topbar-logo span { color: #e53935; }
+        .kbs-topbar-counter { font-size: 10px; color: #e53935; margin-left: 8px; font-weight: 700; }
 
-        /* HERO COMPACT (HEADER) */
+        /* HERO COMPACT */
         .kbs-hero { width: 100%; height: 160px; background-image: url('${HERO_IMG}'); background-size: cover; background-position: center 40%; position: relative; }
         .kbs-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(10,10,10,0.92) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 12px; gap: 14px; }
         .kbs-hero-title { font-size: 38px; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.95); margin: 0; text-align: center; }
         .kbs-hero-title span { color: #e53935; }
 
-        /* FILTER PILLS DI Bawah ARENA27 */
+        /* FILTER PILLS */
         .kbs-filter-wrap { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 2px; scrollbar-width: none; }
         .kbs-filter-wrap::-webkit-scrollbar { display: none; }
         .kbs-filter-btn { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; padding: 6px 12px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.25); background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.85); cursor: pointer; white-space: nowrap; transition: all 0.2s ease; backdrop-filter: blur(4px); }
@@ -210,16 +210,15 @@ export default function HomePage() {
       `}</style>
 
       <div className="kbs-wrap">
-        {/* TOPBAR STICKY */}
+        {/* TOPBAR - TIDAK STICKY, CUMA LOGO ARENA27 DI KANAN */}
         <div className="kbs-topbar">
-          <button onClick={handleLogoClick} className="kbs-topbar-home">
-            <span>←</span> Beranda
-            {clickCount > 0 && clickCount < 5 && <span style={{color:'#e53935',marginLeft:6}}>{clickCount}/5</span>}
-          </button>
-          <span className="kbs-topbar-logo"><span>ARENA</span>27</span>
+          <span onClick={handleLogoClick} className="kbs-topbar-logo">
+            <span>ARENA</span>27
+            {clickCount > 0 && clickCount < 5 && <span className="kbs-topbar-counter">{clickCount}/5</span>}
+          </span>
         </div>
 
-        {/* HERO COMPACT (HEADER) */}
+        {/* HERO COMPACT */}
         <div className="kbs-hero">
           <div className="kbs-hero-overlay">
             <h1 className="kbs-hero-title"><span>ARENA</span>27</h1>
