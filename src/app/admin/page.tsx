@@ -73,39 +73,11 @@ export default function AdminDashboard() {
             <span className="text-xs mt-1">Add New</span>
           </Link>
           <Link href="/admin/categories" className="flex flex-col items-center p-2 text-slate-500 hover:text-orange-500">
-            <span className="text-xl">📁</span>
+            <span className="text-xl"></span>
             <span className="text-xs mt-1">Categories</span>
           </Link>
         </div>
       </nav>
-
-      {/* DESKTOP SIDEBAR (OPTIONAL - HANYA DI DESKTOP) */}
-      <aside className="hidden md:block fixed top-0 left-0 h-full w-64 bg-slate-900 text-white p-4 shadow-xl">
-        <h2 className="text-xl font-bold text-orange-500 mb-6">Arena27 Admin</h2>
-        <nav className="space-y-2">
-          <Link href="/admin" className="block p-3 rounded-lg bg-orange-500 text-white font-medium">
-            📊 Dashboard
-          </Link>
-          <Link href="/admin/articles" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            📝 Articles
-          </Link>
-          <Link href="/admin/articles/new" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            ➕ Add New Article
-          </Link>
-          <Link href="/admin/categories" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            📁 Categories
-          </Link>
-          <Link href="/admin/tags" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            🏷️ Tags
-          </Link>
-          <Link href="/" className="block p-3 rounded-lg hover:bg-slate-800 transition mt-8 border-t border-slate-700 pt-4">
-            🌐 View Site
-          </Link>
-        </nav>
-      </aside>
-
-      {/* SPACER UNTUK DESKTOP SIDEBAR */}
-      <div className="hidden md:block w-64"></div>
 
     </div>
   );
