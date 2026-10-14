@@ -15,16 +15,16 @@ export default function RootLayout({
     <html lang="id">
       <body className="min-h-screen bg-gray-100 font-sans flex flex-col">
         
-        {/* HEADER DENGAN LOGO ARENA27 YANG LEBIH BESAR */}
+        {/* HEADER DENGAN LOGO ARENA27 SUPER BESAR */}
         <header className="bg-slate-900 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-50">
           
-          {/* Logo Arena27 - Diperbesar & Tanpa Background Putih */}
-          <a href="/" className="flex items-center gap-2 hover:opacity-90 transition">
+          {/* Logo Arena27 - SUPER BESAR + Efek Hover */}
+          <a href="/" className="flex items-center gap-2 group">
             <img 
               src="/arena27-logo.png" 
               alt="Arena27 Logo" 
-              // PERUBAHAN DI SINI: Ukuran lebih besar + hapus background putih
-              className="h-16 sm:h-20 md:h-24 w-auto object-contain bg-transparent mix-blend-screen" 
+              // PERUBAHAN DI SINI: Ukuran super besar + margin kiri + efek hover
+              className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain ml-2 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-1" 
             />
           </a>
 
