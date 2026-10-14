@@ -26,10 +26,8 @@ export default function ArticlePage() {
           const description = (a.content || '').substring(0, 160) + '...';
           const articleUrl = 'https://arena27-psi.vercel.app/artikel/' + a.id;
           
-          // Set title
           document.title = a.title + ' - Arena27';
           
-          // Helper function buat set meta
           const setMeta = (type, name, content) => {
             let selector = type === 'property' ? 'meta[property="' + name + '"]' : 'meta[name="' + name + '"]';
             let el = document.querySelector(selector);
@@ -41,7 +39,6 @@ export default function ArticlePage() {
             el.setAttribute('content', content);
           };
           
-          // META TAGS LENGKAP BUAT SHARE (BIAR GAMBAR MUNCUL!)
           setMeta('name', 'description', description);
           setMeta('property', 'og:title', a.title);
           setMeta('property', 'og:description', description);
@@ -54,14 +51,11 @@ export default function ArticlePage() {
           setMeta('property', 'og:type', 'article');
           setMeta('property', 'og:site_name', 'Arena27');
           setMeta('property', 'og:locale', 'id_ID');
-          
-          // TWITTER CARD
           setMeta('name', 'twitter:card', 'summary_large_image');
           setMeta('name', 'twitter:title', a.title);
           setMeta('name', 'twitter:description', description);
           setMeta('name', 'twitter:image', finalImage);
           
-          // CANONICAL
           let canonical = document.querySelector('link[rel="canonical"]');
           if (!canonical) {
             canonical = document.createElement('link');
@@ -106,7 +100,6 @@ export default function ArticlePage() {
 
   const shareUrl = window.location.href;
   const shareText = article.title + ' - Arena27';
-  const shareImage = article.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
 
   return (
     <div style={{background: '#0a0a0a', minHeight: '100vh', color: '#fff', fontFamily: 'system-ui, -apple-system, sans-serif'}}>
@@ -124,35 +117,13 @@ export default function ArticlePage() {
         .article-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
         .article-category { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #e53935; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; align-self: flex-start; }
         .article-title { font-size: 32px; font-weight: 900; color: #fff; line-height: 1.2; margin: 0 0 12px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-        .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; margin-bottom: 16px; }
-
-        /* TOMBOL SHARE INLINE (DI BAWAH TANGGAL) */
-        .share-section { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .share-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-        
-        
-        .share-btn:hover { transform: translateY(-2px); }
-        .share-btn:active { transform: scale(0.96); }
-        .share-wa { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 12px rgba(37,211,102,0.3); }
-        .share-wa:hover { box-shadow: 0 6px 18px rgba(37,211,102,0.5); }
-        .share-fb { background: linear-gradient(135deg, #1877F2, #0C5DC7); box-shadow: 0 4px 12px rgba(24,119,242,0.3); }
-        .share-fb:hover { box-shadow: 0 6px 18px rgba(24,119,242,0.5); }
-        .share-x { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .share-x:hover { box-shadow: 0 6px 18px rgba(255,255,255,0.1); }
-        .share-copy { background: linear-gradient(135deg, #e53935, #b71c1c); box-shadow: 0 4px 12px rgba(229,57,53,0.3); }
-        .share-copy:hover { box-shadow: 0 6px 18px rgba(229,57,53,0.5); }
-        .share-copy.copied { background: linear-gradient(135deg, #10b981, #047857); }
-        
-
-        
-        
-
+        .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
         .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
         .article-content p { margin: 0 0 16px 0; }
-        
+
         /* TOMBOL SHARE DI BAWAH ARTIKEL */
-        .share-section-bottom { padding: 24px 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.1); }
-        .share-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; display: block; }
+        .share-section-bottom { padding: 30px 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.08); }
+        .share-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; display: block; }
         .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
         .share-btn { 
           display: inline-flex; 
@@ -183,9 +154,6 @@ export default function ArticlePage() {
         .share-copy:hover { box-shadow: 0 6px 18px rgba(229,57,53,0.5); }
         .share-copy.copied { background: linear-gradient(135deg, #10b981, #047857); }
         .share-icon { font-size: 18px; line-height: 1; }
-        @media (max-width: 600px) {
-          .share-btn { font-size: 12px; padding: 10px 14px; min-width: 120px; }
-        }
 
         .article-footer { background: #0a0a0a; padding: 30px 16px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
         .article-footer-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; }
@@ -195,70 +163,73 @@ export default function ArticlePage() {
         @media (max-width: 600px) {
           .article-hero { height: 280px; }
           .article-title { font-size: 24px; }
-          .share-btn { width: 38px; height: 38px; font-size: 16px; }
+          .share-btn { font-size: 12px; padding: 10px 14px; min-width: 120px; }
         }
       `}</style>
 
       <div className="article-wrap">
+        {/* TOPBAR */}
         <div className="article-topbar">
           <button onClick={() => router.push('/')} className="article-back">← Kembali</button>
           <span className="article-logo"><span>ARENA</span>27</span>
         </div>
 
+        {/* HERO - TANPA TOMBOL SHARE */}
         <div className="article-hero">
           <img src={article.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80'} alt={article.title} />
           <div className="article-hero-overlay">
             <span className="article-category">{article.category}</span>
             <h1 className="article-title">{article.title}</h1>
             <div className="article-meta">📅 {new Date(article.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} · Arena27</div>
+          </div>
         </div>
 
+        {/* KONTEN ARTIKEL */}
         <div className="article-content">
           {(article.content || '').split('\n\n').map((para, idx) => (
             <p key={idx}>{para}</p>
           ))}
         </div>
-      </div>
 
-
-      {/* TOMBOL SHARE DI BAWAH ARTIKEL */}
-      <div className="share-section-bottom">
-        <span className="share-label">Bagikan Artikel Ini</span>
-        <div className="share-buttons">
-          <a 
-            href={'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl)} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="share-btn share-wa"
-          >
-            <span className="share-icon">📱</span>
-            <span>WhatsApp</span>
-          </a>
-          <a 
-            href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl)} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="share-btn share-fb"
-          >
-            <span className="share-icon">📘</span>
-            <span>Facebook</span>
-          </a>
-          <a 
-            href={'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl)} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="share-btn share-x"
-          >
-            <span className="share-icon">𝕏</span>
-            <span>Twitter</span>
-          </a>
-          <button 
-            onClick={handleCopyLink}
-            className={'share-btn share-copy' + (copied ? ' copied' : '')}
-          >
-            <span className="share-icon">{copied ? '✓' : '🔗'}</span>
-            <span>{copied ? 'Tersalin!' : 'Salin Link'}</span>
-          </button>
+        {/* TOMBOL SHARE DI BAWAH ARTIKEL (CUMA DI SINI!) */}
+        <div className="share-section-bottom">
+          <span className="share-label">Bagikan Artikel Ini</span>
+          <div className="share-buttons">
+            <a 
+              href={'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl)} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="share-btn share-wa"
+            >
+              <span className="share-icon">📱</span>
+              <span>WhatsApp</span>
+            </a>
+            <a 
+              href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl)} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="share-btn share-fb"
+            >
+              <span className="share-icon">📘</span>
+              <span>Facebook</span>
+            </a>
+            <a 
+              href={'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl)} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="share-btn share-x"
+            >
+              <span className="share-icon">𝕏</span>
+              <span>Twitter</span>
+            </a>
+            <button 
+              onClick={handleCopyLink}
+              className={'share-btn share-copy' + (copied ? ' copied' : '')}
+            >
+              <span className="share-icon">{copied ? '✓' : '🔗'}</span>
+              <span>{copied ? 'Tersalin!' : 'Salin Link'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
