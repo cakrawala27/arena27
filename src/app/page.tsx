@@ -1,15 +1,18 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
 export default function HomePage() {
+  const router = useRouter();
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('Semua');
-  const [showAdminEntry, setShowAdminEntry] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimer = useRef<any>(null);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -24,51 +27,44 @@ export default function HomePage() {
     fetchNews();
   }, []);
 
+  const handleLogoClick = () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    clickTimer.current = setTimeout(() => setClickCount(0), 2000);
+
+    if (newCount >= 5) {
+      setClickCount(0);
+      router.push('/admin');
+    }
+  };
+
   const filteredNews = activeFilter === 'Semua' 
     ? news 
     : news.filter(item => item.category.toLowerCase().includes(activeFilter.toLowerCase()));
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* HEADER PUBLIK */}
       <header className="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
         <div className="max-w-6xl mx-auto px-4">
-          {/* TOP BAR */}
           <div className="flex items-center justify-between py-4 border-b border-slate-800">
-            <Link href="/" className="flex items-center gap-2">
+            <div 
+              onClick={handleLogoClick}
+              className="flex items-center gap-2 cursor-pointer select-none active:scale-95 transition"
+            >
               <span className="text-2xl">🏟️</span>
               <h1 className="text-xl md:text-2xl font-black">
                 <span className="text-orange-500">ARENA</span>
                 <span className="text-white">27</span>
               </h1>
-            </Link>
+            </div>
             
-            {/* TOMBOL RAHASIA MASUK ADMIN */}
-            <button 
-              onClick={() => setShowAdminEntry(!showAdminEntry)}
-              className="text-slate-400 hover:text-orange-500 transition p-2"
-              title="Admin"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </button>
+            <div className="text-xs text-slate-500 hidden md:block">
+              {clickCount > 0 && clickCount < 5 ? (clickCount + '/5 🔐') : ''}
+            </div>
           </div>
 
-          {/* PANEL ADMIN ENTRY */}
-          {showAdminEntry && (
-            <div className="py-3 border-b border-slate-800">
-              <Link 
-                href="/admin" 
-                className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-lg transition active:scale-95"
-              >
-                🔐 Masuk ke Admin Panel
-              </Link>
-              <p className="text-xs text-slate-400 mt-2">Hanya untuk redaksi Arena27</p>
-            </div>
-          )}
-
-          {/* FILTER KATEGORI */}
           <div className="flex gap-2 overflow-x-auto py-3">
             {FILTER_CATEGORIES.map((cat) => (
               <button
@@ -88,7 +84,6 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* HERO SECTION */}
       <div className="max-w-6xl mx-auto px-4 pt-6">
         <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 md:p-8 rounded-2xl shadow-xl">
           <span className="inline-block bg-orange-500 text-xs font-bold px-3 py-1 rounded-full uppercase">Headline</span>
@@ -97,7 +92,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* DAFTAR BERITA */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         {loading ? (
           <div className="text-center py-20 text-slate-500">
@@ -138,7 +132,6 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* FOOTER */}
       <footer className="bg-slate-900 text-slate-400 py-8 mt-12">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h3 className="text-lg font-black text-white mb-2">
