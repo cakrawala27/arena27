@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
+const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
+
 export default function HomePage() {
   const router = useRouter();
   const [articles, setArticles] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeFilter, setActiveFilter] = useState('Semua');
   const [clickCount, setClickCount] = useState(0);
   const clickTimer = useRef(null);
   const audioCtx = useRef(null);
@@ -23,19 +26,21 @@ export default function HomePage() {
   useEffect(() => {
     fetchArticles();
     window.scrollTo(0, 0);
-  }, [currentPage]);
+  }, [currentPage, activeFilter]);
 
   const fetchArticles = async () => {
     setLoading(true);
     const from = (currentPage - 1) * POSTS_PER_PAGE;
     const to = from + POSTS_PER_PAGE - 1;
-    const { data, count } = await supabase
+    let query = supabase
       .from('articles')
       .select('*', { count: 'exact' })
-      .ilike('category', '%Sepak Bola%')
       .eq('status', 'published')
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
+    if (activeFilter !== 'Semua') {
+      query = query.ilike('category', '%' + activeFilter + '%');
+    }
+    const { data, count } = await query.range(from, to);
     if (data) setArticles(data);
     if (typeof count === 'number') setTotalCount(count);
     setLoading(false);
@@ -50,6 +55,12 @@ export default function HomePage() {
       setClickCount(0);
       router.push('/admin');
     }
+  };
+
+  const handleFilterClick = (cat) => {
+    setActiveFilter(cat);
+    setCurrentPage(1);
+    playClick();
   };
 
   const playClick = () => {
@@ -104,31 +115,36 @@ export default function HomePage() {
         .kbs-page * { box-sizing: border-box; }
         .kbs-wrap { max-width: 720px; margin: 0 auto; padding: 0 0 40px; }
 
-        .kbs-topbar { background: #0a0a0a; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(229,57,53,0.15); position: sticky; top: 0; z-index: 999; }
+        /* TOPBAR STICKY */
+        .kbs-topbar { background: #0a0a0a; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(229,57,53,0.15); position: sticky; top: 0; z-index: 999; }
         .kbs-topbar-home { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; cursor: pointer; background: none; border: none; padding: 0; }
         .kbs-topbar-home:hover { color: #e53935; }
-        .kbs-topbar-brand { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #e53935; text-transform: uppercase; }
+        .kbs-topbar-logo { font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #fff; }
+        .kbs-topbar-logo span { color: #e53935; }
 
-        .kbs-hero { width: 100%; height: 300px; background-image: url('${HERO_IMG}'); background-size: cover; background-position: center 25%; position: relative; }
-        .kbs-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.38) 45%, rgba(10,10,10,0.98) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
-        .kbs-hero-eyebrow { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
-        .kbs-hero-region { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e53935; }
-        .kbs-hero-title { font-size: 40px; font-weight: 900; color: #fff; letter-spacing: 5px; text-transform: uppercase; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.95); margin-bottom: 7px; }
-        .kbs-hero-sub { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px; }
-        .kbs-hero-site { font-size: 8.5px; color: rgba(229,57,53,0.6); letter-spacing: 1px; }
+        /* HERO COMPACT (HEADER) */
+        .kbs-hero { width: 100%; height: 160px; background-image: url('${HERO_IMG}'); background-size: cover; background-position: center 40%; position: relative; }
+        .kbs-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(10,10,10,0.92) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 12px; gap: 14px; }
+        .kbs-hero-title { font-size: 38px; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.95); margin: 0; text-align: center; }
+        .kbs-hero-title span { color: #e53935; }
 
-        .kbs-stats { background: #111; display: flex; border-top: 2px solid #e53935; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .kbs-stat { flex: 1; padding: 11px 12px; text-align: center; border-right: 1px solid rgba(255,255,255,0.06); }
-        .kbs-stat:last-child { border-right: none; }
-        .kbs-stat-val { display: block; font-size: 15px; font-weight: 900; color: #e53935; font-style: italic; line-height: 1; margin-bottom: 2px; }
-        .kbs-stat-lbl { display: block; font-size: 7px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+        /* FILTER PILLS DI Bawah ARENA27 */
+        .kbs-filter-wrap { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 2px; scrollbar-width: none; }
+        .kbs-filter-wrap::-webkit-scrollbar { display: none; }
+        .kbs-filter-btn { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; padding: 6px 12px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.25); background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.85); cursor: pointer; white-space: nowrap; transition: all 0.2s ease; backdrop-filter: blur(4px); }
+        .kbs-filter-btn:hover { border-color: #e53935; color: #fff; }
+        .kbs-filter-btn.active { background: #e53935; border-color: #e53935; color: #fff; box-shadow: 0 4px 14px rgba(229,57,53,0.5); }
 
+        /* SECTION HEADERS */
         .kbs-list-hd { display: flex; align-items: center; gap: 9px; padding: 16px 16px 10px; background: #0e0e0e; }
         .kbs-list-bar { width: 3px; height: 16px; background: #e53935; border-radius: 2px; flex-shrink: 0; }
         .kbs-list-lbl { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
         .kbs-list-count { margin-left: auto; font-size: 8.5px; font-weight: 700; color: rgba(229,57,53,0.7); letter-spacing: 1px; }
         .kbs-list-badge { margin-left: auto; font-size: 8px; font-weight: 800; letter-spacing: 1px; color: #fff; background: linear-gradient(135deg, #e53935, #b71c1c); padding: 3px 8px; border-radius: 4px; }
+        .kbs-active-filter-info { padding: 8px 16px; background: #0e0e0e; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+        .kbs-active-filter-info b { color: #e53935; font-weight: 800; }
 
+        /* FEATURED CARDS */
         .kbs-featured-wrap { background: #0a0a0a; padding: 0 12px 12px; display: flex; flex-direction: column; gap: 12px; }
         .kbs-featured-card { display: block; position: relative; border-radius: 16px; overflow: hidden; text-decoration: none; aspect-ratio: 16 / 10; transition: transform 0.2s ease; -webkit-tap-highlight-color: transparent; cursor: pointer; }
         .kbs-featured-card:active { transform: scale(0.98); }
@@ -139,6 +155,7 @@ export default function HomePage() {
         .kbs-featured-title { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 2px 8px rgba(0,0,0,0.8); position: relative; z-index: 2; }
         .kbs-featured-meta { font-size: 9px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; position: relative; z-index: 2; }
 
+        /* LIST CARDS */
         .kbs-list { background: #0e0e0e; padding: 0 12px 12px; }
         .kbs-card { display: flex; align-items: center; gap: 12px; background: linear-gradient(105deg, #1e1e1e 0%, #181818 70%, #141414 100%); border-radius: 14px; margin-bottom: 9px; padding: 12px 12px 12px 16px; text-decoration: none; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.18s ease, box-shadow 0.18s ease; -webkit-tap-highlight-color: transparent; cursor: pointer; }
         .kbs-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, #e53935, rgba(229,57,53,0.08)); border-radius: 14px 0 0 14px; }
@@ -162,11 +179,11 @@ export default function HomePage() {
         .kbs-thumb-line { position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, #e53935, rgba(229,57,53,0.08)); border-radius: 0 10px 10px 0; }
         .kbs-arrow { font-size: 20px; color: rgba(229,57,53,0.35); flex-shrink: 0; position: relative; z-index: 1; }
 
+        /* PAGINATION */
         .kbs-pagination { display: flex; align-items: center; justify-content: space-between; padding: 16px 12px 8px; background: #0e0e0e; gap: 10px; }
         .kbs-page-info { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
         .kbs-page-btn { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; text-decoration: none; background: linear-gradient(135deg, #e53935, #b71c1c); padding: 10px 20px; border-radius: 8px; box-shadow: 0 3px 14px rgba(229,57,53,0.4); transition: all 0.2s ease; border: none; cursor: pointer; }
         .kbs-page-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(229,57,53,0.6); }
-        .kbs-page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
         .kbs-page-ghost { width: 100px; }
 
         .kbs-loading { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.5); }
@@ -181,55 +198,53 @@ export default function HomePage() {
         .kbs-footer-text { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
 
         @media (max-width: 600px) {
-          .kbs-hero { height: 230px; }
-          .kbs-hero-title { font-size: 28px; letter-spacing: 3px; }
+          .kbs-hero { height: 140px; }
+          .kbs-hero-title { font-size: 28px; letter-spacing: 4px; }
+          .kbs-filter-btn { font-size: 9px; padding: 5px 10px; }
           .kbs-thumb-wrap { width: 62px; height: 62px; }
           .kbs-thumb-img { width: 62px; height: 62px; }
           .kbs-thumb-fallback { width: 62px; height: 62px; font-size: 20px; }
           .kbs-card-title { font-size: 11px; }
           .kbs-featured-title { font-size: 15px; }
-          .kbs-topbar-home span.txt { display: none; }
         }
       `}</style>
 
       <div className="kbs-wrap">
-        {/* TOPBAR */}
+        {/* TOPBAR STICKY */}
         <div className="kbs-topbar">
           <button onClick={handleLogoClick} className="kbs-topbar-home">
-            <span>←</span> <span className="txt">Beranda</span>
+            <span>←</span> Beranda
             {clickCount > 0 && clickCount < 5 && <span style={{color:'#e53935',marginLeft:6}}>{clickCount}/5</span>}
           </button>
-          <span className="kbs-topbar-brand">Kaba Sepakbola</span>
+          <span className="kbs-topbar-logo"><span>ARENA</span>27</span>
         </div>
 
-        {/* HERO */}
+        {/* HERO COMPACT (HEADER) */}
         <div className="kbs-hero">
           <div className="kbs-hero-overlay">
-            <div className="kbs-hero-eyebrow">
-              <span>⚽</span>
-              <span className="kbs-hero-region">Arena27</span>
+            <h1 className="kbs-hero-title"><span>ARENA</span>27</h1>
+            <div className="kbs-filter-wrap">
+              {FILTER_CATEGORIES.map(function(cat){
+                return (
+                  <button
+                    key={cat}
+                    onClick={function(){ handleFilterClick(cat); }}
+                    className={'kbs-filter-btn' + (activeFilter === cat ? ' active' : '')}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
             </div>
-            <div className="kbs-hero-title">KABA SEPAKBOLA</div>
-            <div className="kbs-hero-sub">Berita Terkini Dunia Sepakbola</div>
-            <div className="kbs-hero-site">arena27.com</div>
           </div>
         </div>
 
-        {/* STATS BAR */}
-        <div className="kbs-stats">
-          <div className="kbs-stat">
-            <span className="kbs-stat-val">⚽ BOLA</span>
-            <span className="kbs-stat-lbl">Kategori</span>
+        {/* INFO FILTER AKTIF */}
+        {activeFilter !== 'Semua' && (
+          <div className="kbs-active-filter-info">
+            🏷️ Filter aktif: <b>{activeFilter}</b> · {totalCount} artikel
           </div>
-          <div className="kbs-stat">
-            <span className="kbs-stat-val">{totalCount}</span>
-            <span className="kbs-stat-lbl">Total Artikel</span>
-          </div>
-          <div className="kbs-stat">
-            <span className="kbs-stat-val">{currentPage} / {totalPages}</span>
-            <span className="kbs-stat-lbl">Halaman</span>
-          </div>
-        </div>
+        )}
 
         {loading ? (
           <div className="kbs-loading">
@@ -238,12 +253,12 @@ export default function HomePage() {
           </div>
         ) : articles.length === 0 ? (
           <div className="kbs-empty">
-            <p style={{fontSize:16,marginBottom:8}}>⚽ Belum ada berita sepakbola</p>
-            <p style={{fontSize:12}}>Tulis berita pertamamu di Admin Panel!</p>
+            <p style={{fontSize:16,marginBottom:8}}>📰 Belum ada berita untuk <b style={{color:'#e53935'}}>{activeFilter}</b></p>
+            <p style={{fontSize:12}}>Coba pilih kategori lain atau tulis berita baru di Admin Panel!</p>
           </div>
         ) : (
           <>
-            {/* 3 BERITA UNGGULAN (HANYA DI HALAMAN 1) */}
+            {/* 3 BERITA UNGGULAN */}
             {featured.length > 0 && (
               <>
                 <div className="kbs-list-hd">
@@ -276,7 +291,7 @@ export default function HomePage() {
               </>
             )}
 
-            {/* LIST BERITA LAINNYA */}
+            {/* LIST BERITA */}
             {regular.length > 0 && (
               <>
                 <div className="kbs-list-hd">
