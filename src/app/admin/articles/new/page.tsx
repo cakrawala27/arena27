@@ -1,48 +1,68 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
-const CATEGORIES = ['Sepak Bola', 'Sport', 'Basket', 'Badminton', 'Tinju', 'Esports', 'Publik Arena'];
+const CATEGORY_TREE = {
+  'Sepakbola': ['Premier League', 'Serie A', 'La Liga', 'Bundesliga', 'Liga Champions', 'FA Cup', 'Liga Indonesia', 'Piala Dunia'],
+  'Basket': ['NBA', 'EuroLeague', 'ABL', 'DBL', 'Piala Dunia Basket'],
+  'Sport': ['MotoGP', 'F1', 'Tour de France', 'Olimpiade', 'Atletik', 'Renang', 'Tinju', 'MMA', 'UFC'],
+  'Esports': ['Mobile Legends', 'PUBG', 'Valorant', 'Dota 2', 'Free Fire', 'League of Legends', 'CS:GO'],
+  'Mata Dunia': ['Teknologi', 'Opini', 'Politik', 'Ekonomi', 'Hiburan', 'Gaya Hidup', 'Otomotif', 'Travel'],
+  'Publik Arena': ['Berita Utama', 'Wawancara', 'Analisis', 'Feature', 'Investigasi']
+};
+
+const MAIN_CATEGORIES = Object.keys(CATEGORY_TREE);
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1522778119026-d647f0596081?w=800';
+
 
 export default function NewArticlePage() {
   const router = useRouter();
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('Sepak Bola');
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [mainCategory, setMainCategory] = useState('Sepakbola');
+  const [customMainCategory, setCustomMainCategory] = useState('');
+  const [useCustomMain, setUseCustomMain] = useState(false);
+  const [subCategory, setSubCategory] = useState('');
+  const [customSubCategory, setCustomSubCategory] = useState('');
+  const [useCustomSub, setUseCustomSub] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
+      reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    
+    let finalMain = useCustomMain ? (customMainCategory || 'Lainnya') : mainCategory;
+    let finalSub = useCustomSub ? (customSubCategory || '') : subCategory;
+    let finalCategory = finalSub ? finalMain + ' - ' + finalSub : finalMain;
+    
     let finalImageUrl = DEFAULT_IMAGE;
 
     if (imageFile) {
       const fileExt = imageFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + fileExt;
       const { error: uploadError } = await supabase.storage.from('images').upload(fileName, imageFile);
-      if (uploadError) { alert('❌ Gagal upload: ' + uploadError.message); setIsSubmitting(false); return; }
+      if (uploadError) { alert('Gagal upload: ' + uploadError.message); setIsSubmitting(false); return; }
       const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName);
       finalImageUrl = urlData.publicUrl;
     }
 
-    const { error } = await supabase.from('articles').insert([{ title, category, content, image: finalImageUrl, status: 'published' }]);
+    const { error } = await supabase.from('articles').insert([{ title, category: finalCategory, content, image: finalImageUrl, status: 'published' }]);
     setIsSubmitting(false);
-    if (error) alert('❌ Gagal publish: ' + error.message);
-    else { alert('✅ Berita + Gambar berhasil dipublish!'); router.push('/admin/articles'); }
+    if (error) alert('Gagal publish: ' + error.message);
+    else { alert('Berita berhasil dipublish!'); router.push('/admin/articles'); }
   };
 
   return (
@@ -53,12 +73,37 @@ export default function NewArticlePage() {
           <label className="block text-sm font-bold text-slate-700 mb-2">Judul Berita</label>
           <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" />
         </div>
+        
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Kategori</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none bg-white">
-            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+          <label className="block text-sm font-bold text-slate-700 mb-2">Kategori Utama</label>
+          <select value={useCustomMain ? 'Lainnya' : mainCategory} onChange={(e) => {
+            if (e.target.value === 'Lainnya') { setUseCustomMain(true); setMainCategory(''); }
+            else { setUseCustomMain(false); setMainCategory(e.target.value); setCustomMainCategory(''); setSubCategory(''); setUseCustomSub(false); }
+          }} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white">
+            {MAIN_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            <option value="Lainnya">✍️ Tambah Kategori Baru...</option>
           </select>
+          {useCustomMain && (
+            <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
+          )}
         </div>
+
+        {!useCustomMain && mainCategory && (
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
+            <select value={useCustomSub ? 'Lainnya' : subCategory} onChange={(e) => {
+              if (e.target.value === 'Lainnya') { setUseCustomSub(true); setSubCategory(''); }
+              else { setUseCustomSub(false); setSubCategory(e.target.value); setCustomSubCategory(''); }
+            }} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white">
+              {(CATEGORY_TREE[mainCategory] || []).map((s) => <option key={s} value={s}>{s}</option>)}
+              <option value="Lainnya">✍️ Tambah Sub Kategori Baru...</option>
+            </select>
+            {useCustomSub && (
+              <input type="text" required value={customSubCategory} onChange={(e) => setCustomSubCategory(e.target.value)} placeholder="Ketik nama sub kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
+            )}
+          </div>
+        )}
+
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2">📸 Upload Gambar dari HP</label>
           <input type="file" accept="image/*" onChange={handleImageChange} className="block w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-orange-500 file:text-white hover:file:bg-orange-600 file:cursor-pointer cursor-pointer" />
