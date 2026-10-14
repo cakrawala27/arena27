@@ -8,31 +8,32 @@ export default function AdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setIsSidebarOpen(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex relative">
       
-      {/* OVERLAY UNTUK MOBILE */}
+      {/* OVERLAY UNTUK MOBILE - Klik untuk tutup sidebar */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={toggleSidebar}
+          onClick={closeSidebar}
         />
       )}
 
       {/* SIDEBAR NAVIGASI */}
       <aside 
         className={`
-          fixed md:static inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform transition-transform duration-300 ease-in-out
+          fixed top-0 left-0 h-full w-64 bg-slate-900 text-white z-50 transform transition-transform duration-300 ease-in-out shadow-xl
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          md:translate-x-0
+          md:translate-x-0 md:static md:h-auto md:shadow-none
         `}
       >
         <div className="p-4 border-b border-slate-700 flex items-center justify-between">
           <h2 className="text-xl font-bold text-orange-500">Arena27 Admin</h2>
           <button 
-            onClick={toggleSidebar}
-            className="md:hidden text-white hover:text-orange-500"
+            onClick={closeSidebar}
+            className="md:hidden text-white hover:text-orange-500 text-2xl focus:outline-none"
           >
             ✕
           </button>
@@ -61,10 +62,10 @@ export default function AdminDashboard() {
       </aside>
 
       {/* KONTEN UTAMA */}
-      <main className="flex-1 flex flex-col min-h-screen">
+      <main className="flex-1 flex flex-col min-h-screen w-full">
         
         {/* HEADER MOBILE DENGAN HAMBURGER MENU */}
-        <header className="bg-white shadow-sm p-4 flex items-center justify-between md:hidden">
+        <header className="bg-white shadow-sm p-4 flex items-center justify-between md:hidden sticky top-0 z-30">
           <button 
             onClick={toggleSidebar}
             className="text-slate-900 text-2xl focus:outline-none"
