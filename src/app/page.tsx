@@ -112,17 +112,23 @@ export default function HomePage() {
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0 !important; padding: 0 !important; background: #0a0a0a !important; }
-        .arena-wrap { max-width: 720px; margin: 0 auto; padding: 0 0 40px; }
 
-        /* HEADER DIAM - TIDAK ADA POSITION STICKY/FIXED SAMA SEKALI */
+        /* HEADER TERPISAH - DI LUAR WRAPPER */
         .arena-topbar { 
+          position: sticky;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 999;
           background: #0a0a0a; 
           padding: 10px 16px; 
           display: flex; 
           align-items: center; 
           justify-content: flex-end; 
-          border-bottom: 1px solid rgba(229,57,53,0.15); 
-          /* NO POSITION, NO STICKY, NO FIXED - DIAM DI TEMPAT */
+          border-bottom: 1px solid rgba(229,57,53,0.15);
+          transform: none !important;
+          animation: none !important;
+          transition: none !important;
         }
         .arena-topbar-logo { 
           font-size: 14px; 
@@ -130,16 +136,21 @@ export default function HomePage() {
           letter-spacing: 2px; 
           color: #fff; 
           cursor: pointer; 
-          user-select: none; 
-          transition: transform 0.1s; 
+          user-select: none;
         }
-        .arena-topbar-logo:active { transform: scale(0.95); }
         .arena-topbar-logo span { color: #e53935; }
         .arena-topbar-counter { 
           font-size: 10px; 
           color: #e53935; 
           margin-left: 8px; 
           font-weight: 700; 
+        }
+
+        /* WRAPPER KONTEN - TERPISAH DARI HEADER */
+        .arena-wrap { 
+          max-width: 720px; 
+          margin: 0 auto; 
+          padding: 0 0 40px;
         }
 
         .arena-hero { 
@@ -358,7 +369,7 @@ export default function HomePage() {
           transform: scale(0); 
           animation: arenaRipple 0.55s linear; 
         }
-         }
+        @keyframes arenaRipple { to { transform: scale(4); opacity: 0; } }
 
         .arena-card-body { flex: 1; min-width: 0; z-index: 1; }
         .arena-card-title { 
@@ -443,7 +454,7 @@ export default function HomePage() {
           border-radius: 50%; 
           animation: spin 0.8s linear infinite; 
         }
-         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .arena-empty { 
           text-align: center; 
@@ -472,29 +483,18 @@ export default function HomePage() {
           .arena-card-title { font-size: 11px; }
           .arena-featured-title { font-size: 15px; }
         }
-      `}
-        /* NUCLEAR FORCE - DISABLE SEMUA ANIMASI DI HEADER */
-        .arena-topbar, .arena-topbar * { 
-          animation: none !important; 
-          transform: none !important; 
-          transition: none !important; 
-          position: static !important;
-        }
-        .arena-topbar:hover, .arena-topbar:active, .arena-topbar:focus {
-          animation: none !important;
-          transform: none !important;
-        }
-      </style>
+      `}</style>
 
+      {/* HEADER TERPISAH - DI LUAR WRAPPER KONTEN */}
+      <div className="arena-topbar">
+        <span onClick={handleLogoClick} className="arena-topbar-logo">
+          <span>ARENA</span>27
+          {clickCount > 0 && clickCount < 5 && <span className="arena-topbar-counter">{clickCount}/5</span>}
+        </span>
+      </div>
+
+      {/* WRAPPER KONTEN - TERPISAH DARI HEADER */}
       <div className="arena-wrap">
-        {/* HEADER DIAM PERMANEN - TIDAK ADA STICKY/FIXED */}
-        <div className="arena-topbar" style={{position: "static", top: "auto", zIndex: "auto"}} style={{position: "sticky", top: "0", left: "0", right: "0", zIndex: "999", transform: "none", animation: "none", transition: "none"}}>
-          <span onClick={handleLogoClick} className="arena-topbar-logo">
-            <span>ARENA</span>27
-            {clickCount > 0 && clickCount < 5 && <span className="arena-topbar-counter">{clickCount}/5</span>}
-          </span>
-        </div>
-
         <div className="arena-hero">
           <div className="arena-hero-overlay">
             <h1 className="arena-hero-title"><span>ARENA</span>27</h1>
