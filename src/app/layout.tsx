@@ -15,17 +15,14 @@ export default function RootLayout({
     <html lang="id">
       <body className="min-h-screen bg-gray-100 font-sans flex flex-col">
         
-        {/* HEADER DENGAN LOGO ARENA27 SUPER BESAR */}
+        {/* HEADER DENGAN LOGO TEKS ARENA27 WARNA ORANGE */}
         <header className="bg-slate-900 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-50">
           
-          {/* Logo Arena27 - SUPER BESAR + Efek Hover */}
+          {/* Logo Teks Arena27 - Warna Orange Keren + Efek Hover */}
           <a href="/" className="flex items-center gap-2 group">
-            <img 
-              src="/arena27-logo.png" 
-              alt="Arena27 Logo" 
-              // PERUBAHAN DI SINI: Ukuran super besar + margin kiri + efek hover
-              className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain ml-2 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-1" 
-            />
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-orange-500 drop-shadow-lg tracking-tight transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-1">
+              ARENA<span className="text-white">27</span>
+            </h1>
           </a>
 
           {/* Navigasi Kategori (Hidden di HP kecil) */}
