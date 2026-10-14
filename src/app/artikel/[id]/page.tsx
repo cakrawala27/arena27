@@ -22,12 +22,15 @@ async function getArticle(id: string) {
     const data = await res.json();
     return data && data.length > 0 ? data[0] : null;
   } catch (e) {
+    console.error('Error fetching article:', e);
     return null;
   }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const article = await getArticle(params.id);
+// FIX: params adalah Promise di Next.js 14+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const article = await getArticle(id);
   
   if (!article) {
     return {
@@ -37,9 +40,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 
   const finalImage = article.image || FALLBACK_IMG;
-  const description = article.meta_description || (article.content || '').substring(0, 160) + '...';
+  const description = article.meta_description || (article.content || '').substring(0, 160).replace(/\n/g, ' ') + '...';
   const title = (article.meta_title || article.title) + ' - Arena27';
   const articleUrl = SITE_URL + '/artikel/' + article.id;
+
+  console.log('🔍 generateMetadata running for:', id);
+  console.log('🔍 Image:', finalImage);
+  console.log('🔍 Title:', title);
 
   return {
     title: title,
@@ -78,9 +85,11 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function ArticlePage({ params }: { params: { id: string } }) {
-  const article = await getArticle(params.id);
-  const articleUrl = SITE_URL + '/artikel/' + params.id;
+// FIX: params adalah Promise di Next.js 14+
+export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const article = await getArticle(id);
+  const articleUrl = SITE_URL + '/artikel/' + id;
 
   if (!article) {
     return (
