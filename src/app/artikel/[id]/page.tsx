@@ -8,7 +8,7 @@ export default function ArticlePage() {
   const router = useRouter();
   const [article, setArticle] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [showShare, setShowShare] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -21,36 +21,66 @@ export default function ArticlePage() {
         if (data && data.length > 0) {
           const a = data[0];
           setArticle(a);
+          
+          const finalImage = a.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
+          const description = (a.content || '').substring(0, 160) + '...';
+          const articleUrl = 'https://arena27-psi.vercel.app/artikel/' + a.id;
+          
+          // Set title
           document.title = a.title + ' - Arena27';
-          // Set meta description
-          let desc = document.querySelector('meta[name="description"]');
-          if (!desc) {
-            desc = document.createElement('meta');
-            desc.setAttribute('name', 'description');
-            document.head.appendChild(desc);
-          }
-          desc.setAttribute('content', (a.content || '').substring(0, 160) + '...');
-          // Set og tags
-          const setMeta = (prop, content) => {
-            let el = document.querySelector('meta[property="' + prop + '"]');
+          
+          // Helper function buat set meta
+          const setMeta = (type, name, content) => {
+            let selector = type === 'property' ? 'meta[property="' + name + '"]' : 'meta[name="' + name + '"]';
+            let el = document.querySelector(selector);
             if (!el) {
               el = document.createElement('meta');
-              el.setAttribute('property', prop);
+              el.setAttribute(type, name);
               document.head.appendChild(el);
             }
             el.setAttribute('content', content);
           };
-          setMeta('og:title', a.title);
-          setMeta('og:description', (a.content || '').substring(0, 160) + '...');
-          setMeta('og:image', a.image || '');
-          setMeta('og:url', 'https://arena27-psi.vercel.app/artikel/' + a.id);
-          setMeta('og:type', 'article');
+          
+          // META TAGS LENGKAP BUAT SHARE (BIAR GAMBAR MUNCUL!)
+          setMeta('name', 'description', description);
+          setMeta('property', 'og:title', a.title);
+          setMeta('property', 'og:description', description);
+          setMeta('property', 'og:image', finalImage);
+          setMeta('property', 'og:image:secure_url', finalImage);
+          setMeta('property', 'og:image:type', 'image/jpeg');
+          setMeta('property', 'og:image:width', '1200');
+          setMeta('property', 'og:image:height', '630');
+          setMeta('property', 'og:url', articleUrl);
+          setMeta('property', 'og:type', 'article');
+          setMeta('property', 'og:site_name', 'Arena27');
+          setMeta('property', 'og:locale', 'id_ID');
+          
+          // TWITTER CARD
+          setMeta('name', 'twitter:card', 'summary_large_image');
+          setMeta('name', 'twitter:title', a.title);
+          setMeta('name', 'twitter:description', description);
+          setMeta('name', 'twitter:image', finalImage);
+          
+          // CANONICAL
+          let canonical = document.querySelector('link[rel="canonical"]');
+          if (!canonical) {
+            canonical = document.createElement('link');
+            canonical.setAttribute('rel', 'canonical');
+            document.head.appendChild(canonical);
+          }
+          canonical.setAttribute('href', articleUrl);
         }
       } catch (e) { console.error(e); }
       setLoading(false);
     };
     if (id) fetchArticle();
   }, [id]);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (loading) {
     return (
@@ -74,6 +104,10 @@ export default function ArticlePage() {
     );
   }
 
+  const shareUrl = window.location.href;
+  const shareText = article.title + ' - Arena27';
+  const shareImage = article.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
+
   return (
     <div style={{background: '#0a0a0a', minHeight: '100vh', color: '#fff', fontFamily: 'system-ui, -apple-system, sans-serif'}}>
       <style>{`
@@ -90,7 +124,42 @@ export default function ArticlePage() {
         .article-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
         .article-category { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #e53935; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; align-self: flex-start; }
         .article-title { font-size: 32px; font-weight: 900; color: #fff; line-height: 1.2; margin: 0 0 12px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-        .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
+        .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; margin-bottom: 16px; }
+
+        /* TOMBOL SHARE INLINE (DI BAWAH TANGGAL) */
+        .share-section { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .share-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+        .share-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+        .share-btn { 
+          display: inline-flex; 
+          align-items: center; 
+          gap: 8px; 
+          padding: 10px 16px; 
+          border-radius: 10px; 
+          text-decoration: none; 
+          font-size: 12px; 
+          font-weight: 700; 
+          color: #fff; 
+          border: none; 
+          cursor: pointer; 
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          flex: 1;
+          min-width: 110px;
+          justify-content: center;
+        }
+        .share-btn:hover { transform: translateY(-2px); }
+        .share-btn:active { transform: scale(0.96); }
+        .share-wa { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 12px rgba(37,211,102,0.3); }
+        .share-wa:hover { box-shadow: 0 6px 18px rgba(37,211,102,0.5); }
+        .share-fb { background: linear-gradient(135deg, #1877F2, #0C5DC7); box-shadow: 0 4px 12px rgba(24,119,242,0.3); }
+        .share-fb:hover { box-shadow: 0 6px 18px rgba(24,119,242,0.5); }
+        .share-x { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .share-x:hover { box-shadow: 0 6px 18px rgba(255,255,255,0.1); }
+        .share-copy { background: linear-gradient(135deg, #e53935, #b71c1c); box-shadow: 0 4px 12px rgba(229,57,53,0.3); }
+        .share-copy:hover { box-shadow: 0 6px 18px rgba(229,57,53,0.5); }
+        .share-copy.copied { background: linear-gradient(135deg, #10b981, #047857); }
+        .share-icon { font-size: 16px; line-height: 1; }
+
         .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
         .article-content p { margin: 0 0 16px 0; }
         .article-footer { background: #0a0a0a; padding: 30px 16px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -101,6 +170,7 @@ export default function ArticlePage() {
         @media (max-width: 600px) {
           .article-hero { height: 280px; }
           .article-title { font-size: 24px; }
+          .share-btn { font-size: 11px; padding: 9px 12px; }
         }
       `}</style>
 
@@ -111,11 +181,52 @@ export default function ArticlePage() {
         </div>
 
         <div className="article-hero">
-          <img src={article.image} alt={article.title} />
+          <img src={article.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80'} alt={article.title} />
           <div className="article-hero-overlay">
             <span className="article-category">{article.category}</span>
             <h1 className="article-title">{article.title}</h1>
             <div className="article-meta">📅 {new Date(article.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} · Arena27</div>
+
+            {/* TOMBOL SHARE INLINE DI BAWAH TANGGAL */}
+            <div className="share-section">
+              <span className="share-label">Bagikan Artikel Ini</span>
+              <div className="share-buttons">
+                <a 
+                  href={'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl)} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="share-btn share-wa"
+                >
+                  <span className="share-icon">📱</span>
+                  <span>WhatsApp</span>
+                </a>
+                <a 
+                  href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl)} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="share-btn share-fb"
+                >
+                  <span className="share-icon">📘</span>
+                  <span>Facebook</span>
+                </a>
+                <a 
+                  href={'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl)} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="share-btn share-x"
+                >
+                  <span className="share-icon">𝕏</span>
+                  <span>Twitter</span>
+                </a>
+                <button 
+                  onClick={handleCopyLink}
+                  className={'share-btn share-copy' + (copied ? ' copied' : '')}
+                >
+                  <span className="share-icon">{copied ? '✓' : '🔗'}</span>
+                  <span>{copied ? 'Tersalin!' : 'Salin Link'}</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -124,30 +235,6 @@ export default function ArticlePage() {
             <p key={idx}>{para}</p>
           ))}
         </div>
-      </div>
-
-
-      {/* TOMBOL SHARE MELAYANG */}
-      <div style={{position: 'fixed', bottom: 24, right: 24, zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10}}>
-        {showShare && article && (
-          <div style={{background: '#1e1e1e', borderRadius: 12, padding: 10, display: 'flex', flexDirection: 'column', gap: 8, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', minWidth: 160}}>
-            <a href={"https://wa.me/?text=" + encodeURIComponent(article.title + " " + window.location.href)} target="_blank" style={{color: '#fff', textDecoration: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#25D366', fontWeight: 700, transition: 'transform 0.1s'}}>
-              <span>📱</span> WhatsApp
-            </a>
-            <a href={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href)} target="_blank" style={{color: '#fff', textDecoration: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#1877F2', fontWeight: 700}}>
-              <span>📘</span> Facebook
-            </a>
-            <a href={"https://twitter.com/intent/tweet?text=" + encodeURIComponent(article.title) + "&url=" + encodeURIComponent(window.location.href)} target="_blank" style={{color: '#fff', textDecoration: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#000', fontWeight: 700, border: '1px solid rgba(255,255,255,0.2)'}}>
-              <span>🐦</span> Twitter/X
-            </a>
-            <button onClick={() => { navigator.clipboard.writeText(window.location.href); alert('Link berhasil disalin!'); }} style={{color: '#fff', border: 'none', fontSize: 13, padding: '10px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10, background: '#e53935', cursor: 'pointer', fontWeight: 700}}>
-              <span>🔗</span> Salin Link
-            </button>
-          </div>
-        )}
-        <button onClick={() => setShowShare(!showShare)} style={{width: 60, height: 60, borderRadius: '50%', background: '#e53935', color: '#fff', border: 'none', fontSize: 26, boxShadow: '0 6px 20px rgba(229,57,53,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s'}}>
-          {showShare ? '✕' : '🔗'}
-        </button>
       </div>
 
       <footer className="article-footer">
