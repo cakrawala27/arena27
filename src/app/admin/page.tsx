@@ -1,121 +1,112 @@
 ﻿// src/app/admin/page.tsx
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 
 export default function AdminDashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       
-      {/* OVERLAY UNTUK MOBILE */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      {/* HEADER ATAS */}
+      <header className="bg-slate-900 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-50">
+        <Link href="/" className="flex items-center gap-2">
+          <h1 className="text-2xl font-black text-orange-500">ARENA<span className="text-white">27</span></h1>
+        </Link>
+        <span className="text-sm text-slate-400 hidden sm:block">Admin Panel</span>
+      </header>
 
-      {/* SIDEBAR NAVIGASI - HANYA SATU INI YANG BOLEH ADA */}
-      <aside 
-        className={`
-          fixed top-0 left-0 h-full w-64 bg-slate-900 text-white z-50 transform transition-transform duration-300 ease-in-out shadow-xl
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          md:relative md:translate-x-0 md:w-64 md:shadow-none
-        `}
-      >
-        <div className="p-4 border-b border-slate-700 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-orange-500">Arena27 Admin</h2>
-          <button 
-            onClick={() => setIsSidebarOpen(false)}
-            className="md:hidden text-white hover:text-orange-500 text-2xl"
-          >
-            ✕
-          </button>
+      {/* KONTEN UTAMA */}
+      <main className="flex-1 p-4 pb-20"> {/* pb-20 biar konten nggak ketutup bottom nav */}
+        <div className="max-w-4xl mx-auto space-y-6">
+          
+          {/* WELCOME CARD */}
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Welcome back, Admin! 👋</h1>
+            <p className="text-slate-600">Kelola konten portal berita Arena27 dengan mudah.</p>
+          </div>
+
+          {/* STATS CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white rounded-xl shadow-sm p-5 border-l-4 border-orange-500">
+              <h3 className="text-xs font-bold text-slate-400 uppercase">Total Articles</h3>
+              <p className="text-3xl font-black text-slate-900 mt-1">12</p>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-500">
+              <h3 className="text-xs font-bold text-slate-400 uppercase">Categories</h3>
+              <p className="text-3xl font-black text-slate-900 mt-1">5</p>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-500">
+              <h3 className="text-xs font-bold text-slate-400 uppercase">Published Today</h3>
+              <p className="text-3xl font-black text-slate-900 mt-1">3</p>
+            </div>
+          </div>
+
+          {/* QUICK ACTIONS */}
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link href="/admin/articles/new" className="block p-4 rounded-lg bg-orange-500 text-white text-center font-medium hover:bg-orange-600 transition">
+                ➕ Write New Article
+              </Link>
+              <Link href="/admin/categories" className="block p-4 rounded-lg bg-slate-100 text-slate-900 text-center font-medium hover:bg-slate-200 transition">
+                📁 Manage Categories
+              </Link>
+            </div>
+          </div>
+
         </div>
+      </main>
 
-        <nav className="p-4 space-y-2">
+      {/* BOTTOM NAVIGATION (MOBILE ONLY) */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-50">
+        <div className="flex justify-around py-2">
+          <Link href="/admin" className="flex flex-col items-center p-2 text-orange-500">
+            <span className="text-xl">📊</span>
+            <span className="text-xs mt-1">Dashboard</span>
+          </Link>
+          <Link href="/admin/articles" className="flex flex-col items-center p-2 text-slate-500 hover:text-orange-500">
+            <span className="text-xl">📝</span>
+            <span className="text-xs mt-1">Articles</span>
+          </Link>
+          <Link href="/admin/articles/new" className="flex flex-col items-center p-2 text-slate-500 hover:text-orange-500">
+            <span className="text-xl">➕</span>
+            <span className="text-xs mt-1">Add New</span>
+          </Link>
+          <Link href="/admin/categories" className="flex flex-col items-center p-2 text-slate-500 hover:text-orange-500">
+            <span className="text-xl">📁</span>
+            <span className="text-xs mt-1">Categories</span>
+          </Link>
+        </div>
+      </nav>
+
+      {/* DESKTOP SIDEBAR (OPTIONAL - HANYA DI DESKTOP) */}
+      <aside className="hidden md:block fixed top-0 left-0 h-full w-64 bg-slate-900 text-white p-4 shadow-xl">
+        <h2 className="text-xl font-bold text-orange-500 mb-6">Arena27 Admin</h2>
+        <nav className="space-y-2">
           <Link href="/admin" className="block p-3 rounded-lg bg-orange-500 text-white font-medium">
-             Dashboard
+            📊 Dashboard
           </Link>
           <Link href="/admin/articles" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-             Articles
+            📝 Articles
           </Link>
           <Link href="/admin/articles/new" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-             Add New Article
+            ➕ Add New Article
           </Link>
           <Link href="/admin/categories" className="block p-3 rounded-lg hover:bg-slate-800 transition">
             📁 Categories
           </Link>
           <Link href="/admin/tags" className="block p-3 rounded-lg hover:bg-slate-800 transition">
-            ️ Tags
+            🏷️ Tags
           </Link>
           <Link href="/" className="block p-3 rounded-lg hover:bg-slate-800 transition mt-8 border-t border-slate-700 pt-4">
-             View Site
+            🌐 View Site
           </Link>
         </nav>
       </aside>
 
-      {/* KONTEN UTAMA */}
-      <main className="flex-1 flex flex-col min-h-screen w-full">
-        
-        {/* HEADER MOBILE DENGAN HAMBURGER MENU */}
-        <header className="bg-white shadow-sm p-4 flex items-center justify-between md:hidden sticky top-0 z-30">
-          <button 
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-slate-900 text-2xl focus:outline-none"
-          >
-            
-          </button>
-          <h1 className="text-lg font-bold text-slate-900">Admin Dashboard</h1>
-          <div className="w-8"></div>
-        </header>
+      {/* SPACER UNTUK DESKTOP SIDEBAR */}
+      <div className="hidden md:block w-64"></div>
 
-        {/* ISI DASHBOARD */}
-        <div className="flex-1 p-4 md:p-8">
-          <div className="max-w-4xl mx-auto">
-            
-            {/* WELCOME CARD */}
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Welcome back, Admin! 👋</h1>
-              <p className="text-slate-600">Kelola konten portal berita Arena27 dengan mudah.</p>
-            </div>
-
-            {/* STATS CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500">
-                <h3 className="text-sm font-medium text-slate-500 uppercase">Total Articles</h3>
-                <p className="text-3xl font-bold text-slate-900 mt-2">12</p>
-              </div>
-              <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
-                <h3 className="text-sm font-medium text-slate-500 uppercase">Categories</h3>
-                <p className="text-3xl font-bold text-slate-900 mt-2">5</p>
-              </div>
-              <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
-                <h3 className="text-sm font-medium text-slate-500 uppercase">Published Today</h3>
-                <p className="text-3xl font-bold text-slate-900 mt-2">3</p>
-              </div>
-            </div>
-
-            {/* QUICK ACTIONS */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Link href="/admin/articles/new" className="block p-4 rounded-lg bg-orange-500 text-white text-center font-medium hover:bg-orange-600 transition">
-                  ➕ Write New Article
-                </Link>
-                <Link href="/admin/categories" className="block p-4 rounded-lg bg-slate-100 text-slate-900 text-center font-medium hover:bg-slate-200 transition">
-                  📁 Manage Categories
-                </Link>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </main>
     </div>
   );
 }
