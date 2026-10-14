@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
-const CATEGORY_TREE = {
+const CATEGORY_TREE: Record<string, string[]> = {
   'Sepakbola': ['Premier League', 'Serie A', 'La Liga', 'Bundesliga', 'Liga Champions', 'FA Cup', 'Liga Indonesia', 'Piala Dunia'],
   'Basket': ['NBA', 'EuroLeague', 'ABL', 'DBL', 'Piala Dunia Basket'],
   'Sport': ['MotoGP', 'F1', 'Tour de France', 'Olimpiade', 'Atletik', 'Renang', 'Tinju', 'MMA', 'UFC'],
@@ -12,13 +12,10 @@ const CATEGORY_TREE = {
   'Mata Dunia': ['Teknologi', 'Opini', 'Politik', 'Ekonomi', 'Hiburan', 'Gaya Hidup', 'Otomotif', 'Travel'],
   'Publik Arena': ['Berita Utama', 'Wawancara', 'Analisis', 'Feature', 'Investigasi']
 };
-
 const MAIN_CATEGORIES = Object.keys(CATEGORY_TREE);
-const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1522778119026-d647f0596081?w=800';
-
 
 export default function EditArticlePage() {
-  const params = useParams();
+  const params: any = useParams();
   const id = params ? String(params.id) : '';
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
@@ -37,11 +34,9 @@ export default function EditArticlePage() {
       const { data } = await supabase.from('articles').select('*').eq('id', id).single();
       if (data) {
         setTitle(data.title);
-        
         const parts = data.category.split(' - ');
         const main = parts[0];
         const sub = parts[1];
-        
         if (MAIN_CATEGORIES.includes(main)) {
           setMainCategory(main);
           setUseCustomMain(false);
@@ -56,7 +51,6 @@ export default function EditArticlePage() {
           setUseCustomMain(true);
           setCustomMainCategory(main);
         }
-        
         setImageUrl(data.image);
         setContent(data.content);
       }
@@ -65,12 +59,11 @@ export default function EditArticlePage() {
     if (id) fetchArticle();
   }, [id]);
 
-  const handleSave = async (e) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     let finalMain = useCustomMain ? (customMainCategory || 'Lainnya') : mainCategory;
     let finalSub = useCustomSub ? (customSubCategory || '') : subCategory;
     let finalCategory = finalSub ? finalMain + ' - ' + finalSub : finalMain;
-    
     const { error } = await supabase.from('articles').update({ title, category: finalCategory, image: imageUrl, content }).eq('id', id);
     if (!error) { alert('Tersimpan di cloud!'); router.push('/admin/articles'); }
   };
@@ -82,7 +75,6 @@ export default function EditArticlePage() {
       <h1 className="text-2xl font-black text-slate-900 mb-6">✏️ Edit Berita</h1>
       <form onSubmit={handleSave} className="bg-white rounded-xl shadow-sm p-6 space-y-5 border border-gray-100">
         <div><label className="block text-sm font-bold text-slate-700 mb-2">Judul</label><input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none" /></div>
-        
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2">Kategori Utama</label>
           <select value={useCustomMain ? 'Lainnya' : mainCategory} onChange={(e) => {
@@ -96,7 +88,6 @@ export default function EditArticlePage() {
             <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
           )}
         </div>
-
         {!useCustomMain && mainCategory && (
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
@@ -112,7 +103,6 @@ export default function EditArticlePage() {
             )}
           </div>
         )}
-
         <div><label className="block text-sm font-bold text-slate-700 mb-2">Link Gambar (Opsional)</label><input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none text-sm" />{imageUrl && <img src={imageUrl} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />}</div>
         <div><label className="block text-sm font-bold text-slate-700 mb-2">Isi Berita</label><textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none resize-y" /></div>
         <div className="flex gap-3">
