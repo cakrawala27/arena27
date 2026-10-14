@@ -23,10 +23,10 @@ export default function ArticlePage() {
           setArticle(a);
           
           const finalImage = a.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
-          const description = (a.content || '').substring(0, 160) + '...';
+          const description = a.meta_description || (a.content || '').substring(0, 160) + '...';
           const articleUrl = 'https://arena27-psi.vercel.app/artikel/' + a.id;
           
-          document.title = a.title + ' - Arena27';
+          document.title = (a.meta_title || a.title) + ' - Arena27';
           
           const setMeta = (type, name, content) => {
             let selector = type === 'property' ? 'meta[property="' + name + '"]' : 'meta[name="' + name + '"]';
@@ -40,7 +40,7 @@ export default function ArticlePage() {
           };
           
           setMeta('name', 'description', description);
-          setMeta('property', 'og:title', a.title);
+          setMeta('property', 'og:title', a.meta_title || a.title);
           setMeta('property', 'og:description', description);
           setMeta('property', 'og:image', finalImage);
           setMeta('property', 'og:image:secure_url', finalImage);
@@ -52,7 +52,7 @@ export default function ArticlePage() {
           setMeta('property', 'og:site_name', 'Arena27');
           setMeta('property', 'og:locale', 'id_ID');
           setMeta('name', 'twitter:card', 'summary_large_image');
-          setMeta('name', 'twitter:title', a.title);
+          setMeta('name', 'twitter:title', a.meta_title || a.title);
           setMeta('name', 'twitter:description', description);
           setMeta('name', 'twitter:image', finalImage);
           
