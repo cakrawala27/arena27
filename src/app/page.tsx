@@ -358,7 +358,7 @@ export default function HomePage() {
           transform: scale(0); 
           animation: arenaRipple 0.55s linear; 
         }
-        @keyframes arenaRipple { to { transform: scale(4); opacity: 0; } }
+         }
 
         .arena-card-body { flex: 1; min-width: 0; z-index: 1; }
         .arena-card-title { 
@@ -443,7 +443,7 @@ export default function HomePage() {
           border-radius: 50%; 
           animation: spin 0.8s linear infinite; 
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+         }
 
         .arena-empty { 
           text-align: center; 
@@ -472,11 +472,23 @@ export default function HomePage() {
           .arena-card-title { font-size: 11px; }
           .arena-featured-title { font-size: 15px; }
         }
-      `}</style>
+      `}
+        /* NUCLEAR FORCE - DISABLE SEMUA ANIMASI DI HEADER */
+        .arena-topbar, .arena-topbar * { 
+          animation: none !important; 
+          transform: none !important; 
+          transition: none !important; 
+          position: static !important;
+        }
+        .arena-topbar:hover, .arena-topbar:active, .arena-topbar:focus {
+          animation: none !important;
+          transform: none !important;
+        }
+      </style>
 
       <div className="arena-wrap">
         {/* HEADER DIAM PERMANEN - TIDAK ADA STICKY/FIXED */}
-        <div className="arena-topbar" style={{position: "static", top: "auto", zIndex: "auto"}}>
+        <div className="arena-topbar" style={{position: "static", top: "auto", zIndex: "auto"}} style={{position: "static", top: "auto", left: "auto", right: "auto", transform: "none", animation: "none", transition: "none"}}>
           <span onClick={handleLogoClick} className="arena-topbar-logo">
             <span>ARENA</span>27
             {clickCount > 0 && clickCount < 5 && <span className="arena-topbar-counter">{clickCount}/5</span>}
