@@ -17,8 +17,7 @@ export default function HomePage() {
   const clickTimer = useRef(null);
   const audioCtx = useRef(null);
 
-  const POSTS_PER_PAGE = 20;
-  const totalPages = Math.max(1, Math.ceil(totalCount / POSTS_PER_PAGE));
+  const POSTS_PER_PAGE = 6;
   const featured = currentPage === 1 ? articles.slice(0, 3) : [];
   const regular = currentPage === 1 ? articles.slice(3) : articles;
 
@@ -567,7 +566,7 @@ export default function HomePage() {
               <>
                 <div className="arena-list-hd">
                   <span className="arena-list-bar"></span>
-                  <span className="arena-list-lbl">{currentPage === 1 ? 'Berita Lainnya' : 'Berita Terbaru'}</span>
+                  <span className="arena-list-lbl">{'Berita Terbaru Lainnya'}</span>
                   <span className="arena-list-count">{regular.length} artikel</span>
                 </div>
                 <div className="arena-list">
@@ -598,17 +597,7 @@ export default function HomePage() {
               </>
             )}
 
-            {totalPages > 1 && (
-              <div className="arena-pagination">
-                {currentPage > 1 ? (
-                  <button onClick={function(){ setCurrentPage(currentPage - 1); }} className="arena-page-btn">‹ Sebelumnya</button>
-                ) : <span className="arena-page-ghost"></span>}
-                <span className="arena-page-info">Hal {currentPage} dari {totalPages}</span>
-                {currentPage < totalPages ? (
-                  <button onClick={function(){ setCurrentPage(currentPage + 1); }} className="arena-page-btn">Selanjutnya ›</button>
-                ) : <span className="arena-page-ghost"></span>}
-              </div>
-            )}
+            
           </>
         )}
       </div>
