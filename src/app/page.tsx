@@ -84,14 +84,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 pt-6">
-        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 md:p-8 rounded-2xl shadow-xl">
-          <span className="inline-block bg-orange-500 text-xs font-bold px-3 py-1 rounded-full uppercase">Headline</span>
-          <h2 className="text-2xl md:text-4xl font-black mt-4 mb-2">Arena27 Sport Portal 🏟️</h2>
-          <p className="text-slate-300 text-sm md:text-base">Portal berita sport global tersinkronisasi via Cloud. Update real-time dari seluruh dunia.</p>
-        </div>
-      </div>
-
+      {/* DAFTAR BERITA - LANGSUNG DI BAWAH HEADER (HEADLINE DIHAPUS) */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         {loading ? (
           <div className="text-center py-20 text-slate-500">
