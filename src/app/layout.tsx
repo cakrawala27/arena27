@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
+export const metadata = {
+  metadataBase: new URL('${SITE_URL}'),
   title: "Arena27 - Portal Berita Sport",
   description: "Portal berita sport terlengkap",
 };
