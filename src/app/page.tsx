@@ -207,7 +207,10 @@ export default function HomePage() {
           .kbs-card-title { font-size: 11px; }
           .kbs-featured-title { font-size: 15px; }
         }
-      `}</style>
+      `}
+        /* FORCE NON-STICKY - OVERRIDE CACHE */
+        .kbs-topbar { position: static !important; top: auto !important; z-index: auto !important; }
+      </style>
 
       <div className="kbs-wrap">
         {/* TOPBAR - TIDAK STICKY, CUMA LOGO ARENA27 DI KANAN */}
