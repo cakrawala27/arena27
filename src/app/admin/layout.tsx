@@ -1,37 +1,42 @@
-﻿import Link from 'next/link';
+﻿'use client';
+
+import Link from 'next/link';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Fungsi paksa buka tab baru ke URL utama
+  const openWebsite = () => {
+    if (typeof window !== 'undefined') {
+      window.open(window.location.origin, '_blank');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 pb-24 flex flex-col">
       
       {/* HEADER ADMIN GLOBAL */}
       <header className="bg-slate-900 text-white p-3 flex items-center justify-between shadow-md sticky top-0 z-50 px-4">
         
-        {/* TOMBOL KIRI: Kembali ke Dashboard Admin (Tetap pakai Link Next.js) */}
         <Link href="/admin" className="flex items-center gap-1 text-sm font-bold text-orange-500 hover:text-orange-400 transition active:scale-95">
           <span className="text-xl leading-none">←</span>
           <span className="hidden sm:inline">Dashboard</span>
         </Link>
 
-        {/* LOGO TENGAH */}
         <h1 className="text-xl font-black text-orange-500 tracking-tight">
           ARENA<span className="text-white">27</span>
         </h1>
 
-        {/* TOMBOL KANAN: Ke Website Utama (PAKAI <a> BIASA BIAR GA NYASAR!) */}
-        <a 
-          href="/" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="flex items-center gap-1 text-sm font-bold text-slate-300 hover:text-white transition active:scale-95"
+        {/* TOMBOL WEBSITE PAKAI JAVASCRIPT MURNI */}
+        <button
+          onClick={openWebsite}
+          className="flex items-center gap-1 text-sm font-bold text-slate-300 hover:text-white transition active:scale-95 bg-transparent border-none cursor-pointer p-0"
         >
           <span className="hidden sm:inline">Website</span>
           <span className="text-lg leading-none">🌐</span>
-        </a>
+        </button>
 
       </header>
 
