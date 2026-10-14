@@ -7,7 +7,6 @@ const SITE_URL = 'https://arena27-psi.vercel.app';
 const SUPABASE_URL = 'https://pagsqpfcclokiypgwrwb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZ3NxcGZjY2xva2l5cGd3cndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NzgzNDUsImV4cCI6MjEwNzQ1NDM0NX0.ZOnL15cYLR43leQPaR143Q8OwAVeWqC99JO8NO7DeTc';
 
-// FETCH DATA DI SERVER (SSR)
 async function getArticle(id: string) {
   try {
     const res = await fetch(
@@ -27,7 +26,6 @@ async function getArticle(id: string) {
   }
 }
 
-// GENERATE METADATA DI SERVER (INI KUNCI SEO!)
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const article = await getArticle(params.id);
   
@@ -76,17 +74,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     robots: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
     },
   };
 }
 
-// HALAMAN ARTIKEL (SERVER COMPONENT)
 export default async function ArticlePage({ params }: { params: { id: string } }) {
   const article = await getArticle(params.id);
   const articleUrl = SITE_URL + '/artikel/' + params.id;
@@ -125,7 +116,6 @@ export default async function ArticlePage({ params }: { params: { id: string } }
         .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
         .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
         .article-content p { margin: 0 0 16px 0; }
-
         .share-section-bottom { padding: 30px 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.08); }
         .share-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; display: block; }
         .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -148,7 +138,6 @@ export default async function ArticlePage({ params }: { params: { id: string } }
         .share-copy:hover { box-shadow: 0 6px 18px rgba(229,57,53,0.5); }
         .share-copy.copied { background: linear-gradient(135deg, #10b981, #047857); }
         .share-icon { font-size: 18px; line-height: 1; }
-
         .article-footer { background: #0a0a0a; padding: 30px 16px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
         .article-footer-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; }
         .article-footer-title span { color: #e53935; }
