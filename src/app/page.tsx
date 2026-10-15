@@ -592,20 +592,7 @@ export default function HomePage() {
                           <span className="arena-card-meta">
                             <span>{formatDate(item.created_at)}</span>
 
-                  {/* Tombol Buka Semua Berita */}
-                  <Link href="/artikel" className="inline-block mt-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3 px-8 rounded-lg shadow-lg hover:shadow-orange-500/50 transition-all duration-300 transform hover:scale-105 text-center"
-                    style={{ 
-                      fontFamily: "system-ui, -apple-system, sans-serif",
-                      letterSpacing: '0.5px',
-                      textTransform: 'uppercase',
-                      fontSize: '14px',
-                      fontWeight: 800
-                    }}
-                  >
-                    BUKA SEMUA BERITA →
-                  </Link>
-
-                            <span style={{color:'rgba(255,255,255,0.2)'}}>Â·</span>
+                  <span style={{color:'rgba(255,255,255,0.2)'}}>Â·</span>
                             <span className="arena-card-subcat">{item.category}</span>
                           </span>
                         </span>
@@ -623,6 +610,32 @@ export default function HomePage() {
             
           </>
         )}
+      </div>
+
+      
+      {/* Tombol Buka Semua Berita - satu saja, setelah daftar artikel */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 20px 30px' }}>
+        <Link
+          href="/artikel"
+          style={{
+            background: 'linear-gradient(90deg, #ff6b00 0%, #ff8c33 100%)',
+            color: '#ffffff',
+            fontWeight: 800,
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            fontSize: '14px',
+            padding: '14px 28px',
+            borderRadius: '10px',
+            boxShadow: '0 6px 18px rgba(255,107,0,0.35)',
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontFamily: 'system-ui, -apple-system, sans-serif'
+          }}
+        >
+          Buka Semua Berita <span aria-hidden="true">→</span>
+        </Link>
       </div>
 
       <footer className="arena-footer">
