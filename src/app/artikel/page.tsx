@@ -1,48 +1,72 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
-export default function ArticleDetailPage() {
-  const [article, setArticle] = useState<any>(null);
-  const [loaded, setLoaded] = useState(false);
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&q=60';
+
+function formatDate(dateString) {
+  if (!dateString) return '';
+  const d = new Date(dateString);
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+export default function SemuaBeritaPage() {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const id = new URLSearchParams(window.location.search).get('id');
-      const stored = localStorage.getItem('arena27_articles');
-      if (stored && id) {
-        const found = JSON.parse(stored).find((a: any) => String(a.id) === id);
-        setArticle(found || null);
-      }
-    } catch (e) {}
-    setLoaded(true);
+    const fetchAll = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false })
+        .range(0, 99);
+      if (data) setArticles(data);
+      setLoading(false);
+    };
+    fetchAll();
   }, []);
 
-  if (!loaded) return <div className="p-10 text-center text-slate-500">Memuat berita...</div>;
-
-  if (!article) {
-    return (
-      <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-sm text-center">
-        <h1 className="text-xl font-black text-slate-900 mb-2">Berita tidak ditemukan 😕</h1>
-        <Link href="/" className="text-orange-500 font-bold">← Kembali ke Beranda</Link>
-      </div>
-    );
-  }
-
   return (
-    <article className="max-w-3xl mx-auto p-4">
-      {article.image && <img src={article.image} alt={article.title} className="w-full h-64 md:h-96 object-cover rounded-2xl shadow-lg mb-6" />}
-      <span className="inline-block bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
-        {article.category}{article.subcategory ? ' • ' + article.subcategory : ''}
-      </span>
-      <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-4 leading-tight">{article.title}</h1>
-      <div className="whitespace-pre-line text-slate-700 text-base md:text-lg leading-relaxed bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        {article.content}
+    <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ffffff', fontFamily: 'system-ui, -apple-system, sans-serif', padding: '24px 16px 60px' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '1px', margin: 0 }}>
+            <span style={{ color: '#ff6b00' }}>SEMUA</span> BERITA
+          </h1>
+          <Link href="/" style={{ color: '#ff6b00', textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>← Kembali ke Beranda</Link>
+        </div>
+        <p style={{ color: '#9ca3af', fontSize: 13, marginBottom: 24 }}>{articles.length} artikel diterbitkan</p>
+
+        {loading ? (
+          <p style={{ color: '#9ca3af', fontSize: 14, textAlign: 'center', padding: 40 }}>Memuat semua berita...</p>
+        ) : articles.length === 0 ? (
+          <p style={{ color: '#9ca3af', fontSize: 14, textAlign: 'center', padding: 40 }}>Belum ada berita yang diterbitkan.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {articles.map(function (item) {
+              return (
+                <Link key={item.id} href={'/artikel/' + item.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ display: 'flex', gap: 14, background: '#161616', border: '1px solid #262626', borderLeft: '4px solid #ff6b00', borderRadius: 12, padding: 14, alignItems: 'center' }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 8, lineHeight: 1.4 }}>{item.title}</div>
+                      <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: 11, color: '#9ca3af' }}>{formatDate(item.created_at)}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', background: '#ff6b00', color: '#ffffff', padding: '4px 10px', borderRadius: 6 }}>{item.category}</span>
+                      </div>
+                    </div>
+                    <img src={item.image || FALLBACK_IMG} alt={item.title} style={{ width: 84, height: 64, objectFit: 'cover', borderRadius: 8 }} onError={function (e) { e.currentTarget.src = FALLBACK_IMG; }} />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
-      <div className="mt-6">
-        <Link href="/" className="text-orange-500 font-bold">← Kembali ke Beranda</Link>
-      </div>
-    </article>
+    </div>
   );
 }
