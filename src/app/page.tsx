@@ -524,7 +524,7 @@ export default function HomePage() {
 
         {activeFilter !== 'Semua' && (
           <div className="arena-filter-info">
-            ðŸ·ï¸ Filter aktif: <b>{activeFilter}</b> Â· {totalCount} artikel
+            ðŸ·ï¸ Filter aktif: <b>{activeFilter}</b> • {totalCount} artikel
           </div>
         )}
 
@@ -592,7 +592,7 @@ export default function HomePage() {
                           <span className="arena-card-meta">
                             <span>{formatDate(item.created_at)}</span>
 
-                  <span style={{color:'rgba(255,255,255,0.2)'}}>Â·</span>
+                  <span style={{color:'rgba(255,255,255,0.2)'}}>•</span>
                             <span className="arena-card-subcat">{item.category}</span>
                           </span>
                         </span>
@@ -622,7 +622,7 @@ export default function HomePage() {
       
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
-        <div className="arena-footer-text">Â© 2026 Arena27 Sport Portal</div>
+        <div className="arena-footer-text">© 2026 Arena27 Sport Portal</div>
       </footer>
     
   {/* Floating Button: Buka Semua */}
