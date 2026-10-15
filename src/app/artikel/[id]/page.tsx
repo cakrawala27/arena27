@@ -59,7 +59,16 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 
   const finalImage = article.image || FALLBACK_IMG;
-  const description = article.meta_description || (article.content || '').substring(0, 160).replace(/\n/g, ' ') + '...';
+  // PRIORITAS UTAMA: Ambil meta_description dari DB. Kalau kosong, baru fallback.
+  let rawDesc = article.meta_description;
+  
+  // Jika meta_description kosong, ambil dari konten (fallback lama)
+  if (!rawDesc || rawDesc.trim() === '') {
+    rawDesc = (article.content || '').replace(/\n/g, ' ').trim();
+  }
+  
+  // Potong maksimal 155 karakter (standar SEO & WhatsApp) + elipsis
+  const description = rawDesc.length > 155 ? rawDesc.substring(0, 152) + '...' : rawDesc;
   const title = (article.meta_title || article.title) + ' - Arena27';
   const articleUrl = SITE_URL + '/artikel/' + article.id;
 
@@ -86,7 +95,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: article.meta_title || article.title,
-      description: description,
+      description: description, // Pastikan pakai variable description yang sudah dibersihkan
       images: [finalImage],
     },
   };
