@@ -6,6 +6,14 @@ import { supabase } from '@/lib/supabase';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
+
+  <style jsx global>{`
+    html {
+      scroll-behavior: smooth;
+    }
+  `}</style>
+  
+
 export default function HomePage() {
   const router = useRouter();
   const [articles, setArticles] = useState([]);
