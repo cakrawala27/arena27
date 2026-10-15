@@ -1,65 +1,47 @@
+// ️ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+export const runtime = 'nodejs';
+
 import { Metadata } from 'next';
 import Link from 'next/link';
 import ShareButtons from './ShareButtons';
 
-// KONFIGURASI AGRESIF: NO CACHE, NO BULLSHIT
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-export const fetchCache = 'force-no-store';
-
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
 const SITE_URL = 'https://arena27-psi.vercel.app';
-
-// HARDCODE CREDENTIALS (PALING RELIABLE BUAT SERVER-SIDE FETCH)
 const SUPABASE_URL = 'https://pagsqpfcclokiypgwrwb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZ3NxcGZjY2xva2l5cGd3cndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NzgzNDUsImV4cCI6MjEwNzQ1NDM0NX0.ZOnL15cYLR43leQPaR143Q8OwAVeWqC99JO8NO7DeTc';
 
 async function getArticle(id: string) {
-  console.log('🔍 [getArticle] Fetching article:', id);
   try {
-    const url = SUPABASE_URL + '/rest/v1/articles?id=eq.' + id + '&select=*';
-    console.log('🔍 [getArticle] URL:', url);
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/articles?id=eq.' + id + '&select=*',
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: 'Bearer ' + SUPABASE_KEY,
+        },
+        cache: 'no-store',
+        next: { revalidate: 0 },
+      }
+    );
     
-    const res = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: 'Bearer ' + SUPABASE_KEY,
-      },
-      cache: 'no-store',
-      next: { revalidate: 0 },
-    });
-    
-    if (!res.ok) {
-      console.error('❌ [getArticle] Fetch failed:', res.status, res.statusText);
-      return null;
-    }
+    if (!res.ok) return null;
     
     const data = await res.json();
-    console.log('✅ [getArticle] Data received:', data.length, 'rows');
-    
-    if (data && data.length > 0) {
-      console.log('✅ [getArticle] Article found:', data[0].title);
-      return data[0];
-    }
-    
-    console.log('⚠️  [getArticle] No article found');
-    return null;
-  } catch (e: any) {
-    console.error('💥 [getArticle] ERROR:', e.message);
+    return data && data.length > 0 ? data[0] : null;
+  } catch (e) {
+    console.error('Error fetching article:', e);
     return null;
   }
 }
 
-// GENERATE METADATA DENGAN FALLBACK JELAS
 export async function generateMetadata({ params }: any): Promise<Metadata> {
-  console.log('🎯 [generateMetadata] START');
-  
-  // Handle params Promise (Next.js 14+) atau object biasa
   const id = typeof params?.then === 'function' ? (await params).id : params?.id;
-  console.log('🎯 [generateMetadata] Article ID:', id);
   
   if (!id) {
-    console.log('❌ [generateMetadata] No ID, returning default');
     return {
       title: 'Arena27 - Portal Berita Sport',
       description: 'Portal berita sport terlengkap',
@@ -69,24 +51,17 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   const article = await getArticle(id);
   
   if (!article) {
-    console.log('❌ [generateMetadata] Article not found, returning default');
     return {
       title: 'Artikel Tidak Ditemukan - Arena27',
       description: 'Artikel yang Anda cari tidak ditemukan.',
     };
   }
-  
-  // BUILD METADATA LENGKAP
+
   const finalImage = article.image || FALLBACK_IMG;
   const description = article.meta_description || (article.content || '').substring(0, 160).replace(/\n/g, ' ') + '...';
   const title = (article.meta_title || article.title) + ' - Arena27';
   const articleUrl = SITE_URL + '/artikel/' + article.id;
-  
-  console.log('✅ [generateMetadata] FINAL METADATA:');
-  console.log('   Title:', title);
-  console.log('   Image:', finalImage);
-  console.log('   Description:', description.substring(0, 80) + '...');
-  
+
   return {
     title: title,
     description: description,
@@ -99,7 +74,13 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       siteName: 'Arena27',
       locale: 'id_ID',
       type: 'article',
-      images: [{ url: finalImage, width: 1200, height: 630, alt: article.title }],
+      images: [{ 
+        url: finalImage, 
+        width: 1200, 
+        height: 630, 
+        alt: article.title,
+        type: 'image/jpeg'
+      }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -143,7 +124,7 @@ export default async function ArticlePage({ params }: any) {
         .article-hero img { width: 100%; height: 100%; object-fit: cover; }
         .article-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
         .article-category { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #e53935; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; align-self: flex-start; }
-        .article-title { font-size: 32px; font-weight: 900; color: #fff; line-height: 1.2; margin: 0 0 12px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+        .article-title { font-size: 32px; font-weight: 900; color: '#fff'; line-height: 1.2; margin: 0 0 12px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
         .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
         .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
         .article-content p { margin: 0 0 16px 0; }
