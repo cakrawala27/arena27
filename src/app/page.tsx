@@ -591,6 +591,20 @@ export default function HomePage() {
                           <span className="arena-card-title">{item.title}</span>
                           <span className="arena-card-meta">
                             <span>{formatDate(item.created_at)}</span>
+
+                  {/* Tombol Buka Semua Berita */}
+                  <Link href="/artikel" className="inline-block mt-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3 px-8 rounded-lg shadow-lg hover:shadow-orange-500/50 transition-all duration-300 transform hover:scale-105 text-center"
+                    style={{ 
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase',
+                      fontSize: '14px',
+                      fontWeight: 800
+                    }}
+                  >
+                    BUKA SEMUA BERITA →
+                  </Link>
+
                             <span style={{color:'rgba(255,255,255,0.2)'}}>Â·</span>
                             <span className="arena-card-subcat">{item.category}</span>
                           </span>
