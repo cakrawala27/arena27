@@ -70,7 +70,10 @@ export default function EditArticlePage() {
     let finalMain = useCustomMain ? (customMainCategory || 'Lainnya') : mainCategory;
     let finalSub = useCustomSub ? (customSubCategory || '') : subCategory;
     let finalCategory = finalSub ? finalMain + ' - ' + finalSub : finalMain;
-    const { error } = await supabase.from('articles').update({ title, category: finalCategory, image: imageUrl, content }).eq('id', id);
+    const { error } = await supabase.from('articles').update({ title, category: finalCategory, image: imageUrl,
+          meta_title: metaTitle || null,
+          meta_description: metaDescription || null,
+          focus_keyword: focusKeyword || null, content }).eq('id', id);
     if (!error) { alert('Tersimpan di cloud!'); router.push('/admin/articles'); }
   };
 
