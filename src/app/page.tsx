@@ -551,7 +551,7 @@ export default function HomePage() {
                         <img src={item.image || FALLBACK_IMG} alt={item.title} className="arena-featured-img" onError={function(e){ e.currentTarget.src = FALLBACK_IMG; }} />
                         
                         <div className="arena-featured-overlay">
-                          <span className="arena-featured-subcat">{item.category}</span>
+                          <span className="arena-featured-subcat" style={{ backgroundColor: "#ff6b00" }}>{item.category}</span>
                           <div className="arena-featured-title">{item.title}</div>
                           <span className="arena-featured-meta">ðŸ“… {formatDate(item.created_at)}</span>
                         </div>
