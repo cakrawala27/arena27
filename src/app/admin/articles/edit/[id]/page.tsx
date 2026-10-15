@@ -20,6 +20,9 @@ export default function EditArticlePage() {
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [title, setTitle] = useState('');
+  const [metaTitle, setMetaTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
+  const [focusKeyword, setFocusKeyword] = useState('');
   const [mainCategory, setMainCategory] = useState('Sepakbola');
   const [customMainCategory, setCustomMainCategory] = useState('');
   const [useCustomMain, setUseCustomMain] = useState(false);
@@ -52,6 +55,9 @@ export default function EditArticlePage() {
           setCustomMainCategory(main);
         }
         setImageUrl(data.image);
+        setMetaTitle(data.meta_title || '');
+        setMetaDescription(data.meta_description || '');
+        setFocusKeyword(data.focus_keyword || '');
         setContent(data.content);
       }
       setLoaded(true);
@@ -106,7 +112,58 @@ export default function EditArticlePage() {
         <div><label className="block text-sm font-bold text-slate-700 mb-2">Link Gambar (Opsional)</label><input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none text-sm" />{imageUrl && <img src={imageUrl} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />}</div>
         <div><label className="block text-sm font-bold text-slate-700 mb-2">Isi Berita</label><textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none resize-y" /></div>
         <div className="flex gap-3">
-          <button type="submit" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-lg shadow-lg active:scale-95 text-lg">💾 SIMPAN KE CLOUD</button>
+          
+        {/* SEO SETTINGS SECTION */}
+        <div style={{marginTop: 24, padding: 20, background: '#1e1e1e', borderRadius: 12, border: '1px solid rgba(229,57,53,0.2)'}}>
+          <h3 style={{fontSize: 14, fontWeight: 800, color: '#e53935', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8}}>
+            🔍 SEO Settings
+          </h3>
+          
+          <div style={{marginBottom: 16}}>
+            <label style={{display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: 6}}>
+              Meta Title <span style={{color: 'rgba(255,255,255,0.4)', fontWeight: 400}}>(opsional)</span>
+            </label>
+            <input 
+              type="text"
+              value={metaTitle}
+              onChange={(e) => setMetaTitle(e.target.value)}
+              placeholder="Judul khusus untuk Google (max 60 karakter)"
+              maxLength={60}
+              style={{width: '100%', padding: '12px 14px', background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 14, outline: 'none'}}
+            />
+            <div style={{fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4}}>{metaTitle.length}/60 karakter</div>
+          </div>
+
+          <div style={{marginBottom: 16}}>
+            <label style={{display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: 6}}>
+              Meta Description <span style={{color: 'rgba(255,255,255,0.4)', fontWeight: 400}}>(opsional)</span>
+            </label>
+            <textarea 
+              value={metaDescription}
+              onChange={(e) => setMetaDescription(e.target.value)}
+              placeholder="Deskripsi khusus untuk Google (120-160 karakter)"
+              maxLength={160}
+              rows={3}
+              style={{width: '100%', padding: '12px 14px', background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 14, outline: 'none', resize: 'vertical', fontFamily: 'inherit'}}
+            />
+            <div style={{fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4}}>{metaDescription.length}/160 karakter</div>
+          </div>
+
+          <div style={{marginBottom: 0}}>
+            <label style={{display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: 6}}>
+              Focus Keyword <span style={{color: 'rgba(255,255,255,0.4)', fontWeight: 400}}>(kata kunci utama)</span>
+            </label>
+            <input 
+              type="text"
+              value={focusKeyword}
+              onChange={(e) => setFocusKeyword(e.target.value)}
+              placeholder="Contoh: manchester united, liga inggris"
+              style={{width: '100%', padding: '12px 14px', background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 14, outline: 'none'}}
+            />
+          </div>
+        </div>
+
+        <button type="submit" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-lg shadow-lg active:scale-95 text-lg">💾 SIMPAN KE CLOUD</button>
           <Link href="/admin/articles" className="px-5 flex items-center justify-center bg-slate-200 text-slate-700 font-bold rounded-lg active:scale-95">Batal</Link>
         </div>
       </form>
