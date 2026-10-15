@@ -194,7 +194,7 @@ export default function HomePage() {
 
         .arena-filter-wrap { 
           display: flex; 
-          gap: 6px; 
+          gap: 4px; 
           overflow-x: auto; 
           max-width: 100%; 
           padding-bottom: 2px; 
@@ -391,7 +391,7 @@ export default function HomePage() {
           overflow: hidden; 
           margin-bottom: 6px; 
         }
-        .arena-card-meta { display: flex; align-items: center; gap: 6px; font-size: 8.5px; color: rgba(229,57,53,0.7); }
+        .arena-card-meta { display: flex; align-items: center; gap: 4px; font-size: 8.5px; color: rgba(229,57,53,0.7); }
         .arena-card-subcat { 
           font-size: 8px; 
           font-weight: 700; 
@@ -606,7 +606,7 @@ export default function HomePage() {
 
                   {/* Tombol kecil Buka Semua Berita - kanan, bawah kartu terakhir */}
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10, marginBottom: 4, paddingRight: 4 }}>
-                    <Link href="/artikel" style={{ background: 'linear-gradient(90deg, #ff6b00 0%, #ff8c33 100%)', color: '#ffffff', fontWeight: 700, fontSize: 11, letterSpacing: '0.8px', textTransform: 'uppercase', padding: '8px 16px', borderRadius: 8, textDecoration: 'none', boxShadow: '0 4px 12px rgba(255,107,0,0.35)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <Link href="/artikel" style={{ background: 'linear-gradient(90deg, #ff6b00 0%, #ff8c33 100%)', color: '#ffffff', fontWeight: 700, fontSize: 10, letterSpacing: '0.5px', textTransform: 'uppercase', padding: '6px 12px', borderRadius: 6, textDecoration: 'none', boxShadow: '0 3px 8px rgba(255,107,0,0.3)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                       Buka Semua Berita <span aria-hidden="true">→</span>
                     </Link>
                   </div>
