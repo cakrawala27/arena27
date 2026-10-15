@@ -603,6 +603,13 @@ export default function HomePage() {
                       </div>
                     );
                   })}
+
+                  {/* Tombol kecil Buka Semua Berita - kanan, bawah kartu terakhir */}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10, marginBottom: 4, paddingRight: 4 }}>
+                    <Link href="/artikel" style={{ background: 'linear-gradient(90deg, #ff6b00 0%, #ff8c33 100%)', color: '#ffffff', fontWeight: 700, fontSize: 11, letterSpacing: '0.8px', textTransform: 'uppercase', padding: '8px 16px', borderRadius: 8, textDecoration: 'none', boxShadow: '0 4px 12px rgba(255,107,0,0.35)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      Buka Semua Berita <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
                 </div>
               </>
             )}
@@ -613,31 +620,6 @@ export default function HomePage() {
       </div>
 
       
-      {/* Tombol Buka Semua Berita - satu saja, setelah daftar artikel */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 20px 30px' }}>
-        <Link
-          href="/artikel"
-          style={{
-            background: 'linear-gradient(90deg, #ff6b00 0%, #ff8c33 100%)',
-            color: '#ffffff',
-            fontWeight: 800,
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-            fontSize: '14px',
-            padding: '14px 28px',
-            borderRadius: '10px',
-            boxShadow: '0 6px 18px rgba(255,107,0,0.35)',
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontFamily: 'system-ui, -apple-system, sans-serif'
-          }}
-        >
-          Buka Semua Berita <span aria-hidden="true">→</span>
-        </Link>
-      </div>
-
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
         <div className="arena-footer-text">Â© 2026 Arena27 Sport Portal</div>
