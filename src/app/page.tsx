@@ -36,7 +36,9 @@ export default function HomePage() {
       .eq('status', 'published')
       .order('created_at', { ascending: false });
     if (activeFilter !== 'Semua') {
-      query = query.ilike('category', '%' + activeFilter + '%');
+      // Smart filter: untuk "Sepak Bola", cari semua kategori yang mengandung "Sepak"
+      const searchKeyword = activeFilter.toUpperCase().includes("SEPAK") ? "Sepak" : activeFilter;
+      query = query.ilike('category', '%' + searchKeyword + '%');
     }
     const { data, count } = await query.range(from, to);
     if (data) setArticles(data);
