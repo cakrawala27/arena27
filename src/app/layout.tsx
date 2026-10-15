@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata = {
-  metadataBase: new URL('${SITE_URL}'),
+  metadataBase: new URL('https://arena27-psi.vercel.app'),
   title: "Arena27 - Portal Berita Sport",
   description: "Portal berita sport terlengkap",
 };
