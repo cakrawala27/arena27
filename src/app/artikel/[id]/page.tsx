@@ -1,9 +1,10 @@
-// ️ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
+// ⚡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 export const runtime = 'nodejs';
+
 
 import { Metadata } from 'next';
 import Link from 'next/link';
