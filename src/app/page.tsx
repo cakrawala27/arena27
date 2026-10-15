@@ -616,7 +616,26 @@ export default function HomePage() {
         <div className="arena-footer-title"><span>ARENA</span>27</div>
         <div className="arena-footer-text">Â© 2026 Arena27 Sport Portal</div>
       </footer>
-    </div>
+    
+  {/* Floating Button: Buka Semua */}
+  <a 
+    href="/kategori/sepak-bola" 
+    className="fixed bottom-8 right-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-4 px-8 rounded-full shadow-2xl hover:shadow-orange-500/50 transition-all duration-300 transform hover:scale-110 z-[9999] flex items-center gap-3 group"
+    style={{ 
+      fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+      letterSpacing: '1px',
+      textTransform: 'uppercase',
+      fontSize: '15px',
+      fontWeight: 800
+    }}
+  >
+    <span>Buka Semua</span>
+    <svg className="w-6 h-6 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+    </svg>
+  </a>
+
+</div>
   );
 }
 
