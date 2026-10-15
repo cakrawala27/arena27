@@ -549,7 +549,7 @@ export default function HomePage() {
                       <div key={item.id} onClick={handleClick} className="arena-featured-card">
                         <span className="ripple-wrap"></span>
                         <img src={item.image || FALLBACK_IMG} alt={item.title} className="arena-featured-img" onError={function(e){ e.currentTarget.src = FALLBACK_IMG; }} />
-                        <span className="arena-featured-rank">#{rank} Unggulan</span>
+                        
                         <div className="arena-featured-overlay">
                           <span className="arena-featured-subcat">{item.category}</span>
                           <div className="arena-featured-title">{item.title}</div>
