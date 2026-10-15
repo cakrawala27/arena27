@@ -591,7 +591,7 @@ export default function HomePage() {
                         <span className="arena-thumb-wrap">
                           <img src={item.image || FALLBACK_IMG} alt={item.title} className="arena-thumb-img" onError={function(e){ e.currentTarget.src = FALLBACK_IMG; }} />
                         </span>
-                        <span className="arena-arrow">â€º</span>
+                        <span className="arena-arrow">&rsaquo;</span>
                       </div>
                     );
                   })}
