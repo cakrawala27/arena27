@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -137,10 +137,10 @@ export default function HomePage() {
           cursor: pointer; 
           user-select: none;
         }
-        .arena-topbar-logo span { color: #e53935; }
+        .arena-topbar-logo span { color: #ff6b00; }
         .arena-topbar-counter { 
           font-size: 10px; 
-          color: #e53935; 
+          color: #ff6b00; 
           margin-left: 8px; 
           font-weight: 700; 
         }
@@ -181,7 +181,7 @@ export default function HomePage() {
           margin: 0; 
           text-align: center; 
         }
-        .arena-hero-title span { color: #e53935; }
+        .arena-hero-title span { color: #ff6b00; }
 
         .arena-filter-wrap { 
           display: flex; 
@@ -207,8 +207,8 @@ export default function HomePage() {
           transition: all 0.2s ease; 
         }
         .arena-filter-btn.active { 
-          background: #e53935; 
-          border-color: #e53935; 
+          background: #ff6b00; 
+          border-color: #ff6b00; 
           color: #fff; 
           box-shadow: 0 4px 14px rgba(229,57,53,0.5); 
         }
@@ -223,7 +223,7 @@ export default function HomePage() {
         .arena-list-bar { 
           width: 3px; 
           height: 16px; 
-          background: #e53935; 
+          background: #ff6b00; 
           border-radius: 2px; 
           flex-shrink: 0; 
         }
@@ -247,7 +247,7 @@ export default function HomePage() {
           font-weight: 800; 
           letter-spacing: 1px; 
           color: #fff; 
-          background: linear-gradient(135deg, #e53935, #b71c1c); 
+          background: linear-gradient(135deg, #ff6b00, #b71c1c); 
           padding: 3px 8px; 
           border-radius: 4px; 
         }
@@ -259,7 +259,7 @@ export default function HomePage() {
           color: rgba(255,255,255,0.5); 
           letter-spacing: 1px; 
         }
-        .arena-filter-info b { color: #e53935; font-weight: 800; }
+        .arena-filter-info b { color: #ff6b00; font-weight: 800; }
 
         .arena-featured-wrap { 
           background: #0a0a0a; 
@@ -297,7 +297,7 @@ export default function HomePage() {
           position: absolute; 
           top: 12px; 
           left: 12px; 
-          background: #e53935; 
+          background: #ff6b00; 
           color: #fff; 
           font-size: 10px; 
           font-weight: 900; 
@@ -357,7 +357,7 @@ export default function HomePage() {
           position: absolute; 
           left: 0; top: 0; bottom: 0; 
           width: 3px; 
-          background: linear-gradient(to bottom, #e53935, rgba(229,57,53,0.08)); 
+          background: linear-gradient(to bottom, #ff6b00, rgba(229,57,53,0.08)); 
         }
         .arena-card:active { transform: scale(0.98); }
         .ripple-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -411,7 +411,7 @@ export default function HomePage() {
           align-items: center; 
           justify-content: center; 
           font-size: 24px; 
-          color: #e53935; 
+          color: #ff6b00; 
         }
         .arena-arrow { font-size: 20px; color: rgba(229,57,53,0.35); z-index: 1; }
 
@@ -435,7 +435,7 @@ export default function HomePage() {
           letter-spacing: 1.5px; 
           text-transform: uppercase; 
           color: #fff; 
-          background: linear-gradient(135deg, #e53935, #b71c1c); 
+          background: linear-gradient(135deg, #ff6b00, #b71c1c); 
           padding: 10px 20px; 
           border-radius: 8px; 
           border: none; 
@@ -449,7 +449,7 @@ export default function HomePage() {
           width: 40px; 
           height: 40px; 
           border: 3px solid rgba(229,57,53,0.2); 
-          border-top-color: #e53935; 
+          border-top-color: #ff6b00; 
           border-radius: 50%; 
           animation: spin 0.8s linear infinite; 
         }
@@ -472,7 +472,7 @@ export default function HomePage() {
           margin-top: 20px; 
         }
         .arena-footer-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; }
-        .arena-footer-title span { color: #e53935; }
+        .arena-footer-title span { color: #ff6b00; }
         .arena-footer-text { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
 
         @media (max-width: 600px) {
@@ -515,7 +515,7 @@ export default function HomePage() {
 
         {activeFilter !== 'Semua' && (
           <div className="arena-filter-info">
-            🏷️ Filter aktif: <b>{activeFilter}</b> · {totalCount} artikel
+            ðŸ·ï¸ Filter aktif: <b>{activeFilter}</b> Â· {totalCount} artikel
           </div>
         )}
 
@@ -526,7 +526,7 @@ export default function HomePage() {
           </div>
         ) : articles.length === 0 ? (
           <div className="arena-empty">
-            <p style={{fontSize:16,marginBottom:8}}>📰 Belum ada berita untuk <b style={{color:'#e53935'}}>{activeFilter}</b></p>
+            <p style={{fontSize:16,marginBottom:8}}>ðŸ“° Belum ada berita untuk <b style={{color:'#ff6b00'}}>{activeFilter}</b></p>
             <p style={{fontSize:12}}>Coba pilih kategori lain atau tulis berita baru!</p>
           </div>
         ) : (
@@ -553,7 +553,7 @@ export default function HomePage() {
                         <div className="arena-featured-overlay">
                           <span className="arena-featured-subcat">{item.category}</span>
                           <div className="arena-featured-title">{item.title}</div>
-                          <span className="arena-featured-meta">📅 {formatDate(item.created_at)}</span>
+                          <span className="arena-featured-meta">ðŸ“… {formatDate(item.created_at)}</span>
                         </div>
                       </div>
                     );
@@ -582,14 +582,14 @@ export default function HomePage() {
                           <span className="arena-card-title">{item.title}</span>
                           <span className="arena-card-meta">
                             <span>{formatDate(item.created_at)}</span>
-                            <span style={{color:'rgba(255,255,255,0.2)'}}>·</span>
+                            <span style={{color:'rgba(255,255,255,0.2)'}}>Â·</span>
                             <span className="arena-card-subcat">{item.category}</span>
                           </span>
                         </span>
                         <span className="arena-thumb-wrap">
                           <img src={item.image || FALLBACK_IMG} alt={item.title} className="arena-thumb-img" onError={function(e){ e.currentTarget.src = FALLBACK_IMG; }} />
                         </span>
-                        <span className="arena-arrow">›</span>
+                        <span className="arena-arrow">â€º</span>
                       </div>
                     );
                   })}
@@ -604,8 +604,9 @@ export default function HomePage() {
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
-        <div className="arena-footer-text">© 2026 Arena27 Sport Portal</div>
+        <div className="arena-footer-text">Â© 2026 Arena27 Sport Portal</div>
       </footer>
     </div>
   );
 }
+
