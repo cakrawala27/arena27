@@ -8,8 +8,11 @@ export const metadata = {
     template: '%s | Arena27'
   },
   description: 'Portal berita sport terlengkap dengan update terkini seputar sepak bola, basket, esports, dan olahraga lainnya.',
-  keywords: ['berita sport', 'sepak bola', 'basket', 'esports', 'liga champions', 'premier league'],
-  authors: [{ name: 'Arena27' }],
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: '/icon.jpg',
+    apple: '/icon.jpg',
+  },
   openGraph: {
     type: 'website',
     locale: 'id_ID',
@@ -19,10 +22,10 @@ export const metadata = {
     siteName: 'Arena27',
     images: [
       {
-        url: '/icon.jpg', // Kita akan buat file ini
-        width: 1200,
-        height: 630,
-        alt: 'Arena27 - Portal Berita Sport'
+        url: '/icon.jpg',
+        width: 512,
+        height: 512,
+        alt: 'Arena27 Logo'
       }
     ]
   },
