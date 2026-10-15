@@ -535,7 +535,7 @@ export default function HomePage() {
           </div>
         ) : articles.length === 0 ? (
           <div className="arena-empty">
-            <p style={{fontSize:16,marginBottom:8}}>ðŸ“° Belum ada berita untuk <b style={{color:'#ff6b00'}}>{activeFilter}</b></p>
+            <p style={{fontSize:16,marginBottom:8}}>📰 Belum ada berita untuk <b style={{color:'#ff6b00'}}>{activeFilter}</b></p>
             <p style={{fontSize:12}}>Coba pilih kategori lain atau tulis berita baru!</p>
           </div>
         ) : (
@@ -562,7 +562,7 @@ export default function HomePage() {
                         <div className="arena-featured-overlay">
                           <span className="arena-featured-subcat" style={{ backgroundColor: "#ff6b00" }}>{item.category}</span>
                           <div className="arena-featured-title">{item.title}</div>
-                          <span className="arena-featured-meta">ðŸ“… {formatDate(item.created_at)}</span>
+                          <span className="arena-featured-meta">📅 {formatDate(item.created_at)}</span>
                         </div>
                       </div>
                     );
