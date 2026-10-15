@@ -77,48 +77,48 @@ export default function EditArticlePage() {
     if (!error) { alert('Tersimpan di cloud!'); router.push('/admin/articles'); }
   };
 
-  if (!loaded) return <div className="p-10 text-center text-slate-500">Memuat...</div>;
+  if (!loaded) return <div>Memuat...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-black text-slate-900 mb-6">✏️ Edit Berita</h1>
-      <form onSubmit={handleSave} className="bg-white rounded-xl shadow-sm p-6 space-y-5 border border-gray-100">
-        <div><label className="block text-sm font-bold text-slate-700 mb-2">Judul</label><input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none" /></div>
+    <div>
+      <h1>✏️ Edit Berita</h1>
+      <form onSubmit={handleSave}>
+        <div><label>Judul</label><input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} /></div>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Kategori Utama</label>
+          <label>Kategori Utama</label>
           <select value={useCustomMain ? 'Lainnya' : mainCategory} onChange={(e) => {
             if (e.target.value === 'Lainnya') { setUseCustomMain(true); setMainCategory(''); }
             else { setUseCustomMain(false); setMainCategory(e.target.value); setCustomMainCategory(''); setSubCategory(''); setUseCustomSub(false); }
-          }} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white">
+          }}>
             {MAIN_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             <option value="Lainnya">✍️ Tambah Kategori Baru...</option>
           </select>
           {useCustomMain && (
-            <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
+            <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." />
           )}
         </div>
         {!useCustomMain && mainCategory && (
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
+            <label>Sub Kategori</label>
             <select value={useCustomSub ? 'Lainnya' : subCategory} onChange={(e) => {
               if (e.target.value === 'Lainnya') { setUseCustomSub(true); setSubCategory(''); }
               else { setUseCustomSub(false); setSubCategory(e.target.value); setCustomSubCategory(''); }
-            }} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white">
+            }}>
               {(CATEGORY_TREE[mainCategory] || []).map((s) => <option key={s} value={s}>{s}</option>)}
               <option value="Lainnya">✍️ Tambah Sub Kategori Baru...</option>
             </select>
             {useCustomSub && (
-              <input type="text" required value={customSubCategory} onChange={(e) => setCustomSubCategory(e.target.value)} placeholder="Ketik nama sub kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
+              <input type="text" required value={customSubCategory} onChange={(e) => setCustomSubCategory(e.target.value)} placeholder="Ketik nama sub kategori baru..." />
             )}
           </div>
         )}
-        <div><label className="block text-sm font-bold text-slate-700 mb-2">Link Gambar (Opsional)</label><input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none text-sm" />{imageUrl && <img src={imageUrl} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />}</div>
-        <div><label className="block text-sm font-bold text-slate-700 mb-2">Isi Berita</label><textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none resize-y" /></div>
-        <div className="flex gap-3">
+        <div><label>Link Gambar (Opsional)</label><input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />{imageUrl && <img src={imageUrl} alt="Preview" />}</div>
+        <div><label>Isi Berita</label><textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} /></div>
+        <div>
           
         {/* SEO SETTINGS SECTION */}
         <div style={{marginTop: 24, padding: 20, background: '#1e1e1e', borderRadius: 12, border: '1px solid rgba(229,57,53,0.2)'}}>
-          <h3 style={{fontSize: 14, fontWeight: 800, color: '#e53935', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8}}>
+          <h3 style={{fontSize: 14, fontWeight: 800, color: '#ff6b00', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8}}>
             🔍 SEO Settings
           </h3>
           
@@ -166,8 +166,8 @@ export default function EditArticlePage() {
           </div>
         </div>
 
-        <button type="submit" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-lg shadow-lg active:scale-95 text-lg">💾 SIMPAN KE CLOUD</button>
-          <Link href="/admin/articles" className="px-5 flex items-center justify-center bg-slate-200 text-slate-700 font-bold rounded-lg active:scale-95">Batal</Link>
+        <button type="submit">💾 SIMPAN KE CLOUD</button>
+          <Link href="/admin/articles">Batal</Link>
         </div>
       </form>
     </div>

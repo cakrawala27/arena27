@@ -111,7 +111,7 @@ export default async function ArticlePage({ params }: any) {
       <div style={{minHeight: '100vh', background: '#0a0a0a', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
           <p style={{fontSize: 24}}>😕 Artikel tidak ditemukan</p>
-          <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#e53935', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>← Kembali ke Beranda</Link>
+          <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#ff6b00', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>← Kembali ke Beranda</Link>
         </div>
       </div>
     );
@@ -127,13 +127,13 @@ export default async function ArticlePage({ params }: any) {
         .article-wrap { max-width: 720px; margin: 0 auto; padding: 0 0 40px; }
         .article-topbar { position: sticky; top: 0; z-index: 999; background: #0a0a0a; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(229,57,53,0.15); }
         .article-back { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); text-decoration: none; cursor: pointer; background: none; border: none; padding: 0; }
-        .article-back:hover { color: #e53935; }
+        .article-back:hover { color: #ff6b00; }
         .article-logo { font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #fff; }
-        .article-logo span { color: #e53935; }
+        .article-logo span { color: #ff6b00; }
         .article-hero { width: 100%; height: 400px; position: relative; overflow: hidden; }
         .article-hero img { width: 100%; height: 100%; object-fit: cover; }
         .article-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
-        .article-category { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #e53935; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; align-self: flex-start; }
+        .article-category { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #ff6b00; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; align-self: flex-start; }
         .article-title { font-size: 32px; font-weight: 900; color: '#fff'; line-height: 1.2; margin: 0 0 12px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
         .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
         .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
@@ -150,13 +150,13 @@ export default async function ArticlePage({ params }: any) {
         .share-fb:hover { box-shadow: 0 6px 18px rgba(24,119,242,0.5); }
         .share-x { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .share-x:hover { box-shadow: 0 6px 18px rgba(255,255,255,0.1); }
-        .share-copy { background: linear-gradient(135deg, #e53935, #b71c1c); box-shadow: 0 4px 12px rgba(229,57,53,0.3); }
+        .share-copy { background: linear-gradient(135deg, #ff6b00, #b71c1c); box-shadow: 0 4px 12px rgba(229,57,53,0.3); }
         .share-copy:hover { box-shadow: 0 6px 18px rgba(229,57,53,0.5); }
         .share-copy.copied { background: linear-gradient(135deg, #10b981, #047857); }
         .share-icon { font-size: 18px; line-height: 1; }
         .article-footer { background: #0a0a0a; padding: 30px 16px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
         .article-footer-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; }
-        .article-footer-title span { color: #e53935; }
+        .article-footer-title span { color: #ff6b00; }
         .article-footer-text { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
         @media (max-width: 600px) { .article-hero { height: 280px; } .article-title { font-size: 24px; } .share-btn { font-size: 12px; padding: 10px 14px; min-width: 120px; } }
       `}</style>

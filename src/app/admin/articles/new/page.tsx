@@ -65,54 +65,54 @@ export default function NewArticlePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-black text-slate-900 mb-6">✍️ Tulis Berita Baru</h1>
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-6 space-y-5 border border-gray-100">
+    <div>
+      <h1>✍️ Tulis Berita Baru</h1>
+      <form onSubmit={handleSubmit}>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Judul Berita</label>
-          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" />
+          <label>Judul Berita</label>
+          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Kategori Utama</label>
+          <label>Kategori Utama</label>
           <select value={useCustomMain ? 'Lainnya' : mainCategory} onChange={(e) => {
             if (e.target.value === 'Lainnya') { setUseCustomMain(true); setMainCategory(''); }
             else { setUseCustomMain(false); setMainCategory(e.target.value); setCustomMainCategory(''); setSubCategory(''); setUseCustomSub(false); }
-          }} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white">
+          }}>
             {MAIN_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             <option value="Lainnya">✍️ Tambah Kategori Baru...</option>
           </select>
           {useCustomMain && (
-            <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
+            <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." />
           )}
         </div>
         {!useCustomMain && mainCategory && (
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
+            <label>Sub Kategori</label>
             <select value={useCustomSub ? 'Lainnya' : subCategory} onChange={(e) => {
               if (e.target.value === 'Lainnya') { setUseCustomSub(true); setSubCategory(''); }
               else { setUseCustomSub(false); setSubCategory(e.target.value); setCustomSubCategory(''); }
-            }} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-white">
+            }}>
               {(CATEGORY_TREE[mainCategory] || []).map((s) => <option key={s} value={s}>{s}</option>)}
               <option value="Lainnya">✍️ Tambah Sub Kategori Baru...</option>
             </select>
             {useCustomSub && (
-              <input type="text" required value={customSubCategory} onChange={(e) => setCustomSubCategory(e.target.value)} placeholder="Ketik nama sub kategori baru..." className="mt-2 w-full px-4 py-3 border-2 border-orange-500 rounded-lg outline-none" />
+              <input type="text" required value={customSubCategory} onChange={(e) => setCustomSubCategory(e.target.value)} placeholder="Ketik nama sub kategori baru..." />
             )}
           </div>
         )}
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">📸 Upload Gambar dari HP</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} className="block w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-orange-500 file:text-white hover:file:bg-orange-600 file:cursor-pointer cursor-pointer" />
-          {imagePreview && <img src={imagePreview} alt="Preview" className="mt-3 h-48 w-full object-cover rounded-lg border-2 border-orange-500" />}
+          <label>📸 Upload Gambar dari HP</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+          {imagePreview && <img src={imagePreview} alt="Preview" />}
         </div>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Isi Berita</label>
-          <textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none resize-y" />
+          <label>Isi Berita</label>
+          <textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} />
         </div>
         
         {/* SEO FIELDS */}
         <div style={{marginTop: 24, padding: 20, background: '#1e1e1e', borderRadius: 12, border: '1px solid rgba(229,57,53,0.2)'}}>
-          <h3 style={{fontSize: 14, fontWeight: 800, color: '#e53935', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8}}>
+          <h3 style={{fontSize: 14, fontWeight: 800, color: '#ff6b00', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8}}>
             🔍 SEO Settings
           </h3>
           
@@ -160,7 +160,7 @@ export default function NewArticlePage() {
           </div>
         </div>
 
-        <button type="submit" disabled={isSubmitting} className="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-lg shadow-lg transition active:scale-95 disabled:opacity-50 text-lg">
+        <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? '⏳ Upload & Publish...' : '🚀 PUBLIKASIKAN KE DUNIA'}
         </button>
       </form>
