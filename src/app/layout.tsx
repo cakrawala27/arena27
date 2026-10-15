@@ -19,7 +19,7 @@ export const metadata = {
     siteName: 'Arena27',
     images: [
       {
-        url: '/arena27-og.jpg', // Kita akan buat file ini
+        url: '/icon.jpg', // Kita akan buat file ini
         width: 1200,
         height: 630,
         alt: 'Arena27 - Portal Berita Sport'
@@ -30,7 +30,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Arena27 - Portal Berita Sport',
     description: 'Portal berita sport terlengkap dengan update terkini seputar sepak bola, basket, esports, dan olahraga lainnya.',
-    images: ['/arena27-og.jpg']
+    images: ['/icon.jpg']
   },
   robots: {
     index: true,
