@@ -682,7 +682,7 @@ export default function HomePage() {
           <div className="pl-inner">
             <div className="pl-circle">
               <div className="pl-circle-inner">
-                <span className="pl-circle-icon">⚽</span>
+                <img src="/pl-logo.svg" alt="Premier League" className="pl-circle-icon" />
                 <span className="pl-circle-text">PREMIER</span>
                 <span className="pl-circle-text">LEAGUE</span>
               </div>

@@ -320,3 +320,13 @@ body {
   .pl-title { font-size: 12px; }
   .pl-thumb { width: 48px; height: 48px; }
 }
+
+/* ==== PL LOGO RECOLOR ==== */
+.pl-circle-icon {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 6px;
+  filter: brightness(0) saturate(100%) invert(58%) sepia(88%) saturate(2657%) hue-rotate(360deg) brightness(101%) contrast(105%);
+}
