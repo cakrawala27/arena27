@@ -376,7 +376,21 @@ body {
   max-height: 220px !important;
   object-fit: cover !important;
   display: block !important;
-  filter: hue-rotate(140deg) saturate(2) brightness(1.1) !important;
+  filter: none !important;
+}
+
+/* Overlay orange di atas banner */
+.pl-zone {
+  position: relative;
+}
+.pl-zone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 107, 0, 0.75);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
 }
 
 @media (max-width: 768px) {
