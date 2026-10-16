@@ -104,11 +104,19 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 
 // ===== RICH TEXT PARSER =====
 function parseInlineHtml(s: string): string {
-  return s
-    .replace(/\[B\]([\s\S]*?)\[\/B\]/g, '<strong>$1</strong>')
-    .replace(/\[I\]([\s\S]*?)\[\/I\]/g, '<em>$1</em>')
-    .replace(/\[ORANGE\]([\s\S]*?)\[\/ORANGE\]/g, '<span class="rte-orange">$1</span>')
-    .replace(/\[WHITE\]([\s\S]*?)\[\/WHITE\]/g, '<span class="rte-white">$1</span>');
+  // Normalisasi tag cacat seperti "[B[" jadi "[B]["
+  s = s.replace(/\[(B|I|H2|H3|ORANGE|WHITE)\s*\[/gi, '[$1][');
+  // 2 pass supaya nesting level apapun ke-proses
+  for (let pass = 0; pass < 2; pass++) {
+    s = s
+      .replace(/\[ORANGE\]([\s\S]*?)\[\/ORANGE\]/gi, '<span class="rte-orange">$1</span>')
+      .replace(/\[WHITE\]([\s\S]*?)\[\/WHITE\]/gi, '<span class="rte-white">$1</span>')
+      .replace(/\[B\]([\s\S]*?)\[\/B\]/gi, '<strong>$1</strong>')
+      .replace(/\[I\]([\s\S]*?)\[\/I\]/gi, '<em>$1</em>');
+  }
+  // Buang sisa tag yang gak berpasangan (anti jejak!)
+  s = s.replace(/\[\/?(B|I|H2|H3|ORANGE|WHITE)\]/gi, '');
+  return s;
 }
 
 function renderRichContent(text: string): string {
@@ -118,9 +126,9 @@ function renderRichContent(text: string): string {
     .replace(/>/g, '&gt;');
   const paragraphs = escaped.split(/\n+/).filter(function (p) { return p.trim(); });
   return paragraphs.map(function (p) {
-    var h2Match = p.match(/^\[H2\]([\s\S]*?)\[\/H2\]$/);
+    const h2Match = p.match(/^\[H2\]([\s\S]*?)\[\/H2\]$/i);
     if (h2Match) return '<h2 class="rte-h2">' + parseInlineHtml(h2Match[1].trim()) + '</h2>';
-    var h3Match = p.match(/^\[H3\]([\s\S]*?)\[\/H3\]$/);
+    const h3Match = p.match(/^\[H3\]([\s\S]*?)\[\/H3\]$/i);
     if (h3Match) return '<h3 class="rte-h3">' + parseInlineHtml(h3Match[1].trim()) + '</h3>';
     return '<p>' + parseInlineHtml(p) + '</p>';
   }).join('');
