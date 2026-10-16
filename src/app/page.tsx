@@ -649,7 +649,7 @@ export default function HomePage() {
                 return (
                   <Link key={item.id} href={'/artikel/' + item.id} className="lc-card" style={item.image ? { backgroundImage: 'linear-gradient(to top, rgba(10,5,3,0.95) 0%, rgba(10,5,3,0.4) 45%, rgba(10,5,3,0.15) 100%), url(' + item.image + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
                     <span className="lc-num">0{idx + 1}</span>
-                    <span className="lc-title">{item.title}</span>
+                    <span className="lc-title">{item.title.length > 55 ? item.title.substring(0, 52) + '...' : item.title}</span>
                   </Link>
                 );
               })}
