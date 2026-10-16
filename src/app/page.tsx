@@ -53,6 +53,21 @@ export default function HomePage() {
     setLoading(false);
   };
 
+  const [footNews, setFootNews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchFoot = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .ilike('category', '%Sepak%')
+        .order('created_at', { ascending: false })
+        .limit(4);
+      if (data) setFootNews(data);
+    };
+    fetchFoot();
+  }, []);
+
   const handleLogoClick = () => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
@@ -620,6 +635,31 @@ export default function HomePage() {
       </div>
 
       
+      {/* ===== ZONA SEPAKBOLA WIDGET ===== */}
+      {footNews.length > 0 && (
+        <section className="sz-widget">
+          <div className="sz-bg"></div>
+          <div className="sz-inner">
+            <div className="sz-head">
+              <h2>Sepakbola Adalah <b>Gairah Utama</b></h2>
+              <p>4 Berita Terpanas Pilihan Arena27</p>
+            </div>
+            <div className="sz-grid">
+              {footNews.map(function (item, idx) {
+                return (
+                  <Link key={item.id} href={'/artikel/' + item.id} className="sz-card">
+                    <span className="sz-num">0{idx + 1}</span>
+                    <span className="sz-title">{item.title}</span>
+                    <span className="sz-dots"></span>
+                    <span className="sz-cat">{item.category}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
         <div className="arena-footer-text">© 2026 Arena27 Sport Portal</div>
