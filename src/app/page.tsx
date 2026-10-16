@@ -654,6 +654,9 @@ export default function HomePage() {
                 );
               })}
             </div>
+            <div className="lc-see-all">
+              <a href="/liga-champions">Lihat Semua →</a>
+            </div>
           </div>
         </section>
       )}

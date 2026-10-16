@@ -151,3 +151,27 @@ body {
 .lc-card:hover img {
   transform: scale(1.06);
 }
+
+/* ==== LC SEE ALL BUTTON ==== */
+.lc-see-all {
+  text-align: center;
+  margin-top: 18px;
+}
+.lc-see-all a {
+  display: inline-block;
+  background: #ff6b00;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+.lc-see-all a:hover {
+  background: #ff8533;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+}
