@@ -1,4 +1,4 @@
-// ⚡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
+﻿// âš¡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
@@ -144,8 +144,8 @@ export default async function ArticlePage({ params }: any) {
     return (
       <div style={{minHeight: '100vh', background: '#0a0a0a', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
-          <p style={{fontSize: 24}}>😕 Artikel tidak ditemukan</p>
-          <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#ff6b00', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>← Kembali ke Beranda</Link>
+          <p style={{fontSize: 24}}>ðŸ˜• Artikel tidak ditemukan</p>
+          <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#ff6b00', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>â† Kembali ke Beranda</Link>
         </div>
       </div>
     );
@@ -192,12 +192,14 @@ export default async function ArticlePage({ params }: any) {
         .article-footer-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; }
         .article-footer-title span { color: #ff6b00; }
         .article-footer-text { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+        .article-footer-dev { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 1px; margin-top: 6px; }
+        .article-footer-dev span { color: #ff6b00; font-weight: 700; }
         @media (max-width: 600px) { .article-hero { height: 280px; } .article-title { font-size: 24px; } .share-btn { font-size: 12px; padding: 10px 14px; min-width: 120px; } }
       `}</style>
 
       <div className="article-wrap">
         <div className="article-topbar">
-          <Link href="/" className="article-back">← Kembali</Link>
+          <Link href="/" className="article-back">â† Kembali</Link>
           <span className="article-logo"><span>ARENA</span>27</span>
         </div>
         <div className="article-hero">
@@ -205,7 +207,7 @@ export default async function ArticlePage({ params }: any) {
           <div className="article-hero-overlay">
             <span className="article-category">{article.category}</span>
             <h1 className="article-title">{article.title}</h1>
-            <div className="article-meta">📅 {formattedDate} · Arena27</div>
+            <div className="article-meta">ðŸ“… {formattedDate} Â· Arena27</div>
           </div>
         </div>
         <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: renderRichContent(article.content || '') }} />
@@ -213,7 +215,8 @@ export default async function ArticlePage({ params }: any) {
       </div>
       <footer className="article-footer">
         <div className="article-footer-title"><span>ARENA</span>27</div>
-        <div className="article-footer-text">© 2026 Arena27 Sport Portal</div>
+        <div className="article-footer-text">© 2026 Arena27</div>
+        <div className="article-footer-dev">Dev by : <span>Cybernet Project Indonesia</span></div>
       </footer>
     </div>
   );
