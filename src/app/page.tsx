@@ -60,7 +60,7 @@ export default function HomePage() {
         .from('articles')
         .select('*')
         .eq('status', 'published')
-        .ilike('category', '%Sepak%')
+        .ilike('category', '%Liga Champions%')
         .order('created_at', { ascending: false })
         .limit(4);
       if (data) setFootNews(data);
@@ -635,23 +635,23 @@ export default function HomePage() {
       </div>
 
       
-      {/* ===== ZONA SEPAKBOLA WIDGET ===== */}
+      {/* ===== ZONA LIGA CHAMPIONS WIDGET ===== */}
       {footNews.length > 0 && (
-        <section className="sz-widget">
-          <div className="sz-bg"></div>
-          <div className="sz-inner">
-            <div className="sz-head">
-              <h2>Sepakbola Adalah <b>Gairah Utama</b></h2>
-              <p>4 Berita Terpanas Pilihan Arena27</p>
+        <section className="lc-widget">
+          <div className="lc-bg"></div>
+          <div className="lc-inner">
+            <div className="lc-head">
+              <h2>Nyala <b>Liga Champions</b></h2>
+              <p>4 Duel Terpanas Pilihan Arena27</p>
             </div>
-            <div className="sz-grid">
+            <div className="lc-grid">
               {footNews.map(function (item, idx) {
                 return (
-                  <Link key={item.id} href={'/artikel/' + item.id} className="sz-card">
-                    <span className="sz-num">0{idx + 1}</span>
-                    <span className="sz-title">{item.title}</span>
-                    <span className="sz-dots"></span>
-                    <span className="sz-cat">{item.category}</span>
+                  <Link key={item.id} href={'/artikel/' + item.id} className="lc-card" style={item.image ? { backgroundImage: 'linear-gradient(rgba(10,5,3,0.78) 0%, rgba(10,5,3,0.92) 100%), url(' + item.image + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+                    <span className="lc-num">0{idx + 1}</span>
+                    <span className="lc-title">{item.title}</span>
+                    <span className="lc-dots"></span>
+                    <span className="lc-cat">{item.category}</span>
                   </Link>
                 );
               })}
