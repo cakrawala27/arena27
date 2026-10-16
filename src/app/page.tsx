@@ -83,6 +83,22 @@ export default function HomePage() {
     fetchPL();
   }, []);
 
+  // ===== SERIE A FETCH =====
+  const [saNews, setSaNews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchSA = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .ilike('category', '%Serie A%')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (data) setSaNews(data);
+    };
+    fetchSA();
+  }, []);
+
   const handleLogoClick = () => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
@@ -705,6 +721,37 @@ export default function HomePage() {
         </section>
       )}
       {/* ===== END ZONA PREMIER LEAGUE WHEEL ===== */}
+
+      {/* ===== ZONA SERIE A ===== */}
+      {saNews.length > 0 && (
+        <section className="sa-section">
+          <div className="sa-inner">
+            <div className="sa-left">
+              <div className="sa-vertical-wrap">
+                <div className="sa-vertical-text">SERIE A</div>
+              </div>
+              <div className="sa-flag"></div>
+
+            </div>
+            <div className="sa-right">
+              {saNews.slice(0, 5).map(function (item, idx) {
+                return (
+                  <Link key={item.id} href={'/artikel/' + item.id} className="sa-card">
+                    <span className="sa-num">{String(idx + 1).padStart(2, '0')}</span>
+                    <div className="sa-thumb" style={item.image ? { backgroundImage: 'url(' + item.image + ')' } : {}}></div>
+                    <div className="sa-info">
+                      <div className="sa-title">{item.title.length > 65 ? item.title.substring(0, item.title.lastIndexOf(' ', 62)) + '...' : item.title}</div>
+                      <div className="sa-date">{new Date(item.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                    </div>
+                    <span className="sa-arrow">›</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+      {/* ===== END ZONA SERIE A ===== */}
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>

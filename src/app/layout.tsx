@@ -1,6 +1,15 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
 
+import { Anton } from "next/font/google";
+
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton",
+  display: "swap",
+});
+
 export const metadata = {
   metadataBase: new URL('https://arena27-psi.vercel.app'),
   title: {
@@ -44,7 +53,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <body className="antialiased min-h-screen bg-slate-50">{children}</body>
+      <body className={`${anton.variable} antialiased min-h-screen bg-slate-50`}>{children}</body>
     </html>
   );
 }
