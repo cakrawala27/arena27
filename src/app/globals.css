@@ -641,3 +641,130 @@ body {
   border-color: #ff4444;
   box-shadow: 0 0 0 3px rgba(255,68,68,0.15);
 }
+
+/* ============================================
+   BACA JUGA SECTION
+   ============================================ */
+.baca-juga-section {
+  position: relative;
+  background-image: linear-gradient(rgba(10, 5, 0, 0.88), rgba(10, 5, 0, 0.94)), url('/bacajuga.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 60px 16px 70px;
+  margin-top: 40px;
+  border-top: 2px solid rgba(255, 107, 0, 0.3);
+  overflow: hidden;
+}
+
+.baca-juga-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.baca-juga-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-align: center;
+  color: #ffffff;
+  margin: 0 0 32px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.baca-juga-title span { color: #ff6b00; }
+.baca-juga-title::before,
+.baca-juga-title::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff6b00, transparent);
+}
+.baca-juga-title::before { left: calc(50% - 140px); }
+.baca-juga-title::after { right: calc(50% - 140px); }
+
+.baca-juga-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.baca-juga-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 12, 6, 0.85);
+  border: 1px solid rgba(255, 107, 0, 0.25);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.baca-juga-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 107, 0, 0.7);
+  box-shadow: 0 16px 40px rgba(255, 107, 0, 0.3);
+}
+
+.baca-juga-img {
+  width: 100%;
+  height: 140px;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 2px solid rgba(255, 107, 0, 0.3);
+  transition: transform 0.5s ease;
+}
+.baca-juga-card:hover .baca-juga-img {
+  transform: scale(1.05);
+}
+
+.baca-juga-body {
+  padding: 14px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.baca-juga-cat {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #ff6b00;
+  background: rgba(255, 107, 0, 0.12);
+  border: 1px solid rgba(255, 107, 0, 0.35);
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.baca-juga-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #ffffff;
+  transition: color 0.25s ease;
+}
+.baca-juga-card:hover .baca-juga-card-title {
+  color: #ff6b00;
+}
+
+@media (max-width: 768px) {
+  .baca-juga-section { padding: 40px 14px 50px; }
+  .baca-juga-title { font-size: 18px; letter-spacing: 1.5px; margin-bottom: 24px; }
+  .baca-juga-title::before, .baca-juga-title::after { width: 30px; }
+  .baca-juga-title::before { left: calc(50% - 90px); }
+  .baca-juga-title::after { right: calc(50% - 90px); }
+  .baca-juga-grid { grid-template-columns: 1fr; gap: 14px; }
+  .baca-juga-img { height: 180px; }
+}

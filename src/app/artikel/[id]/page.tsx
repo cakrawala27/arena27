@@ -39,7 +39,30 @@ async function getArticle(id: string) {
   }
 }
 
+async function getRelatedArticles(currentId: string) {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/articles?status=eq.published&id=neq.' + currentId + '&select=id,title,image,category&order=created_at.desc&limit=3',
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: 'Bearer ' + SUPABASE_KEY,
+        },
+        cache: 'no-store',
+      }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data || [];
+  } catch (e) {
+    console.error('Error fetching related:', e);
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: any): Promise<Metadata> {
+
+
   const id = typeof params?.then === 'function' ? (await params).id : params?.id;
   
   if (!id) {
@@ -135,17 +158,35 @@ function renderRichContent(text: string): string {
 }
 // ===== END RICH TEXT PARSER =====
 
+
+function splitContentAtParagraph(html: string, splitAfter: number) {
+  const paragraphs = html.split(/(?=<p)/g).filter(function(p) { return p.trim().length > 0; });
+  if (paragraphs.length < 2) {
+    return { first: html, second: "" };
+  }
+  const actualSplit = Math.min(splitAfter, Math.floor(paragraphs.length / 2));
+  if (actualSplit < 1) {
+    return { first: html, second: "" };
+  }
+  const first = paragraphs.slice(0, actualSplit).join("");
+  const second = paragraphs.slice(actualSplit).join("");
+  return { first: first, second: second };
+}
+
 export default async function ArticlePage({ params }: any) {
   const id = typeof params?.then === 'function' ? (await params).id : params?.id;
   const article = await getArticle(id);
+  const related = await getRelatedArticles(id);
   const articleUrl = SITE_URL + '/artikel/' + id;
+  const fullContent = renderRichContent(article?.content || '');
+  const split = splitContentAtParagraph(fullContent, 3);
 
   if (!article) {
     return (
       <div style={{minHeight: '100vh', background: '#0a0a0a', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
           <p style={{fontSize: 24}}>ðŸ˜• Artikel tidak ditemukan</p>
-          <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#ff6b00', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>â† Kembali ke Beranda</Link>
+          <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#ff6b00', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>← Kembali ke Beranda</Link>
         </div>
       </div>
     );
@@ -199,7 +240,7 @@ export default async function ArticlePage({ params }: any) {
 
       <div className="article-wrap">
         <div className="article-topbar">
-          <Link href="/" className="article-back">â† Kembali</Link>
+          <Link href="/" className="article-back">← Kembali</Link>
           <span className="article-logo"><span>ARENA</span>27</span>
         </div>
         <div className="article-hero">
@@ -210,7 +251,32 @@ export default async function ArticlePage({ params }: any) {
             <div className="article-meta">ðŸ“… {formattedDate} Â· Arena27</div>
           </div>
         </div>
-        <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: renderRichContent(article.content || '') }} />
+        <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: split.first }} />
+
+        {split.second && related.length > 0 && (
+          <section className="baca-juga-section">
+            <div className="baca-juga-inner">
+              <h2 className="baca-juga-title"><span>BACA</span> JUGA</h2>
+              <div className="baca-juga-grid">
+                {related.map(function (item) {
+                  return (
+                    <Link key={item.id} href={'/artikel/' + item.id} className="baca-juga-card">
+                      <div className="baca-juga-img" style={{ backgroundImage: 'url(' + (item.image || FALLBACK_IMG) + ')' }} />
+                      <div className="baca-juga-body">
+                        <div className="baca-juga-cat">{item.category}</div>
+                        <div className="baca-juga-card-title">{item.title}</div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {split.second && (
+          <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: split.second }} />
+        )}
         <ShareButtons title={article.title} url={articleUrl} />
       </div>
       <footer className="article-footer">
