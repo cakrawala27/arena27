@@ -680,13 +680,7 @@ export default function HomePage() {
       {plNews.length > 0 && (
         <section className="pl-zone">
           <div className="pl-inner">
-            <div className="pl-circle">
-              <div className="pl-circle-inner">
-                <img src="/pl-logo.svg" alt="Premier League" className="pl-circle-icon" />
-                <span className="pl-circle-text">PREMIER</span>
-                <span className="pl-circle-text">LEAGUE</span>
-              </div>
-            </div>
+            <img src="/pl-logo.webp" alt="Premier League" className="pl-logo-main" />
             <div className="pl-wheel">
               {plNews.slice(0, 5).map(function (item, idx) {
                 return (
