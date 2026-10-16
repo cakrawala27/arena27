@@ -1,7 +1,6 @@
-'use client';
+﻿'use client';
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import RichEditor from '@/components/RichEditor';
 
@@ -20,25 +19,29 @@ export default function EditArticlePage() {
   const id = params ? String(params.id) : '';
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSEO, setShowSEO] = useState(true);
+
   const [title, setTitle] = useState('');
+  const [mainCategory, setMainCategory] = useState('Sepakbola');
+  const [subCategory, setSubCategory] = useState('');
+  const [customMainCategory, setCustomMainCategory] = useState('');
+  const [customSubCategory, setCustomSubCategory] = useState('');
+  const [useCustomMain, setUseCustomMain] = useState(false);
+  const [useCustomSub, setUseCustomSub] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [content, setContent] = useState('');
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
   const [focusKeyword, setFocusKeyword] = useState('');
-  const [mainCategory, setMainCategory] = useState('Sepakbola');
-  const [customMainCategory, setCustomMainCategory] = useState('');
-  const [useCustomMain, setUseCustomMain] = useState(false);
-  const [subCategory, setSubCategory] = useState('');
-  const [customSubCategory, setCustomSubCategory] = useState('');
-  const [useCustomSub, setUseCustomSub] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-  const [content, setContent] = useState('');
 
   useEffect(() => {
     const fetchArticle = async () => {
       const { data } = await supabase.from('articles').select('*').eq('id', id).single();
       if (data) {
-        setTitle(data.title);
-        const parts = data.category.split(' - ');
+        setTitle(data.title || '');
+        const parts = (data.category || '').split(' - ');
         const main = parts[0];
         const sub = parts[1];
         if (MAIN_CATEGORIES.includes(main)) {
@@ -50,126 +53,244 @@ export default function EditArticlePage() {
           } else if (sub) {
             setUseCustomSub(true);
             setCustomSubCategory(sub);
+          } else {
+            const subs = CATEGORY_TREE[main] || [];
+            setSubCategory(subs.length > 0 ? subs[0] : '');
           }
         } else {
           setUseCustomMain(true);
           setCustomMainCategory(main);
         }
-        setImageUrl(data.image);
+        setImageUrl(data.image || '');
         setMetaTitle(data.meta_title || '');
         setMetaDescription(data.meta_description || '');
         setFocusKeyword(data.focus_keyword || '');
-        setContent(data.content);
+        setContent(data.content || '');
       }
       setLoaded(true);
     };
     if (id) fetchArticle();
   }, [id]);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    let finalMain = useCustomMain ? (customMainCategory || 'Lainnya') : mainCategory;
-    let finalSub = useCustomSub ? (customSubCategory || '') : subCategory;
-    let finalCategory = finalSub ? finalMain + ' - ' + finalSub : finalMain;
-    const { error } = await supabase.from('articles').update({ title, category: finalCategory, image: imageUrl,
-          meta_title: metaTitle || null,
-          meta_description: metaDescription || null,
-          focus_keyword: focusKeyword || null, content }).eq('id', id);
-    if (!error) { alert('Tersimpan di cloud!'); router.push('/admin/articles'); }
+  const handleMainCategoryChange = (val: string) => {
+    if (val === 'Lainnya') {
+      setUseCustomMain(true);
+      setMainCategory('');
+      setSubCategory('');
+    } else {
+      setUseCustomMain(false);
+      setMainCategory(val);
+      setCustomMainCategory('');
+      setUseCustomSub(false);
+      setCustomSubCategory('');
+      const subs = CATEGORY_TREE[val] || [];
+      setSubCategory(subs.length > 0 ? subs[0] : '');
+    }
   };
 
-  if (!loaded) return <div>Memuat...</div>;
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { alert('Maksimal 5MB bro!'); return; }
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setImageUrl(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) { alert('Judul wajib diisi!'); return; }
+    const finalMain = useCustomMain ? (customMainCategory || 'Lainnya') : mainCategory;
+    const finalSub = useCustomSub ? (customSubCategory || '') : subCategory;
+    if (!finalMain || !finalSub) { alert('Kategori & sub-kategori wajib diisi!'); return; }
+
+    setIsSubmitting(true);
+    const finalCategory = finalMain + ' - ' + finalSub;
+    let finalImageUrl = imageUrl;
+
+    if (imageFile) {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + fileExt;
+      const { error: uploadError } = await supabase.storage.from('images').upload(fileName, imageFile);
+      if (uploadError) { alert('Gagal upload: ' + uploadError.message); setIsSubmitting(false); return; }
+      const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName);
+      finalImageUrl = urlData.publicUrl;
+    }
+
+    const { error } = await supabase.from('articles').update({
+      title,
+      category: finalCategory,
+      content,
+      image: finalImageUrl,
+      meta_title: metaTitle || null,
+      meta_description: metaDescription || null,
+      focus_keyword: focusKeyword || null,
+    }).eq('id', id);
+
+    setIsSubmitting(false);
+    if (error) alert('Gagal simpan: ' + error.message);
+    else { alert('Artikel berhasil diupdate!'); router.push('/admin/articles'); }
+  };
+
+  const currentSubs = useCustomMain ? [] : (CATEGORY_TREE[mainCategory] || []);
+
+  if (!loaded) {
+    return <div className="admin-wrapper"><p style={{ color: '#9ca3af' }}>Memuat artikel...</p></div>;
+  }
 
   return (
-    <div>
-      <h1>✏️ Edit Berita</h1>
+    <div className="admin-wrapper">
+      <h1 className="admin-title"><span>EDIT</span> BERITA</h1>
+
       <form onSubmit={handleSave}>
-        <div><label>Judul</label><input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-        <div>
-          <label>Kategori Utama</label>
-          <select value={useCustomMain ? 'Lainnya' : mainCategory} onChange={(e) => {
-            if (e.target.value === 'Lainnya') { setUseCustomMain(true); setMainCategory(''); }
-            else { setUseCustomMain(false); setMainCategory(e.target.value); setCustomMainCategory(''); setSubCategory(''); setUseCustomSub(false); }
-          }}>
-            {MAIN_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-            <option value="Lainnya">✍️ Tambah Kategori Baru...</option>
-          </select>
-          {useCustomMain && (
-            <input type="text" required value={customMainCategory} onChange={(e) => setCustomMainCategory(e.target.value)} placeholder="Ketik nama kategori baru..." />
-          )}
-        </div>
-        {!useCustomMain && mainCategory && (
+        <div className="admin-grid">
+
           <div>
-            <label>Sub Kategori</label>
-            <select value={useCustomSub ? 'Lainnya' : subCategory} onChange={(e) => {
-              if (e.target.value === 'Lainnya') { setUseCustomSub(true); setSubCategory(''); }
-              else { setUseCustomSub(false); setSubCategory(e.target.value); setCustomSubCategory(''); }
-            }}>
-              {(CATEGORY_TREE[mainCategory] || []).map((s) => <option key={s} value={s}>{s}</option>)}
-              <option value="Lainnya">✍️ Tambah Sub Kategori Baru...</option>
-            </select>
-            {useCustomSub && (
-              <input type="text" required value={customSubCategory} onChange={(e) => setCustomSubCategory(e.target.value)} placeholder="Ketik nama sub kategori baru..." />
-            )}
-          </div>
-        )}
-        <div><label>Link Gambar (Opsional)</label><input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />{imageUrl && <img src={imageUrl} alt="Preview" />}</div>
-        <div><label>Isi Berita</label>
-        <RichEditor required value={content} onChange={setContent} rows={14} /></div>
-        <div>
-          
-        {/* SEO SETTINGS SECTION */}
-        <div style={{marginTop: 24, padding: 20, background: '#1e1e1e', borderRadius: 12, border: '1px solid rgba(229,57,53,0.2)'}}>
-          <h3 style={{fontSize: 14, fontWeight: 800, color: '#ff6b00', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8}}>
-            🔍 SEO Settings
-          </h3>
-          
-          <div style={{marginBottom: 16}}>
-            <label style={{display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: 6}}>
-              Meta Title <span style={{color: 'rgba(255,255,255,0.4)', fontWeight: 400}}>(opsional)</span>
-            </label>
-            <input 
-              type="text"
-              value={metaTitle}
-              onChange={(e) => setMetaTitle(e.target.value)}
-              placeholder="Judul khusus untuk Google (max 60 karakter)"
-              maxLength={60}
-              style={{width: '100%', padding: '12px 14px', background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 14, outline: 'none'}}
-            />
-            <div style={{fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4}}>{metaTitle.length}/60 karakter</div>
+            <div className="admin-card">
+              <div className="admin-card-title">Judul Berita</div>
+              <input
+                type="text"
+                className="admin-input admin-title-input"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Tulis judul yang menarik..."
+              />
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title">Isi Berita</div>
+              <div className="admin-editor-wrap">
+                <RichEditor required value={content} onChange={setContent} rows={20} />
+              </div>
+            </div>
           </div>
 
-          <div style={{marginBottom: 16}}>
-            <label style={{display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: 6}}>
-              Meta Description <span style={{color: 'rgba(255,255,255,0.4)', fontWeight: 400}}>(opsional)</span>
-            </label>
-            <textarea 
-              value={metaDescription}
-              onChange={(e) => setMetaDescription(e.target.value)}
-              placeholder="Deskripsi khusus untuk Google (120-160 karakter)"
-              maxLength={160}
-              rows={3}
-              style={{width: '100%', padding: '12px 14px', background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 14, outline: 'none', resize: 'vertical', fontFamily: 'inherit'}}
-            />
-            <div style={{fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4}}>{metaDescription.length}/160 karakter</div>
-          </div>
+          <div className="admin-sidebar">
 
-          <div style={{marginBottom: 0}}>
-            <label style={{display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: 6}}>
-              Focus Keyword <span style={{color: 'rgba(255,255,255,0.4)', fontWeight: 400}}>(kata kunci utama)</span>
-            </label>
-            <input 
-              type="text"
-              value={focusKeyword}
-              onChange={(e) => setFocusKeyword(e.target.value)}
-              placeholder="Contoh: manchester united, liga inggris"
-              style={{width: '100%', padding: '12px 14px', background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 14, outline: 'none'}}
-            />
-          </div>
-        </div>
+            <div className="admin-card">
+              <div className="admin-card-title">Simpan</div>
+              <button type="submit" className="admin-btn admin-btn-primary" disabled={isSubmitting}>
+                {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+              </button>
+              <button type="button" className="admin-btn admin-btn-secondary" onClick={() => router.push('/admin/articles')}>
+                Batal
+              </button>
+            </div>
 
-        <button type="submit">💾 SIMPAN KE CLOUD</button>
-          <Link href="/admin/articles">Batal</Link>
+            <div className="admin-card">
+              <div className="admin-card-title">Kategori</div>
+
+              <div className="admin-field">
+                <label className="admin-label">Kategori Utama <span className="req">*</span></label>
+                <select className="admin-select" value={useCustomMain ? 'Lainnya' : mainCategory} onChange={(e) => handleMainCategoryChange(e.target.value)}>
+                  {MAIN_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                  <option value="Lainnya">Tambah Kategori Baru...</option>
+                </select>
+                {useCustomMain && (
+                  <input
+                    type="text"
+                    className="admin-input"
+                    style={{ marginTop: 8 }}
+                    required
+                    value={customMainCategory}
+                    onChange={(e) => setCustomMainCategory(e.target.value)}
+                    placeholder="Ketik nama kategori baru..."
+                  />
+                )}
+              </div>
+
+              {!useCustomMain && mainCategory && (
+                <div className="admin-field" style={{ marginBottom: 0 }}>
+                  <label className="admin-label">Sub Kategori <span className="req">*</span></label>
+                  <select className="admin-select" value={useCustomSub ? 'Lainnya' : subCategory} onChange={(e) => {
+                    if (e.target.value === 'Lainnya') { setUseCustomSub(true); setSubCategory(''); }
+                    else { setUseCustomSub(false); setSubCategory(e.target.value); setCustomSubCategory(''); }
+                  }}>
+                    {currentSubs.map((s) => <option key={s} value={s}>{s}</option>)}
+                    <option value="Lainnya">Tambah Sub Kategori Baru...</option>
+                  </select>
+                  {useCustomSub && (
+                    <input
+                      type="text"
+                      className="admin-input"
+                      style={{ marginTop: 8 }}
+                      required
+                      value={customSubCategory}
+                      onChange={(e) => setCustomSubCategory(e.target.value)}
+                      placeholder="Ketik nama sub kategori baru..."
+                    />
+                  )}
+                </div>
+              )}
+
+              {!useCustomMain && !useCustomSub && subCategory && (
+                <div className="admin-warning">
+                  Kategori: <strong>{mainCategory} - {subCategory}</strong>
+                </div>
+              )}
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title">Thumbnail</div>
+              <label className="admin-upload">
+                <input type="file" accept="image/*" onChange={handleImageChange} />
+                <span className="admin-upload-icon">Upload</span>
+                <span className="admin-upload-text">{imageUrl ? 'Ganti Gambar' : 'Pilih Gambar (Maks 5MB)'}</span>
+              </label>
+              {imageUrl && <img src={imageUrl} alt="Preview" className="admin-preview" />}
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title admin-seo-toggle" onClick={() => setShowSEO(!showSEO)}>
+                SEO Settings {showSEO ? 'v' : '>'}
+              </div>
+
+              {showSEO && (
+                <>
+                  <div className="admin-field">
+                    <label className="admin-label">Meta Title <span className="opt">(opsional)</span></label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      value={metaTitle}
+                      onChange={(e) => setMetaTitle(e.target.value)}
+                      placeholder="Judul SEO untuk Google"
+                      maxLength={60}
+                    />
+                    <div className={`admin-counter ${metaTitle.length > 55 ? 'over' : ''}`}>{metaTitle.length}/60</div>
+                  </div>
+
+                  <div className="admin-field">
+                    <label className="admin-label">Meta Description <span className="opt">(opsional)</span></label>
+                    <textarea
+                      className="admin-textarea"
+                      value={metaDescription}
+                      onChange={(e) => setMetaDescription(e.target.value)}
+                      placeholder="Deskripsi untuk Google"
+                      maxLength={160}
+                      rows={3}
+                    />
+                    <div className={`admin-counter ${metaDescription.length > 150 ? 'over' : ''}`}>{metaDescription.length}/160</div>
+                  </div>
+
+                  <div className="admin-field" style={{ marginBottom: 0 }}>
+                    <label className="admin-label">Focus Keyword <span className="opt">(opsional)</span></label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      value={focusKeyword}
+                      onChange={(e) => setFocusKeyword(e.target.value)}
+                      placeholder="Contoh: manchester united"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+
+          </div>
         </div>
       </form>
     </div>
