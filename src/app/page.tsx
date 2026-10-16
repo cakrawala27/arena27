@@ -513,6 +513,8 @@ export default function HomePage() {
         .arena-footer-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px; }
         .arena-footer-title span { color: #ff6b00; }
         .arena-footer-text { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+        .arena-footer-dev { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 1px; margin-top: 6px; }
+        .arena-footer-dev span { color: #ff6b00; font-weight: 700; }
 
         @media (max-width: 600px) {
           .arena-hero { height: 140px; }
@@ -706,7 +708,8 @@ export default function HomePage() {
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
-        <div className="arena-footer-text">© 2026 Arena27 Sport Portal</div>
+        <div className="arena-footer-text">© 2026 Arena27</div>
+        <div className="arena-footer-dev">Dev by : <span>Cybernet Project Indonesia</span></div>
       </footer>
     
   {/* Floating Button: Buka Semua */}
