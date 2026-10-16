@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 body {
   background-color: #f8fafc;
@@ -154,24 +154,22 @@ body {
 
 /* ==== LC SEE ALL BUTTON ==== */
 .lc-see-all {
-  text-align: center;
-  margin-top: 18px;
+  text-align: right;
+  margin-top: 14px;
 }
 .lc-see-all a {
   display: inline-block;
-  background: #ff6b00;
-  color: #ffffff;
+  background: transparent;
+  color: #ff6b00;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 1px;
-  padding: 10px 24px;
-  border-radius: 999px;
+  padding: 6px 0;
   text-decoration: none;
-  transition: all 0.3s ease;
   text-transform: uppercase;
+  transition: all 0.3s ease;
 }
 .lc-see-all a:hover {
-  background: #ff8533;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+  color: #ff8533;
+  letter-spacing: 1.5px;
 }
