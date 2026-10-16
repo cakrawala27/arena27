@@ -340,3 +340,47 @@ body {
   display: block;
   object-fit: contain;
 }
+
+/* ==== PL BANNER FULL WIDTH + RECOLOR ==== */
+.pl-zone {
+  padding: 0 0 24px !important;
+  max-width: 100% !important;
+}
+
+.pl-inner {
+  flex-direction: column !important;
+  gap: 24px !important;
+  padding: 0 !important;
+}
+
+.pl-logo-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 !important;
+  filter: hue-rotate(-120deg) saturate(2) brightness(1.1) contrast(1.1);
+}
+
+.pl-wheel {
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+}
+
+/* ==== FIX PL BANNER SIZE + COLOR ==== */
+.pl-logo-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 220px !important;
+  object-fit: cover !important;
+  display: block !important;
+  filter: hue-rotate(140deg) saturate(2) brightness(1.1) !important;
+}
+
+@media (max-width: 768px) {
+  .pl-logo-main {
+    max-height: 140px !important;
+  }
+}
