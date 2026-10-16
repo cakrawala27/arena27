@@ -68,6 +68,21 @@ export default function HomePage() {
     fetchFoot();
   }, []);
 
+  const [plNews, setPlNews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchPL = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .ilike('category', '%Premier League%')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (data) setPlNews(data);
+    };
+    fetchPL();
+  }, []);
+
   const handleLogoClick = () => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
@@ -660,6 +675,40 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
+      {/* ===== ZONA PREMIER LEAGUE WHEEL ===== */}
+      {plNews.length > 0 && (
+        <section className="pl-zone">
+          <div className="pl-inner">
+            <div className="pl-circle">
+              <div className="pl-circle-inner">
+                <span className="pl-circle-icon">⚽</span>
+                <span className="pl-circle-text">PREMIER</span>
+                <span className="pl-circle-text">LEAGUE</span>
+              </div>
+            </div>
+            <div className="pl-wheel">
+              {plNews.slice(0, 5).map(function (item, idx) {
+                return (
+                  <Link key={item.id} href={'/artikel/' + item.id} className="pl-item">
+                    <div className="pl-thumb" style={item.image ? { backgroundImage: 'url(' + item.image + ')' } : {}}>
+                      <span className="pl-num">0{idx + 1}</span>
+                    </div>
+                    <div className="pl-content">
+                      <div className="pl-title">{item.title.length > 60 ? item.title.substring(0, 57) + '...' : item.title}</div>
+                      <span className="pl-badge">{item.category}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+          <div className="pl-see-all">
+            <a href="/premier-league">Lihat Semua →</a>
+          </div>
+        </section>
+      )}
+      {/* ===== END ZONA PREMIER LEAGUE WHEEL ===== */}
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
