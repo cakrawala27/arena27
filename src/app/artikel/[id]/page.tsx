@@ -42,7 +42,7 @@ async function getArticle(id: string) {
 async function getRelatedArticles(currentId: string) {
   try {
     const res = await fetch(
-      SUPABASE_URL + '/rest/v1/articles?status=eq.published&id=neq.' + currentId + '&select=id,title,image,category&order=created_at.desc&limit=3',
+      SUPABASE_URL + '/rest/v1/articles?status=eq.published&id=neq.' + currentId + '&select=id,title,image,category,created_at&order=created_at.desc&limit=3',
       {
         headers: {
           apikey: SUPABASE_KEY,
@@ -256,16 +256,22 @@ export default async function ArticlePage({ params }: any) {
         {split.second && related.length > 0 && (
           <section className="baca-juga-section">
             <div className="baca-juga-inner">
-              <h2 className="baca-juga-title"><span>BACA</span> JUGA</h2>
-              <div className="baca-juga-grid">
-                {related.map(function (item) {
+              <h2 className="baca-juga-title">
+                <span className="baca-juga-bullet">•</span>
+                BACA JUGA
+                <span className="baca-juga-bullet">•</span>
+              </h2>
+              <div className="baca-juga-list">
+                {related.map(function (item, idx) {
                   return (
-                    <Link key={item.id} href={'/artikel/' + item.id} className="baca-juga-card">
-                      <div className="baca-juga-img" style={{ backgroundImage: 'url(' + (item.image || FALLBACK_IMG) + ')' }} />
-                      <div className="baca-juga-body">
-                        <div className="baca-juga-cat">{item.category}</div>
-                        <div className="baca-juga-card-title">{item.title}</div>
+                    <Link key={item.id} href={'/artikel/' + item.id} className="baca-juga-row">
+                      <div className="baca-juga-num">{String(idx + 1).padStart(2, '0')}</div>
+                      <div className="baca-juga-thumb" style={{ backgroundImage: 'url(' + (item.image || FALLBACK_IMG) + ')' }} />
+                      <div className="baca-juga-text">
+                        <div className="baca-juga-row-title">{item.title}</div>
+                        <div className="baca-juga-row-date">{new Date(item.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
                       </div>
+                      <div className="baca-juga-arrow">›</div>
                     </Link>
                   );
                 })}
@@ -287,3 +293,4 @@ export default async function ArticlePage({ params }: any) {
     </div>
   );
 }
+
