@@ -101,6 +101,32 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   };
 }
 
+
+// ===== RICH TEXT PARSER =====
+function parseInlineHtml(s: string): string {
+  return s
+    .replace(/\[B\]([\s\S]*?)\[\/B\]/g, '<strong>$1</strong>')
+    .replace(/\[I\]([\s\S]*?)\[\/I\]/g, '<em>$1</em>')
+    .replace(/\[ORANGE\]([\s\S]*?)\[\/ORANGE\]/g, '<span class="rte-orange">$1</span>')
+    .replace(/\[WHITE\]([\s\S]*?)\[\/WHITE\]/g, '<span class="rte-white">$1</span>');
+}
+
+function renderRichContent(text: string): string {
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  const paragraphs = escaped.split(/\n+/).filter(function (p) { return p.trim(); });
+  return paragraphs.map(function (p) {
+    var h2Match = p.match(/^\[H2\]([\s\S]*?)\[\/H2\]$/);
+    if (h2Match) return '<h2 class="rte-h2">' + parseInlineHtml(h2Match[1].trim()) + '</h2>';
+    var h3Match = p.match(/^\[H3\]([\s\S]*?)\[\/H3\]$/);
+    if (h3Match) return '<h3 class="rte-h3">' + parseInlineHtml(h3Match[1].trim()) + '</h3>';
+    return '<p>' + parseInlineHtml(p) + '</p>';
+  }).join('');
+}
+// ===== END RICH TEXT PARSER =====
+
 export default async function ArticlePage({ params }: any) {
   const id = typeof params?.then === 'function' ? (await params).id : params?.id;
   const article = await getArticle(id);
@@ -174,9 +200,7 @@ export default async function ArticlePage({ params }: any) {
             <div className="article-meta">📅 {formattedDate} · Arena27</div>
           </div>
         </div>
-        <div className="article-content">
-          {(article.content || '').split('\n\n').map((para, idx) => (<p key={idx}>{para}</p>))}
-        </div>
+        <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: renderRichContent(article.content || '') }} />
         <ShareButtons title={article.title} url={articleUrl} />
       </div>
       <footer className="article-footer">

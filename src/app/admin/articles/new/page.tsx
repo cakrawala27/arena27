@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import RichEditor from '@/components/RichEditor';
 
 const CATEGORY_TREE: Record<string, string[]> = {
   'Sepakbola': ['Premier League', 'Serie A', 'La Liga', 'Bundesliga', 'Liga Champions', 'FA Cup', 'Liga Indonesia', 'Piala Dunia'],
@@ -107,7 +108,7 @@ export default function NewArticlePage() {
         </div>
         <div>
           <label>Isi Berita</label>
-          <textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} />
+          <RichEditor required value={content} onChange={setContent} rows={14} />
         </div>
         
         {/* SEO FIELDS */}
