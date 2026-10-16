@@ -98,3 +98,56 @@ body {
   .lc-card:nth-child(odd)::after { display: none; }
 }
 /* ===== END ZONA LIGA CHAMPIONS ===== */
+
+/* ==== ARTICLE CARD TWEAK ==== */
+.category-badge {
+  display: inline-block;
+  background: rgba(255, 107, 0, 0.15);
+  color: #ff6b00;
+  border: 1px solid rgba(255, 107, 0, 0.35);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  backdrop-filter: blur(4px);
+}
+
+.article-card {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s ease;
+  cursor: pointer;
+}
+.article-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(255, 107, 0, 0.25);
+  border-color: rgba(255, 107, 0, 0.6);
+}
+.article-card img {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.article-card:hover img {
+  transform: scale(1.06);
+}
+
+/* ==== LC CARD HOVER EFFECT ==== */
+.lc-card {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s ease;
+  cursor: pointer;
+}
+.lc-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(255, 107, 0, 0.25);
+  border-color: rgba(255, 107, 0, 0.6) !important;
+}
+.lc-card img {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lc-card:hover img {
+  transform: scale(1.06);
+}

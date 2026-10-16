@@ -641,7 +641,7 @@ export default function HomePage() {
           <div className="lc-bg"></div>
           <div className="lc-inner">
             <div className="lc-head">
-              <h2>Nyala <b>Liga Champions</b></h2>
+              <h2><b>Liga Champions</b></h2>
               <p>4 Duel Terpanas Pilihan Arena27</p>
             </div>
             <div className="lc-grid">
