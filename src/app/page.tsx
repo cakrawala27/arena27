@@ -647,11 +647,9 @@ export default function HomePage() {
             <div className="lc-grid">
               {footNews.map(function (item, idx) {
                 return (
-                  <Link key={item.id} href={'/artikel/' + item.id} className="lc-card" style={item.image ? { backgroundImage: 'linear-gradient(rgba(10,5,3,0.78) 0%, rgba(10,5,3,0.92) 100%), url(' + item.image + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+                  <Link key={item.id} href={'/artikel/' + item.id} className="lc-card" style={item.image ? { backgroundImage: 'linear-gradient(to top, rgba(10,5,3,0.95) 0%, rgba(10,5,3,0.4) 45%, rgba(10,5,3,0.15) 100%), url(' + item.image + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
                     <span className="lc-num">0{idx + 1}</span>
                     <span className="lc-title">{item.title}</span>
-                    <span className="lc-dots"></span>
-                    <span className="lc-cat">{item.category}</span>
                   </Link>
                 );
               })}
