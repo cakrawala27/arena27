@@ -147,11 +147,24 @@ function renderRichContent(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-  const paragraphs = escaped.split(/\n+/).filter(function (p) { return p.trim(); });
+  // Pre-process:
+  // 1. Buang [B] & [/B] orphan
+  // 2. H2/H3 jadi paragraf sendiri
+  // 3. Buang \n di dalam [H2]...[/H2] & [H3]...[/H3]
+  const preprocessed = escaped
+    .replace(/\[B\]\s*\n\s*/g, '')
+    .replace(/\s*\n\s*\[\/B\]/g, '')
+    .replace(/([^\n])\n*(\[H2\])/g, '$1\n\n[H2]')
+    .replace(/(\[\/H2\])\n*([^\n])/g, '[/H2]\n\n$1')
+    .replace(/([^\n])\n*(\[H3\])/g, '$1\n\n[H3]')
+    .replace(/(\[\/H3\])\n*([^\n])/g, '[/H3]\n\n$1')
+    .replace(/\[H2\]([\s\S]*?)\[\/H2\]/gi, function(m, inner) { return '[H2]' + inner.replace(/\n+/g, ' ').trim() + '[/H2]'; })
+    .replace(/\[H3\]([\s\S]*?)\[\/H3\]/gi, function(m, inner) { return '[H3]' + inner.replace(/\n+/g, ' ').trim() + '[/H3]'; });
+  const paragraphs = preprocessed.split(/\n+/).filter(function (p) { return p.trim(); });
   return paragraphs.map(function (p) {
-    const h2Match = p.match(/^\[H2\]([\s\S]*?)\[\/H2\]$/i);
+    const h2Match = p.match(/\[H2\]([\s\S]*?)\[\/H2\]/i);
     if (h2Match) return '<h2 class="rte-h2">' + parseInlineHtml(h2Match[1].trim()) + '</h2>';
-    const h3Match = p.match(/^\[H3\]([\s\S]*?)\[\/H3\]$/i);
+    const h3Match = p.match(/\[H3\]([\s\S]*?)\[\/H3\]/i);
     if (h3Match) return '<h3 class="rte-h3">' + parseInlineHtml(h3Match[1].trim()) + '</h3>';
     return '<p>' + parseInlineHtml(p) + '</p>';
   }).join('');
