@@ -18,11 +18,13 @@ export default function SwipeCard({ cards }: { cards: any[] }) {
   const displayCards = stack.length < 5 ? [...stack, ...cards.slice(0, 5 - stack.length)] : stack;
 
   const handleSwipe = () => {
-    // Selalu buang kartu paling depan (index 0)
-    const swiped = stack[0];
-    const newStack = stack.slice(1);
-    newStack.push(swiped);
-    setStack([...newStack]);
+    setStack((prev) => {
+      // Kalau stack kosong, jangan lakuin apa-apa
+      if (prev.length === 0) return prev;
+      // Buang kartu pertama, taruh di paling belakang
+      const [first, ...rest] = prev;
+      return [...rest, first];
+    });
   };
 
   if (!cards || cards.length === 0) {
