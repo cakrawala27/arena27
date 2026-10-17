@@ -42,3 +42,7 @@ next-env.d.ts
 
 # Backup files
 *.bak
+
+# Test files
+test-*.txt
+test-*.js
