@@ -572,7 +572,7 @@ export default function HomePage() {
 
         {activeFilter !== 'Semua' && (
           <div className="arena-filter-info">
-            ðŸ·ï¸ Filter aktif: <b>{activeFilter}</b> • {totalCount} artikel
+            &#127991;&#65039; Filter aktif: <b>{activeFilter}</b> &#8226; {totalCount} artikel
           </div>
         )}
 

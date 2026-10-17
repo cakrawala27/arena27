@@ -261,7 +261,7 @@ export default async function ArticlePage({ params }: any) {
           <div className="article-hero-overlay">
             <span className="article-category">{article.category}</span>
             <h1 className="article-title">{article.title}</h1>
-            <div className="article-meta">ðŸ“… {formattedDate} Â· Arena27</div>
+            <div className="article-meta">&#128197; {formattedDate} &middot; Arena27</div>
           </div>
         </div>
         <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: split.first }} />
