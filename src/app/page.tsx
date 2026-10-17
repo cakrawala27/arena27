@@ -749,6 +749,9 @@ export default function HomePage() {
               })}
             </div>
           </div>
+          <div className="sa-see-all">
+            <a href="/serie-a">🐆 Lihat Semua →</a>
+          </div>
         </section>
       )}
       {/* ===== END ZONA SERIE A ===== */}

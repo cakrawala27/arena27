@@ -1322,3 +1322,34 @@ body {
   .sa-date { font-size: 9px; }
   .sa-arrow { font-size: 20px; }
 }
+
+/* ==== SA SEE ALL BUTTON ==== */
+.sa-see-all {
+  text-align: right;
+  margin-top: 20px;
+  position: relative;
+  z-index: 5;
+  padding-right: 20px;
+}
+.sa-see-all a {
+  display: inline-block;
+  background: rgba(15, 10, 5, 0.9);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  border: 2px solid rgba(255, 107, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.sa-see-all a:hover {
+  background: #ff6b00;
+  border-color: #ff8533;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 0, 0.5);
+}
