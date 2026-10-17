@@ -46,7 +46,7 @@ export default function SwipeCard({ cards }: { cards: any[] }) {
 
           return (
             <SwipeCardItem
-              key={item.id + '-' + index}
+              key={item.id}
               item={item}
               color={color}
               index={index}
@@ -78,6 +78,7 @@ function SwipeCardItem({ item, color, index, total, isTop, onSwipe }: any) {
       className="swipe-card"
       style={{
         boxShadow: isFrontCard ? '0 20px 40px rgba(0, 0, 0, 0.6)' : '0 4px 12px rgba(0, 0, 0, 0.3)',
+        pointerEvents: isTop ? 'auto' : 'none',
         y: isTop ? y : 0,
         rotate: isTop ? rotate : 0,
         opacity: isTop ? opacity : 1,
@@ -91,7 +92,7 @@ function SwipeCardItem({ item, color, index, total, isTop, onSwipe }: any) {
 
       dragElastic={0.7}
       onDragEnd={(e, info) => {
-        if (info.offset.y < -120) {
+        if (info.offset.y < -60) {
           onSwipe();
         }
       }}
