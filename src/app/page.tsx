@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import SwipeCard from '@/components/SwipeCard';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
@@ -81,6 +82,22 @@ export default function HomePage() {
       if (data) setPlNews(data);
     };
     fetchPL();
+  }, []);
+
+  // ===== INDONESIA FOOTBALL FETCH =====
+  const [indoNews, setIndoNews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchIndo = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .or('category.ilike.%Liga 1%,category.ilike.%Liga 2%')
+        .order('created_at', { ascending: false })
+        .limit(20);
+      if (data) setIndoNews(data);
+    };
+    fetchIndo();
   }, []);
 
   // ===== SERIE A FETCH =====
@@ -755,6 +772,21 @@ export default function HomePage() {
         </section>
       )}
       {/* ===== END ZONA SERIE A ===== */}
+
+      {/* ===== ZONA INDONESIA FOOTBALL ===== */}
+      {indoNews.length > 0 && (
+        <section className="indo-football-section">
+          <div className="indo-inner">
+            <h2 className="indo-title"><span>INDONESIA</span> FOOTBALL</h2>
+            <p className="indo-subtitle">Liga 1 & Liga 2 — Geser kartu ke atas</p>
+            <SwipeCard cards={indoNews} />
+            <div className="indo-see-all">
+              <a href="/indonesia-football">Lihat Semua →</a>
+            </div>
+          </div>
+        </section>
+      )}
+      {/* ===== END ZONA INDONESIA FOOTBALL ===== */}
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>

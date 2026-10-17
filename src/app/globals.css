@@ -1353,3 +1353,145 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(255, 107, 0, 0.5);
 }
+
+/* ==== INDONESIA FOOTBALL WIDGET ==== */
+.indo-football-section {
+  background: #0a0a0a;
+  padding: 60px 16px 70px;
+  margin-top: 40px;
+  overflow: hidden;
+  position: relative;
+}
+
+.indo-inner {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.indo-title {
+  font-family: var(--font-anton), system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+.indo-title span {
+  color: #df2531;
+}
+
+.indo-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0 0 32px;
+}
+
+.swipe-stack {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  height: 480px;
+  margin: 0 auto;
+}
+
+.swipe-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  will-change: transform;
+}
+
+.swipe-card:active {
+  cursor: grabbing;
+}
+
+.swipe-card-title {
+  padding: 20px 24px 16px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+}
+
+.swipe-card-image {
+  flex: 1;
+  overflow: hidden;
+}
+
+.swipe-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.swipe-card-link {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+.swipe-card-link:hover {
+  background: #df2531;
+  color: #fff !important;
+}
+
+.swipe-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.indo-see-all {
+  text-align: right;
+  margin-top: 32px;
+  padding-right: 20px;
+}
+.indo-see-all a {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+.indo-see-all a:hover {
+  background: #df2531;
+  border-color: #df2531;
+}
+
+@media (max-width: 768px) {
+  .indo-title { font-size: 24px; letter-spacing: 2px; }
+  .swipe-stack { height: 400px; max-width: 320px; }
+  .swipe-card-title { font-size: 16px; padding: 16px 18px 12px; }
+}

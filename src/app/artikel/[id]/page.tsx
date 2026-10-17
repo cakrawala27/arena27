@@ -127,48 +127,58 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 
 // ===== RICH TEXT PARSER =====
 function parseInlineHtml(s: string): string {
-  // Normalisasi tag cacat seperti "[B[" jadi "[B]["
-  s = s.replace(/\[(B|I|H2|H3|ORANGE|WHITE)\s*\[/gi, '[$1][');
-  // 2 pass supaya nesting level apapun ke-proses
+  s = s.replace(/\[(B|I|H2|H3|ORANGE|WHITE)\s*\[/gi, "[$1][");
   for (let pass = 0; pass < 2; pass++) {
     s = s
       .replace(/\[ORANGE\]([\s\S]*?)\[\/ORANGE\]/gi, '<span class="rte-orange">$1</span>')
       .replace(/\[WHITE\]([\s\S]*?)\[\/WHITE\]/gi, '<span class="rte-white">$1</span>')
-      .replace(/\[B\]([\s\S]*?)\[\/B\]/gi, '<strong>$1</strong>')
-      .replace(/\[I\]([\s\S]*?)\[\/I\]/gi, '<em>$1</em>');
+      .replace(/\[B\]([\s\S]*?)\[\/B\]/gi, "<strong>$1</strong>")
+      .replace(/\[I\]([\s\S]*?)\[\/I\]/gi, "<em>$1</em>");
   }
-  // Buang sisa tag yang gak berpasangan (anti jejak!)
-  s = s.replace(/\[\/?(B|I|H2|H3|ORANGE|WHITE)\]/gi, '');
+  s = s.replace(/\[(B|I|H2|H3|ORANGE|WHITE)\]|\[\/(B|I|H2|H3|ORANGE|WHITE)\]/gi, "");
   return s;
 }
 
 function renderRichContent(text: string): string {
-  const escaped = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-  // Pre-process:
-  // 1. Buang [B] & [/B] orphan
-  // 2. H2/H3 jadi paragraf sendiri
-  // 3. Buang \n di dalam [H2]...[/H2] & [H3]...[/H3]
-  const preprocessed = escaped
-    .replace(/\[B\]\s*\n\s*/g, '')
-    .replace(/\s*\n\s*\[\/B\]/g, '')
-    .replace(/([^\n])\n*(\[H2\])/g, '$1\n\n[H2]')
-    .replace(/(\[\/H2\])\n*([^\n])/g, '[/H2]\n\n$1')
-    .replace(/([^\n])\n*(\[H3\])/g, '$1\n\n[H3]')
-    .replace(/(\[\/H3\])\n*([^\n])/g, '[/H3]\n\n$1')
-    .replace(/\[H2\]([\s\S]*?)\[\/H2\]/gi, function(m, inner) { return '[H2]' + inner.replace(/\n+/g, ' ').trim() + '[/H2]'; })
-    .replace(/\[H3\]([\s\S]*?)\[\/H3\]/gi, function(m, inner) { return '[H3]' + inner.replace(/\n+/g, ' ').trim() + '[/H3]'; });
-  const paragraphs = preprocessed.split(/\n+/).filter(function (p) { return p.trim(); });
+  let clean = text.replace(/\r/g, "");
+  clean = clean.replace(/^\[\/?(B|I|H2|H3|ORANGE|WHITE)\]\s*/gmi, "");
+  clean = clean
+    .replace(/\[B\]\s*\n*\s*(\[H2\])/gi, "$1")
+    .replace(/(\[\/H2\])\s*\n*\s*\[\/B\]/gi, "$1")
+    .replace(/\[B\]\s*\n*\s*(\[H3\])/gi, "$1")
+    .replace(/(\[\/H3\])\s*\n*\s*\[\/B\]/gi, "$1");
+  const paragraphs = clean.split(/\n+/).filter(function (p) { return p.trim(); });
   return paragraphs.map(function (p) {
-    const h2Match = p.match(/\[H2\]([\s\S]*?)\[\/H2\]/i);
-    if (h2Match) return '<h2 class="rte-h2">' + parseInlineHtml(h2Match[1].trim()) + '</h2>';
-    const h3Match = p.match(/\[H3\]([\s\S]*?)\[\/H3\]/i);
-    if (h3Match) return '<h3 class="rte-h3">' + parseInlineHtml(h3Match[1].trim()) + '</h3>';
-    return '<p>' + parseInlineHtml(p) + '</p>';
-  }).join('');
+    const h2Regex = /\[H2\]([\s\S]*?)\[\/H2\]/gi;
+    if (h2Regex.test(p)) {
+      return p.replace(h2Regex, function(m, h2Text) {
+        const formattedH2 = "<h2 class=" + ' + "rte-h2" + ' + ">" + parseInlineHtml(h2Text.trim()) + "</h2>";
+        const beforeText = p.substring(0, p.indexOf("[H2]")).trim();
+        const afterText = p.substring(p.indexOf("[/H2]") + 5).trim();
+        let html = "";
+        if (beforeText) html += "<p>" + parseInlineHtml(beforeText) + "</p>";
+        html += formattedH2;
+        if (afterText) html += "<p>" + parseInlineHtml(afterText) + "</p>";
+        return html;
+      });
+    }
+    const h3Regex = /\[H3\]([\s\S]*?)\[\/H3\]/gi;
+    if (h3Regex.test(p)) {
+      return p.replace(h3Regex, function(m, h3Text) {
+        const formattedH3 = "<h3 class=" + ' + "rte-h3" + ' + ">" + parseInlineHtml(h3Text.trim()) + "</h3>";
+        const beforeText = p.substring(0, p.indexOf("[H3]")).trim();
+        const afterText = p.substring(p.indexOf("[/H3]") + 5).trim();
+        let html = "";
+        if (beforeText) html += "<p>" + parseInlineHtml(beforeText) + "</p>";
+        html += formattedH3;
+        if (afterText) html += "<p>" + parseInlineHtml(afterText) + "</p>";
+        return html;
+      });
+    }
+    return "<p>" + parseInlineHtml(p) + "</p>";
+  }).join("");
 }
+
 // ===== END RICH TEXT PARSER =====
 
 
