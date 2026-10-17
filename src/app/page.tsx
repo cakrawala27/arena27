@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import SwipeCard from '@/components/SwipeCard';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
@@ -775,11 +774,41 @@ export default function HomePage() {
 
       {/* ===== ZONA INDONESIA FOOTBALL ===== */}
       {indoNews.length > 0 && (
-        <section className="indo-football-section">
-          <div className="indo-inner">
+        <section className="indo-section">
+          <div className="indo-container">
             <h2 className="indo-title"><span>INDONESIA</span> FOOTBALL</h2>
             
-            <SwipeCard cards={indoNews} />
+            
+            {/* LIST ARTIKEL */}
+            {/* HERO IMAGE (Artikel 1) */}
+            {indoNews[0] && (
+              <Link href={"/artikel/" + indoNews[0].id} className="indo-hero">
+                <img src={indoNews[0].image || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80"} alt={indoNews[0].title} className="indo-hero-img" />
+                <div className="indo-hero-overlay">
+                  <span className="indo-hero-badge">{indoNews[0].category}</span>
+                  <h3 className="indo-hero-title">{indoNews[0].title}</h3>
+                </div>
+              </Link>
+            )}
+
+            {/* LIST ARTIKEL (Artikel 2-4) */}
+            <div className="indo-list">
+              {indoNews.slice(1, 4).map(function (item, idx) {
+                return (
+                  <Link key={item.id} href={"/artikel/" + item.id} className="indo-item">
+                    <div className="indo-thumb" style={{ backgroundImage: "url(" + (item.image || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&q=60") + ")" }}>
+                      <span className="indo-num">0{idx + 2}</span>
+                    </div>
+                    <div className="indo-content">
+                      <div className="indo-title">{item.title.length > 60 ? item.title.substring(0, item.title.lastIndexOf(" ", 57)) + "..." : item.title}</div>
+                      <span className="indo-badge">{item.category}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            
+            {/* LIHAT SEMUA */}
             <div className="indo-see-all">
               <a href="/indonesia-football">Lihat Semua →</a>
             </div>
