@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -17,13 +17,12 @@ export default function SwipeCard({ cards }: { cards: any[] }) {
   // Kalau kurang dari 5, loop dari awal
   const displayCards = stack.length < 5 ? [...stack, ...cards.slice(0, 5 - stack.length)] : stack;
 
-  const handleSwipe = (index: number) => {
-    // Ambil kartu yang di-swipe
-    const swiped = stack[index];
-    // Buang dari stack, taruh paling belakang
-    const newStack = stack.filter((_, i) => i !== index);
+  const handleSwipe = () => {
+    // Selalu buang kartu paling depan (index 0)
+    const swiped = stack[0];
+    const newStack = stack.slice(1);
     newStack.push(swiped);
-    setStack(newStack);
+    setStack([...newStack]);
   };
 
   if (!cards || cards.length === 0) {
@@ -39,9 +38,9 @@ export default function SwipeCard({ cards }: { cards: any[] }) {
       <AnimatePresence initial={false}>
         {displayCards.map((item, index) => {
           // Reverse index: 0 = paling depan (hitam), 4 = paling belakang
-          const reverseIndex = displayCards.length - 1 - index;
+          const reverseIndex = index;
           const color = CARD_COLORS[reverseIndex] || CARD_COLORS[0];
-          const isTop = index === displayCards.length - 1;
+          const isTop = index === 0;
 
           return (
             <SwipeCardItem
@@ -51,7 +50,7 @@ export default function SwipeCard({ cards }: { cards: any[] }) {
               index={index}
               total={displayCards.length}
               isTop={isTop}
-              onSwipe={() => handleSwipe(index)}
+              onSwipe={handleSwipe}
             />
           );
         })}
@@ -65,8 +64,9 @@ function SwipeCardItem({ item, color, index, total, isTop, onSwipe }: any) {
   const rotate = useTransform(y, [-300, 0, 300], [-8, 0, 8]);
   const opacity = useTransform(y, [-300, -100, 0], [0, 0.8, 1]);
 
-  const stackOffset = (total - 1 - index) * 12;
-  const stackScale = 1 - (total - 1 - index) * 0.04;
+  const stackOffset = index * 25;
+  const stackScale = 1 - index * 0.06;
+  const isFrontCard = index === 0;
 
   const displayTitle = item.meta_title || item.title || 'Tanpa Judul';
   const displayImage = item.image || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&q=80';
@@ -75,17 +75,18 @@ function SwipeCardItem({ item, color, index, total, isTop, onSwipe }: any) {
     <motion.div
       className="swipe-card"
       style={{
+        boxShadow: isFrontCard ? '0 20px 40px rgba(0, 0, 0, 0.6)' : '0 4px 12px rgba(0, 0, 0, 0.3)',
         y: isTop ? y : 0,
         rotate: isTop ? rotate : 0,
         opacity: isTop ? opacity : 1,
-        translateY: stackOffset,
+        translateY: -stackOffset,
         scale: stackScale,
-        zIndex: index,
+        zIndex: total - index,
         backgroundColor: color.bg,
         color: color.text,
       }}
       drag={isTop ? 'y' : false}
-      dragConstraints={{ top: 0, bottom: 0 }}
+
       dragElastic={0.7}
       onDragEnd={(e, info) => {
         if (info.offset.y < -120) {
@@ -102,7 +103,7 @@ function SwipeCardItem({ item, color, index, total, isTop, onSwipe }: any) {
       </div>
       {isTop && (
         <Link href={'/artikel/' + item.id} className="swipe-card-link" style={{ color: color.text }}>
-          Baca →
+          Baca &#8594;
         </Link>
       )}
     </motion.div>

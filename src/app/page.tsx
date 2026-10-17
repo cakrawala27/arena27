@@ -92,7 +92,7 @@ export default function HomePage() {
         .from('articles')
         .select('*')
         .eq('status', 'published')
-        .or('category.ilike.%Liga 1%,category.ilike.%Liga 2%')
+        .ilike('category', '%Liga Indonesia%')
         .order('created_at', { ascending: false })
         .limit(20);
       if (data) setIndoNews(data);
@@ -778,7 +778,7 @@ export default function HomePage() {
         <section className="indo-football-section">
           <div className="indo-inner">
             <h2 className="indo-title"><span>INDONESIA</span> FOOTBALL</h2>
-            <p className="indo-subtitle">Liga 1 & Liga 2 — Geser kartu ke atas</p>
+            
             <SwipeCard cards={indoNews} />
             <div className="indo-see-all">
               <a href="/indonesia-football">Lihat Semua →</a>
