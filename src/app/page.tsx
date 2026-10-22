@@ -99,6 +99,22 @@ export default function HomePage() {
     fetchIndo();
   }, []);
 
+  // ===== MOTOGP FETCH =====
+  const [motogpNews, setMotogpNews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchMotoGP = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .ilike('category', '%MotoGP%')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (data) setMotogpNews(data);
+    };
+    fetchMotoGP();
+  }, []);
+
   // ===== SERIE A FETCH =====
   const [saNews, setSaNews] = useState<any[]>([]);
   useEffect(() => {
@@ -816,6 +832,46 @@ export default function HomePage() {
         </section>
       )}
       {/* ===== END ZONA INDONESIA FOOTBALL ===== */}
+
+      {/* ===== ZONA MOTOGP ===== */}
+      {motogpNews.length > 0 && (
+        <section className="motogp-section">
+          <div className="motogp-container">
+            <h2 className="motogp-title"><span>🏍️</span> MOTOGP</h2>
+            
+            {motogpNews[0] && (
+              <Link href={"/artikel/" + motogpNews[0].id} className="motogp-hero">
+                <img src={motogpNews[0].image || "/motogp-bg.webp"} alt={motogpNews[0].title} className="motogp-hero-img" />
+                <div className="motogp-hero-overlay">
+                  <span className="motogp-hero-badge">MOTOGP</span>
+                  <h3 className="motogp-hero-title">{motogpNews[0].title}</h3>
+                </div>
+              </Link>
+            )}
+
+            <div className="motogp-list">
+              {motogpNews.slice(1, 5).map(function (item, idx) {
+                return (
+                  <Link key={item.id} href={"/artikel/" + item.id} className="motogp-item">
+                    <div className="motogp-thumb" style={{ backgroundImage: "url(" + (item.image || "/motogp-bg.webp") + ")" }}>
+                      <span className="motogp-num">0{idx + 2}</span>
+                    </div>
+                    <div className="motogp-content">
+                      <div className="motogp-item-title">{item.title.length > 60 ? item.title.substring(0, item.title.lastIndexOf(" ", 57)) + "..." : item.title}</div>
+                      <span className="motogp-badge">{item.category}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="motogp-see-all">
+              <a href="/motogp">Lihat Semua →</a>
+            </div>
+          </div>
+        </section>
+      )}
+      {/* ===== END ZONA MOTOGP ===== */}
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
