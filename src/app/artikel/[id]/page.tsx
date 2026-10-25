@@ -150,6 +150,7 @@ function renderRichContent(text: string): string {
   // 3. Buang tag [B] & [I] yang nempel di H2 (biar parser gak bingung)
   clean = clean.replace(/\[B\]\s*\n*\s*(\[H[23]\])/gi, "$1");
   clean = clean.replace(/(\[\/H[23]\])\s*\n*\s*\[\/B\]/gi, "$1");
+  clean = clean.replace(/\[B\]\s*\n*\s*\[\/B\]\s*\n*\s*(\[H[23]\])/gi, "$1");
 
   // 4. Split jadi paragraf
   const paragraphs = clean.split(/\n+/).filter(function (p) { return p.trim(); });
