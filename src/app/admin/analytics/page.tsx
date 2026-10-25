@@ -4,25 +4,44 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 
+const FILTERS = [
+  { key: 'today', label: 'Hari Ini', days: 1 },
+  { key: 'week', label: 'Minggu Ini', days: 7 },
+  { key: 'month', label: 'Bulan Ini', days: 30 },
+  { key: 'all', label: 'Semua', days: null },
+];
+
 export default function AnalyticsPage() {
   const [views, setViews] = useState<any[]>([]);
   const [topArticles, setTopArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
     const fetchData = async () => {
-      // 1. Ambil data kunjungan & artikel
-      const { data: viewsData } = await supabase
+      setLoading(true);
+      
+      // Build query with date filter
+      let query = supabase
         .from('article_views')
         .select('viewed_at, article_id')
         .order('viewed_at', { ascending: true });
+
+      const filter = FILTERS.find(f => f.key === activeFilter);
+      if (filter && filter.days !== null) {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - filter.days);
+        query = query.gte('viewed_at', cutoff.toISOString());
+      }
+
+      const { data: viewsData } = await query;
 
       const { data: articlesData } = await supabase
         .from('articles')
         .select('id, title');
 
       if (viewsData && articlesData) {
-        // --- PROSES GRAFIK HARIAN ---
+        // --- GRAFIK HARIAN ---
         const groupedDates: { [key: string]: number } = {};
         viewsData.forEach((v) => {
           const date = new Date(v.viewed_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -31,7 +50,7 @@ export default function AnalyticsPage() {
         const chartData = Object.entries(groupedDates).map(([date, count]) => ({ date, count }));
         setViews(chartData);
 
-        // --- PROSES TOP ARTIKEL ---
+        // --- TOP ARTIKEL ---
         const groupedArticles: { [key: string]: number } = {};
         viewsData.forEach((v) => {
           groupedArticles[v.article_id] = (groupedArticles[v.article_id] || 0) + 1;
@@ -46,15 +65,15 @@ export default function AnalyticsPage() {
               title: article ? article.title : 'Artikel Dihapus',
             };
           })
-          .sort((a, b) => b.count - a.count) // Urutkan dari yang terbanyak
-          .slice(0, 10); // Ambil Top 5
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10);
 
         setTopArticles(topData);
       }
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [activeFilter]);
 
   const totalViews = views.reduce((sum, v) => sum + v.count, 0);
 
@@ -69,13 +88,38 @@ export default function AnalyticsPage() {
             ← Kembali ke Admin
           </Link>
         </div>
+
+        {/* FILTER TOMBOL */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+          {FILTERS.map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setActiveFilter(f.key)}
+              style={{
+                padding: '8px 16px',
+                fontSize: 13,
+                fontWeight: 700,
+                borderRadius: 99,
+                cursor: 'pointer',
+                border: activeFilter === f.key ? '2px solid #ff6b00' : '1px solid #262626',
+                background: activeFilter === f.key ? '#ff6b00' : '#161616',
+                color: activeFilter === f.key ? '#fff' : '#9ca3af',
+                transition: 'all 0.2s',
+              }}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
         
         <div style={{ background: '#161616', border: '1px solid #262626', borderRadius: 12, padding: 24, marginBottom: 16 }}>
-          <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Total Kunjungan (Semua Artikel)</p>
+          <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>
+            Total Kunjungan ({FILTERS.find(f => f.key === activeFilter)?.label})
+          </p>
           <p style={{ fontSize: 32, fontWeight: 800, color: '#ff6b00', margin: '4px 0 0' }}>{totalViews}</p>
         </div>
 
-        {/* GRAFIK HARIAN */}
+        {/* GRAFIK */}
         <div style={{ background: '#161616', border: '1px solid #262626', borderRadius: 12, padding: 24, marginBottom: 16 }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: '0 0 16px' }}>
             Grafik Kunjungan per Hari
@@ -83,7 +127,7 @@ export default function AnalyticsPage() {
           {loading ? (
             <p style={{ color: '#9ca3af', textAlign: 'center', padding: 40 }}>Memuat data...</p>
           ) : views.length === 0 ? (
-            <p style={{ color: '#9ca3af', textAlign: 'center', padding: 40 }}>Belum ada data kunjungan.</p>
+            <p style={{ color: '#9ca3af', textAlign: 'center', padding: 40 }}>Belum ada data kunjungan untuk periode ini.</p>
           ) : (
             <div style={{ width: '100%', height: 300 }}>
               <ResponsiveContainer>
@@ -111,7 +155,7 @@ export default function AnalyticsPage() {
           {loading ? (
              <p style={{ color: '#9ca3af', textAlign: 'center' }}>Memuat...</p>
           ) : topArticles.length === 0 ? (
-             <p style={{ color: '#9ca3af', textAlign: 'center' }}>Belum ada data.</p>
+             <p style={{ color: '#9ca3af', textAlign: 'center' }}>Belum ada data untuk periode ini.</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {topArticles.map((item, idx) => (

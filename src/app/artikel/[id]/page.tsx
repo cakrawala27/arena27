@@ -198,22 +198,53 @@ function splitContentAtParagraph(html: string, splitAfter: number) {
 
 async function trackView(id: string) {
   try {
+    // Ambil IP user dari headers (Next.js)
+    const { headers } = await import("next/headers");
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for")?.split(",")[0] || headersList.get("x-real-ip") || "0.0.0.0";
+    const userAgent = headersList.get("user-agent") || "";
+    
+    // Deteksi device
+    let device = "Desktop";
+    if (/Mobile|Android|iPhone|iPad/i.test(userAgent)) device = "Mobile";
+    
+    // Geolocation via ip-api.com (gratis, no API key)
+    let country = null, city = null;
+    if (ip && ip !== "0.0.0.0" && ip !== "::1" && !ip.startsWith("127.")) {
+      try {
+        const geoRes = await fetch("http://ip-api.com/json/" + ip + "?fields=status,country,city");
+        const geoData = await geoRes.json();
+        if (geoData.status === "success") {
+          country = geoData.country;
+          city = geoData.city;
+        }
+      } catch (e) {}
+    }
+    
+    // Insert ke Supabase
     await fetch(
       SUPABASE_URL + '/rest/v1/article_views',
       {
-        method: 'POST',
+        method: "POST",
         headers: {
           apikey: SUPABASE_KEY,
-          Authorization: 'Bearer ' + SUPABASE_KEY,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal'
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
         },
-        body: JSON.stringify({ article_id: id }),
-        cache: 'no-store',
+        body: JSON.stringify({
+          article_id: id,
+          ip_address: ip,
+          country: country,
+          city: city,
+          user_agent: userAgent,
+          device: device,
+        }),
+        cache: "no-store",
       }
     );
   } catch (e) {
-    console.error('Track error:', e);
+    console.error("Track error:", e);
   }
 }
 
