@@ -140,42 +140,51 @@ function parseInlineHtml(s: string): string {
 }
 
 function renderRichContent(text: string): string {
+  // 1. Normalisasi: buang \r, rapihin tag
   let clean = text.replace(/\r/g, "");
-  clean = clean.replace(/^\[\/?(B|I|H2|H3|ORANGE|WHITE)\]\s*/gmi, "");
-  clean = clean
-    .replace(/\[B\]\s*\n*\s*(\[H2\])/gi, "$1")
-    .replace(/(\[\/H2\])\s*\n*\s*\[\/B\]/gi, "$1")
-    .replace(/\[B\]\s*\n*\s*(\[H3\])/gi, "$1")
-    .replace(/(\[\/H3\])\s*\n*\s*\[\/B\]/gi, "$1");
+
+  // 2. Paksa H2/H3 berdiri sendiri (kasih \n\n sebelum & sesudah)
+  clean = clean.replace(/\[H2\]/gi, "\n\n[H2]").replace(/\[\/H2\]/gi, "[/H2]\n\n");
+  clean = clean.replace(/\[H3\]/gi, "\n\n[H3]").replace(/\[\/H3\]/gi, "[/H3]\n\n");
+
+  // 3. Buang tag [B] & [I] yang nempel di H2 (biar parser gak bingung)
+  clean = clean.replace(/\[B\]\s*\n*\s*(\[H[23]\])/gi, "$1");
+  clean = clean.replace(/(\[\/H[23]\])\s*\n*\s*\[\/B\]/gi, "$1");
+
+  // 4. Split jadi paragraf
   const paragraphs = clean.split(/\n+/).filter(function (p) { return p.trim(); });
+
+  // 5. Render tiap paragraf
   return paragraphs.map(function (p) {
-    const h2Regex = /\[H2\]([\s\S]*?)\[\/H2\]/gi;
-    if (h2Regex.test(p)) {
-      return p.replace(h2Regex, function(m, h2Text) {
-        const formattedH2 = "<h2 class=" + ' + "rte-h2" + ' + ">" + parseInlineHtml(h2Text.trim()) + "</h2>";
-        const beforeText = p.substring(0, p.indexOf("[H2]")).trim();
-        const afterText = p.substring(p.indexOf("[/H2]") + 5).trim();
-        let html = "";
-        if (beforeText) html += "<p>" + parseInlineHtml(beforeText) + "</p>";
-        html += formattedH2;
-        if (afterText) html += "<p>" + parseInlineHtml(afterText) + "</p>";
-        return html;
-      });
+    const trimmed = p.trim();
+
+    // Cek H2
+    const h2Match = trimmed.match(/\[H2\]([\s\S]*?)\[\/H2\]/i);
+    if (h2Match) {
+      const h2Text = parseInlineHtml(h2Match[1].trim());
+      const before = trimmed.substring(0, trimmed.indexOf("[H2]")).trim();
+      const after = trimmed.substring(trimmed.indexOf("[/H2]") + 5).trim();
+      let html = "";
+      if (before) html += "<p>" + parseInlineHtml(before) + "</p>";
+      html += "<h2 class=\"rte-h2\">" + h2Text + "</h2>";
+      if (after) html += "<p>" + parseInlineHtml(after) + "</p>";
+      return html;
     }
-    const h3Regex = /\[H3\]([\s\S]*?)\[\/H3\]/gi;
-    if (h3Regex.test(p)) {
-      return p.replace(h3Regex, function(m, h3Text) {
-        const formattedH3 = "<h3 class=" + ' + "rte-h3" + ' + ">" + parseInlineHtml(h3Text.trim()) + "</h3>";
-        const beforeText = p.substring(0, p.indexOf("[H3]")).trim();
-        const afterText = p.substring(p.indexOf("[/H3]") + 5).trim();
-        let html = "";
-        if (beforeText) html += "<p>" + parseInlineHtml(beforeText) + "</p>";
-        html += formattedH3;
-        if (afterText) html += "<p>" + parseInlineHtml(afterText) + "</p>";
-        return html;
-      });
+
+    // Cek H3
+    const h3Match = trimmed.match(/\[H3\]([\s\S]*?)\[\/H3\]/i);
+    if (h3Match) {
+      const h3Text = parseInlineHtml(h3Match[1].trim());
+      const before = trimmed.substring(0, trimmed.indexOf("[H3]")).trim();
+      const after = trimmed.substring(trimmed.indexOf("[/H3]") + 5).trim();
+      let html = "";
+      if (before) html += "<p>" + parseInlineHtml(before) + "</p>";
+      html += "<h3 class=\"rte-h3\">" + h3Text + "</h3>";
+      if (after) html += "<p>" + parseInlineHtml(after) + "</p>";
+      return html;
     }
-    return "<p>" + parseInlineHtml(p) + "</p>";
+
+    return "<p>" + parseInlineHtml(trimmed) + "</p>";
   }).join("");
 }
 
