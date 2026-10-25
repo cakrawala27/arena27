@@ -96,6 +96,22 @@ export default function AnalyticsPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#fff', padding: '24px 16px' }}>
+<style jsx global>{`
+  @media (max-width: 768px) {
+    .analytics-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .analytics-card-title {
+      font-size: 14px !important;
+    }
+    .analytics-card-value {
+      font-size: 18px !important;
+    }
+    .analytics-card-label {
+      font-size: 11px !important;
+    }
+  }
+`}</style>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: 0 }}>📊 Statistik Pengunjung</h1>
@@ -132,7 +148,7 @@ export default function AnalyticsPage() {
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+        <div className="analytics-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
           {/* Top Negara */}
           <div style={{ background: '#161616', border: '1px solid #262626', borderRadius: 12, padding: 24 }}>
             <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: '0 0 16px' }}>🌍 Top 5 Negara</h2>
