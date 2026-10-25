@@ -196,8 +196,30 @@ function splitContentAtParagraph(html: string, splitAfter: number) {
   return { first: first, second: second };
 }
 
+async function trackView(id: string) {
+  try {
+    await fetch(
+      SUPABASE_URL + '/rest/v1/article_views',
+      {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify({ article_id: id }),
+        cache: 'no-store',
+      }
+    );
+  } catch (e) {
+    console.error('Track error:', e);
+  }
+}
+
 export default async function ArticlePage({ params }: any) {
   const id = typeof params?.then === 'function' ? (await params).id : params?.id;
+  trackView(id);
   const article = await getArticle(id);
   const related = await getRelatedArticles(id);
   const articleUrl = SITE_URL + '/artikel/' + id;
