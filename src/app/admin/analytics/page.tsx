@@ -95,9 +95,17 @@ export default function AnalyticsPage() {
   const totalViews = views.reduce((sum, v) => sum + v.count, 0);
 
   return (
+    <>
     <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#fff', padding: '24px 16px' }}>
 <style jsx global>{`
   @media (max-width: 768px) {
+          .analytics-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+          }
+          .analytics-title { font-size: 20px !important; }
+          .analytics-back-link { font-size: 12px !important; }
     .analytics-grid {
       grid-template-columns: 1fr !important;
     }
@@ -113,9 +121,9 @@ export default function AnalyticsPage() {
   }
 `}</style>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: 0 }}>📊 Statistik Pengunjung</h1>
-          <Link href="/admin" style={{ color: '#ff6b00', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>← Kembali ke Admin</Link>
+        <div className="analytics-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, gap: 12 }}>
+          <h1 className="analytics-title" style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: 0 }}>📊 Statistik Pengunjung</h1>
+          <Link href="/admin" className="analytics-back-link" style={{ color: '#ff6b00', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>← Kembali ke Admin</Link>
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -212,5 +220,6 @@ export default function AnalyticsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
