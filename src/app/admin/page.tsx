@@ -34,6 +34,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link href="/admin/articles/new" className="block p-4 rounded-lg bg-orange-500 text-white text-center font-bold shadow-lg active:scale-95">➕ Tulis Berita</Link>
           <Link href="/admin/articles" className="block p-4 rounded-lg bg-slate-100 text-slate-900 text-center font-bold active:scale-95">📋 Daftar Berita</Link>
+          <Link href="/admin/analytics" className="block p-4 rounded-lg bg-blue-500 text-white text-center font-bold shadow-lg active:scale-95">📊 Statistik Pengunjung</Link>
         </div>
       </div>
     </div>
