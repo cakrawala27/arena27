@@ -123,7 +123,6 @@ export default function AnalyticsPage() {
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <div className="analytics-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, gap: 12 }}>
           <h1 className="analytics-title" style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: 0 }}>📊 Statistik Pengunjung</h1>
-          <Link href="/admin" className="analytics-back-link" style={{ color: '#ff6b00', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>← Kembali ke Admin</Link>
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
