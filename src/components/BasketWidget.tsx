@@ -33,6 +33,7 @@ export default function BasketWidget({ articles }: { articles: any[] }) {
           {displayArticles.map((item, idx) => (
             <Link key={item.id + '-' + idx} href={'/artikel/' + item.id} className="basket-card">
               <div className="basket-img" style={{ backgroundImage: `url(${item.image || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&q=60'})` }}>
+                <span className="basket-num">{(idx % articles.length) + 1 < 10 ? '0' : ''}{(idx % articles.length) + 1}</span>
                 <span className="basket-cat">{item.category}</span>
               </div>
               <div className="basket-content">
