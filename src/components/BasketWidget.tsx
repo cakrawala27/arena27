@@ -25,6 +25,16 @@ export default function BasketWidget({ articles }: { articles: any[] }) {
             </Link>
           ))}
         </div>
+        
+        {/* Tombol Lihat Semua - Gaya Coretan */}
+        <div className="basket-see-all">
+          <a href="/basket">
+            Lihat Semua
+            <svg viewBox="0 0 100 20" preserveAspectRatio="none">
+              <path d="M0,10 Q25,0 50,10 T100,10" fill="none" stroke="#ff6b00" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
   );
