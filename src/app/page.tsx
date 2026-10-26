@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import BasketWidget from '@/components/BasketWidget';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
@@ -97,6 +98,22 @@ export default function HomePage() {
       if (data) setIndoNews(data);
     };
     fetchIndo();
+  }, []);
+
+  // ===== BASKET FETCH =====
+  const [basketNews, setBasketNews] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchBasket = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .ilike('category', '%Basket%')
+        .order('created_at', { ascending: false })
+        .limit(10);
+      if (data) setBasketNews(data);
+    };
+    fetchBasket();
   }, []);
 
   // ===== MOTOGP FETCH =====
@@ -872,6 +889,10 @@ export default function HomePage() {
         </section>
       )}
       {/* ===== END ZONA MOTOGP ===== */}
+
+      {/* ===== ZONA BASKET ===== */}
+      {basketNews.length > 0 && <BasketWidget articles={basketNews} />}
+      {/* ===== END ZONA BASKET ===== */}
 
       <footer className="arena-footer">
         <div className="arena-footer-title"><span>ARENA</span>27</div>
