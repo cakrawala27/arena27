@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
+import GoogleTranslate from "@/components/GoogleTranslate";
 
 import { Anton } from "next/font/google";
 
@@ -53,8 +54,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <body className={`${anton.variable} antialiased min-h-screen bg-slate-50`}>{children}</body>
+      <body className={`${anton.variable} antialiased min-h-screen bg-slate-50`}>
+        <GoogleTranslate />
+        {children}
+      </body>
     </html>
   );
 }
-
