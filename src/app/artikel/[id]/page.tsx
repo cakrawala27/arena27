@@ -11,7 +11,7 @@ import Link from 'next/link';
 import ShareButtons from './ShareButtons';
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
-const SITE_URL = 'https://arena27-psi.vercel.app';
+const SITE_URL = 'https://arena27.my.id';
 const SUPABASE_URL = 'https://pagsqpfcclokiypgwrwb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZ3NxcGZjY2xva2l5cGd3cndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NzgzNDUsImV4cCI6MjEwNzQ1NDM0NX0.ZOnL15cYLR43leQPaR143Q8OwAVeWqC99JO8NO7DeTc';
 

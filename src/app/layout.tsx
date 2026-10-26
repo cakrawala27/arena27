@@ -11,7 +11,7 @@ const anton = Anton({
 });
 
 export const metadata = {
-  metadataBase: new URL('https://arena27-psi.vercel.app'),
+  metadataBase: new URL('https://arena27.my.id'),
   title: {
     default: 'Arena27 - Portal Berita Sport',
     template: '%s | Arena27'
@@ -25,7 +25,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'id_ID',
-    url: 'https://arena27-psi.vercel.app',
+    url: 'https://arena27.my.id',
     title: 'Arena27 - Portal Berita Sport',
     description: 'Portal berita sport terlengkap dengan update terkini seputar sepak bola, basket, esports, dan olahraga lainnya.',
     siteName: 'Arena27',
