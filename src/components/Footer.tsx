@@ -6,9 +6,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
-            <Link href="/" className="text-xl font-bold text-white tracking-wider">
-              ARENA<span className="text-orange-500">27</span>
-            </Link>
+            <Link href="/" className="text-xl font-black tracking-wider hover:opacity-80 transition-opacity"><span style={{ color: '#ff6b00' }}>ARENA</span><span style={{ color: '#ffffff' }}>27</span></Link>
             <p className="text-xs mt-2">© 2026 Arena27. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
