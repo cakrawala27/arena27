@@ -885,6 +885,19 @@ export default function HomePage() {
       
     
   {/* Floating Button: Buka Semua */}
+      <footer className="arena-footer">
+        <div className="arena-footer-title"><span>ARENA</span>27</div>
+        <div className="arena-footer-text">PORTAL BERITA OLAHRAGA</div>
+        <nav style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px', marginTop: '18px' }}>
+          <Link href="/about" style={{ color: '#ccc', textDecoration: 'none' }}>Tentang Kami</Link>
+          <Link href="/contact" style={{ color: '#ccc', textDecoration: 'none' }}>Kontak</Link>
+          <Link href="/privacy" style={{ color: '#ccc', textDecoration: 'none' }}>Kebijakan Privasi</Link>
+          <Link href="/terms" style={{ color: '#ccc', textDecoration: 'none' }}>Syarat & Ketentuan</Link>
+        </nav>
+        <div className="arena-footer-dev">
+          © {new Date().getFullYear()} <span>ARENA27</span>
+        </div>
+      </footer>
   
 
   
@@ -892,4 +905,3 @@ export default function HomePage() {
 </div>
   );
 }
-
