@@ -1,30 +1,41 @@
 ﻿import Topbar from '@/components/Topbar';
+import Footer from '@/components/Footer';
 
 export const metadata = { title: 'Tentang Kami | Arena27' };
 
 export default function AboutPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#fff', fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0a0a0a', color: '#fff', fontFamily: 'system-ui, sans-serif' }}>
       <Topbar />
-      
-      <div style={{ padding: '40px 16px' }}>
+      <div style={{ flex: 1, padding: '40px 16px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', background: '#161616', border: '1px solid #262626', borderRadius: 16, padding: 40 }}>
+          
           <h1 style={{ fontSize: 32, fontWeight: 900, color: '#ff6b00', marginBottom: 24 }}>Tentang Arena27</h1>
+          
           <p style={{ fontSize: 16, lineHeight: 1.8, color: '#9ca3af', marginBottom: 16 }}>
-            <b>Arena27</b> adalah portal berita olahraga terdepan yang menyajikan informasi terkini, analisis mendalam, dan liputan eksklusif seputar dunia olahraga. Kami berkomitmen untuk memberikan berita yang akurat, cepat, dan terpercaya kepada seluruh pembaca di Indonesia dan mancanegara.
+            Arena27 adalah portal berita olahraga yang menyajikan informasi terbaru seputar sepak bola, NBA, MotoGP, esports, dan berbagai cabang olahraga lainnya.
           </p>
+          
           <p style={{ fontSize: 16, lineHeight: 1.8, color: '#9ca3af', marginBottom: 16 }}>
-            Didirikan dengan semangat untuk menghadirkan jurnalisme olahraga berkualitas, Arena27 mencakup berbagai kategori mulai dari Sepakbola (Liga Champions, Premier League, Serie A), Basket (NBA), MotoGP, hingga Esports.
+            Kami menghadirkan berita, hasil pertandingan, dan perkembangan dunia olahraga nasional maupun internasional secara aktual, informatif, dan mudah dipahami.
           </p>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginTop: 32, marginBottom: 16 }}>Visi Kami</h2>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: '#9ca3af', marginBottom: 16 }}>
-            Menjadi sumber referensi utama bagi para penggemar olahraga di Indonesia, dengan menghadirkan konten yang informatif, inspiratif, dan berintegritas.
+          
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: '#9ca3af', marginBottom: 32 }}>
+            Arena27 hadir untuk menemani penggemar olahraga mengikuti setiap pertandingan dan cerita di balik dunia olahraga.
           </p>
-          <p style={{ fontSize: 14, color: '#6b7280', marginTop: 40, borderTop: '1px solid #262626', paddingTop: 20 }}>
-            Dikelola secara profesional oleh <b>Cybernet Project Indonesia</b>.
-          </p>
+
+          <div style={{ borderTop: '1px solid #262626', paddingTop: 20 }}>
+            <p style={{ fontSize: 15, color: '#9ca3af', marginBottom: 8 }}>
+              <b>Email:</b> Arena27project@gmail.com
+            </p>
+            <p style={{ fontSize: 15, color: '#9ca3af', marginBottom: 8 }}>
+              <b>Website:</b> https://arena27.my.id
+            </p>
+          </div>
+
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

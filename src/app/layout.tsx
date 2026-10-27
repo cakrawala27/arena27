@@ -1,7 +1,6 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
 import GoogleTranslate from "@/components/GoogleTranslate";
-import LayoutWrapper from "@/components/LayoutWrapper";
 import { Anton } from "next/font/google";
 
 const anton = Anton({
@@ -78,10 +77,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${anton.variable} antialiased min-h-screen bg-slate-50`}>
         <GoogleTranslate />
-        <LayoutWrapper>
+        
           {children}
-        </LayoutWrapper>
+        
       </body>
     </html>
   );
 }
+
