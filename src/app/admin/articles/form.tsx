@@ -1,136 +1,163 @@
-'use client';
-
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+﻿'use client';
+import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { CATEGORY_TREE, MAIN_CATEGORIES } from '@/lib/categories';
+import RichEditor from '@/components/RichEditor'; // Pastikan lu punya komponen ini
 
-const CATEGORY_TREE: { name: string; subs: string[] }[] = [
-  { name: 'Sepak Bola', subs: ['Premier League', 'Serie A', 'La Liga', 'Bundesliga', 'Liga Champions', 'FA Cup', 'FIFA Calendar', 'Timnas'] },
-  { name: 'Sport', subs: ['MotoGP', 'F1'] },
-  { name: 'Sudut Mata', subs: ['Teknologi', 'Opini'] },
-  { name: 'Basket', subs: ['NBA', 'IBL'] },
-  { name: 'Badminton', subs: ['BWF', 'Olympic'] },
-  { name: 'Tinju', subs: [] },
-  { name: 'Esports', subs: ['Mobile Legends', 'PUBG', 'Valorant'] },
-  { name: 'Publik Arena', subs: ['Sekitar Kita'] },
-];
-
-type Props = { isEdit?: boolean };
-
-export default function ArticleForm({ isEdit = false }: Props) {
+export default function ArticleForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
-  const [id, setId] = useState('');
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('Sepak Bola');
-  const [subcategory, setSubcategory] = useState('');
-  const [content, setContent] = useState('');
-  const [imageBase64, setImageBase64] = useState('');
+  const isEdit = !!initialData;
+  
+  const [title, setTitle] = useState(initialData?.title || '');
+  
+  // Pisahin kategori & sub-kategori
+  const catParts = (initialData?.category || 'Sepakbola').split(' - ');
+  const [category, setCategory] = useState(catParts[0] || 'Sepakbola');
+  const currentSubs = CATEGORY_TREE[category] || [];
+  const [subcategory, setSubcategory] = useState(catParts[1] || currentSubs[0] || '');
+  
+  const [content, setContent] = useState(initialData?.content || '');
+  const [imageUrl, setImageUrl] = useState(initialData?.image || '');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  
+  // SEO State
+  const [metaTitle, setMetaTitle] = useState(initialData?.meta_title || '');
+  const [metaDesc, setMetaDesc] = useState(initialData?.meta_description || '');
+  const [focusKeyword, setFocusKeyword] = useState(initialData?.focus_keyword || '');
+  const [showSEO, setShowSEO] = useState(true);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const currentSubs = CATEGORY_TREE.find((c) => c.name === category)?.subs || [];
-
-  useEffect(() => {
-    const urlId = new URLSearchParams(window.location.search).get('id') || '';
-    setId(urlId);
-    if (isEdit && urlId) {
-      try {
-        const stored = localStorage.getItem('arena27_articles');
-        if (stored) {
-          const found = JSON.parse(stored).find((a: any) => String(a.id) === urlId);
-          if (found) {
-            setTitle(found.title || '');
-            setCategory(found.category || 'Sepak Bola');
-            setSubcategory(found.subcategory || '');
-            setContent(found.content || '');
-            setImageBase64(found.image || '');
-          }
-        }
-      } catch (e) {}
-    }
-  }, [isEdit]);
-
-  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const next = e.target.value;
+  const handleCategoryChange = (next: string) => {
     setCategory(next);
-    const subs = CATEGORY_TREE.find((c) => c.name === next)?.subs || [];
+    const subs = CATEGORY_TREE[next] || [];
     setSubcategory(subs.length > 0 ? subs[0] : '');
   };
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { alert('Maksimal 5MB!'); return; }
-    const reader = new FileReader();
-    reader.onload = (ev: any) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let w = img.width;
-        let h = img.height;
-        if (w > 800) { h = Math.round((h * 800) / w); w = 800; }
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        if (ctx) ctx.drawImage(img, 0, 0, w, h);
-        setImageBase64(canvas.toDataURL('image/jpeg', 0.8));
-      };
-      img.src = String(ev.target.result);
-    };
-    reader.readAsDataURL(file);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const list = JSON.parse(localStorage.getItem('arena27_articles') || '[]');
-    if (isEdit && id) {
-      const idx = list.findIndex((a: any) => String(a.id) === id);
-      if (idx !== -1) list[idx] = { ...list[idx], title, category, subcategory, content, image: imageBase64 };
-    } else {
-      list.unshift({ id: Date.now(), title, category, subcategory, content, image: imageBase64, created_at: new Date().toISOString() });
+
+    let finalImageUrl = imageUrl;
+
+    // Upload gambar ke Supabase Storage kalau ada file baru
+    if (imageFile) {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + fileExt;
+      const { error: uploadError } = await supabase.storage.from('images').upload(fileName, imageFile);
+      
+      if (uploadError) {
+        alert('Gagal upload gambar: ' + uploadError.message);
+        setIsSubmitting(false);
+        return;
+      }
+      
+      const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName);
+      finalImageUrl = urlData.publicUrl;
     }
-    localStorage.setItem('arena27_articles', JSON.stringify(list));
-    alert('✅ Berhasil disimpan!');
+
+    const payload = {
+      title,
+      category: category + ' - ' + subcategory,
+      content,
+      image: finalImageUrl,
+      meta_title: metaTitle,
+      meta_description: metaDesc,
+      focus_keyword: focusKeyword,
+      status: 'published'
+    };
+
+    if (isEdit) {
+      await supabase.from('articles').update(payload).eq('id', initialData.id);
+    } else {
+      await supabase.from('articles').insert([payload]);
+    }
+
+    setIsSubmitting(false);
     router.push('/admin/articles');
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-black text-slate-900 mb-6">{isEdit ? '✏️ Edit Berita' : '✍️ Tulis Berita Baru'}</h1>
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-6 space-y-5 border border-gray-100">
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Judul</label>
-          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
+    <div className="max-w-4xl mx-auto pb-20">
+      <h1 className="text-2xl font-black text-slate-900 mb-6">{isEdit ? 'Edit Berita' : 'Tulis Berita Baru'}</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* === KARTU 1: KONTEN UTAMA === */}
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-5">
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Kategori</label>
-            <select value={category} onChange={handleCategoryChange} className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white">
-              {CATEGORY_TREE.map((c) => <option key={c.name}>{c.name}</option>)}
-            </select>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Judul</label>
+            <input required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-3 py-3 border border-gray-300 rounded-lg" placeholder="Judul berita..." />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Kategori Utama</label>
+              <select value={category} onChange={(e) => handleCategoryChange(e.target.value)} className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white">
+                {MAIN_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
+              <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)} disabled={currentSubs.length === 0} className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white disabled:bg-slate-100">
+                {currentSubs.length === 0 ? <option>Umum</option> : currentSubs.map((s) => <option key={s}>{s}</option>)}
+              </select>
+            </div>
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Sub Kategori</label>
-            <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)} disabled={currentSubs.length === 0} className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white disabled:bg-slate-100 disabled:text-slate-400">
-              {currentSubs.length === 0 ? <option>Umum</option> : currentSubs.map((s) => <option key={s}>{s}</option>)}
-            </select>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Isi Berita</label>
+            <RichEditor value={content} onChange={setContent} />
           </div>
         </div>
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Upload Gambar dari HP</label>
-          <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700" />
-          {imageBase64 && <img src={imageBase64} alt="Preview" className="mt-3 h-40 w-full object-cover rounded-lg border border-gray-200" />}
+
+        {/* === KARTU 2: GAMBAR === */}
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-4">
+          <label className="block text-sm font-bold text-slate-700 mb-2">Gambar Utama</label>
+          <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" />
+          <p className="text-xs text-slate-400">Atau masukkan URL manual:</p>
+          <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="https://..." />
+          {imageUrl && <img src={imageUrl} alt="Preview" className="mt-4 w-full max-h-60 object-cover rounded-lg border" />}
         </div>
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Isi Berita</label>
-          <textarea required value={content} onChange={(e) => setContent(e.target.value)} rows={8} className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-y" />
+
+        {/* === KARTU 3: SEO SETTINGS === */}
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <div className="flex justify-between items-center mb-4 cursor-pointer" onClick={() => setShowSEO(!showSEO)}>
+            <h3 className="font-black text-orange-500 uppercase tracking-wider text-sm">🔍 SEO Settings</h3>
+            <span className="text-slate-400">{showSEO ? '▲' : '▼'}</span>
+          </div>
+          
+          {showSEO && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Meta Title (50-60 karakter)</label>
+                <input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Judul untuk Google..." />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Meta Description (120-160 karakter)</label>
+                <textarea value={metaDesc} onChange={(e) => setMetaDesc(e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Deskripsi singkat untuk Google..." />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Focus Keyword</label>
+                <input value={focusKeyword} onChange={(e) => setFocusKeyword(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Kata kunci utama..." />
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* === TOMBOL AKSI === */}
         <div className="flex gap-3">
-          <button type="submit" disabled={isSubmitting} className="flex-1 bg-orange-500 text-white font-black py-4 rounded-lg shadow-lg active:scale-95 disabled:opacity-50">
-            {isSubmitting ? '⏳...' : (isEdit ? '💾 SIMPAN' : '🚀 PUBLISH')}
+          <button type="submit" disabled={isSubmitting} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-lg shadow-lg transition-colors disabled:opacity-50">
+            {isSubmitting ? 'Menyimpan...' : (isEdit ? '💾 SIMPAN' : '🚀 PUBLISH SEKARANG')}
           </button>
-          <Link href="/admin/articles" className="px-5 flex items-center bg-slate-200 rounded-lg font-bold">Batal</Link>
+          <Link href="/admin/articles" className="px-8 flex items-center justify-center bg-slate-200 hover:bg-slate-300 rounded-lg font-bold transition-colors">Batal</Link>
         </div>
+
       </form>
     </div>
   );
