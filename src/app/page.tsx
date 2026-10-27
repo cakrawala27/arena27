@@ -888,10 +888,10 @@ export default function HomePage() {
       <footer className="arena-footer">
 
         <nav style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px', marginTop: '18px' }}>
-          <Link href="/about" style={{ color: '#ccc', textDecoration: 'none' }}>Tentang Kami</Link>
-          <Link href="/contact" style={{ color: '#ccc', textDecoration: 'none' }}>Kontak</Link>
-          <Link href="/privacy" style={{ color: '#ccc', textDecoration: 'none' }}>Kebijakan Privasi</Link>
-          <Link href="/terms" style={{ color: '#ccc', textDecoration: 'none' }}>Syarat & Ketentuan</Link>
+          <Link href="/about" style={{ color: '#ccc', textDecoration: 'none', fontSize: '10px' }}>Tentang Kami</Link>
+          <Link href="/contact" style={{ color: '#ccc', textDecoration: 'none', fontSize: '10px' }}>Kontak</Link>
+          <Link href="/privacy" style={{ color: '#ccc', textDecoration: 'none', fontSize: '10px' }}>Kebijakan Privasi</Link>
+          <Link href="/terms" style={{ color: '#ccc', textDecoration: 'none', fontSize: '10px' }}>Syarat & Ketentuan</Link>
         </nav>
         <div className="arena-footer-dev">
           © {new Date().getFullYear()} <span>ARENA27</span>. Hak cipta dilindungi.
@@ -907,6 +907,7 @@ export default function HomePage() {
 </div>
   );
 }
+
 
 
 
