@@ -882,11 +882,7 @@ export default function HomePage() {
       {basketNews.length > 0 && <BasketWidget articles={basketNews} />}
       {/* ===== END ZONA BASKET ===== */}
 
-      <footer className="arena-footer">
-        <div className="arena-footer-title"><span>ARENA</span>27</div>
-        <div className="arena-footer-text">© 2026 Arena27</div>
-        <div className="arena-footer-dev">Dev by : <span>Cybernet Project Indonesia</span></div>
-      </footer>
+      
     
   {/* Floating Button: Buka Semua */}
   
