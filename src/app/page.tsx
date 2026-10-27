@@ -893,8 +893,22 @@ export default function HomePage() {
           <Link href="/privacy" style={{ color: '#ccc', textDecoration: 'none' }}>Kebijakan Privasi</Link>
           <Link href="/terms" style={{ color: '#ccc', textDecoration: 'none' }}>Syarat & Ketentuan</Link>
         </nav>
-        <div className="arena-footer-dev">
-          © {new Date().getFullYear()} <span>ARENA27</span>
+        <div style={{ marginTop: '22px', textAlign: 'center' }}>
+          <div style={{ fontSize: '18px', fontWeight: 900, letterSpacing: '2px' }}>
+            <span style={{ color: '#ff6b00' }}>ARENA</span><span style={{ color: '#ffffff' }}>27</span>
+          </div>
+          <div style={{ fontSize: '11px', color: '#aaa', marginTop: '8px' }}>
+            Dikembangkan oleh
+          </div>
+          <div style={{ fontSize: '13px', color: '#fff', fontWeight: 700, marginTop: '3px' }}>
+            Cybernet Project Indonesia
+          </div>
+          <div style={{ fontSize: '10px', color: '#85858b', marginTop: '5px' }}>
+            Teknologi • Kreativitas • Inovasi Digital
+          </div>
+          <div className="arena-footer-dev" style={{ marginTop: '12px' }}>
+            © {new Date().getFullYear()} <span>ARENA27</span>. Hak cipta dilindungi.
+          </div>
         </div>
       </footer>
   
@@ -904,4 +918,5 @@ export default function HomePage() {
 </div>
   );
 }
+
 
