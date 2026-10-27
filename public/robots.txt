@@ -1,4 +1,5 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 
-Sitemap: https://arena27-psi.vercel.app/sitemap.xml
+Sitemap: https://arena27.my.id/sitemap.xml
+
