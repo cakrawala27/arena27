@@ -580,10 +580,10 @@ export default function HomePage() {
 
       {/* HEADER TERPISAH - DI LUAR WRAPPER KONTEN */}
       <div className="arena-topbar">
-        <span className="arena-topbar-logo">
+        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}><span className="arena-topbar-logo">
           <span>ARENA</span>27
 
-        </span>
+        </span></Link>
       </div>
 
       {/* WRAPPER KONTEN - TERPISAH DARI HEADER */}
