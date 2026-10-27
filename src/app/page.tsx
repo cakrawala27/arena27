@@ -21,8 +21,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeFilter, setActiveFilter] = useState('Semua');
-  const [clickCount, setClickCount] = useState(0);
-  const clickTimer = useRef(null);
   const audioCtx = useRef(null);
 
   const POSTS_PER_PAGE = 6;
@@ -148,16 +146,6 @@ export default function HomePage() {
     fetchSA();
   }, []);
 
-  const handleLogoClick = () => {
-    const newCount = clickCount + 1;
-    setClickCount(newCount);
-    if (clickTimer.current) clearTimeout(clickTimer.current);
-    clickTimer.current = setTimeout(function(){ setClickCount(0); }, 2000);
-    if (newCount >= 5) {
-      setClickCount(0);
-      router.push('/admin');
-    }
-  };
 
   const handleFilterClick = (cat) => {
     setActiveFilter(cat);
@@ -592,9 +580,9 @@ export default function HomePage() {
 
       {/* HEADER TERPISAH - DI LUAR WRAPPER KONTEN */}
       <div className="arena-topbar">
-        <span onClick={handleLogoClick} className="arena-topbar-logo">
+        <span className="arena-topbar-logo">
           <span>ARENA</span>27
-          {clickCount > 0 && clickCount < 5 && <span className="arena-topbar-counter">{clickCount}/5</span>}
+
         </span>
       </div>
 
