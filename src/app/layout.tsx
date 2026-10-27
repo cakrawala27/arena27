@@ -20,8 +20,13 @@ export const metadata = {
   description: 'Portal berita sport terlengkap dengan update terkini seputar sepak bola, basket, esports, dan olahraga lainnya.',
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: '/icon.jpg',
-    apple: '/icon.jpg',
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/icon-192.png',
+    shortcut: '/favicon.ico',
   },
   openGraph: {
     type: 'website',

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Arena27 - Portal Berita Sport",
   "short_name": "Arena27",
   "description": "Portal berita sport terlengkap & terkini",
@@ -8,15 +8,15 @@
   "theme_color": "#ff6b00",
   "icons": [
     {
-      "src": "/icon.jpg",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon.jpg",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
