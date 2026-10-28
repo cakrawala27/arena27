@@ -42,9 +42,8 @@ export default function HomePage() {
       .eq('status', 'published')
       .order('created_at', { ascending: false });
     if (activeFilter !== 'Semua') {
-      // Smart filter: untuk "Sepak Bola", cari semua kategori yang mengandung "Sepak"
-      const searchKeyword = activeFilter.toUpperCase().includes("SEPAK") ? "Sepak" : activeFilter;
-      query = query.ilike('category', '%' + searchKeyword + '%');
+      const categoryKey = activeFilter === 'Sepak Bola' ? 'Sepakbola' : activeFilter;
+      query = query.ilike('category', categoryKey + ' -%');
     }
     const { data, count } = await query.range(from, to);
     if (data) setArticles(data);
@@ -607,11 +606,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {activeFilter !== 'Semua' && (
-          <div className="arena-filter-info">
-            &#127991;&#65039; Filter aktif: <b>{activeFilter}</b> &#8226; {totalCount} artikel
-          </div>
-        )}
 
         {loading ? (
           <div className="arena-loading">
@@ -706,7 +700,7 @@ export default function HomePage() {
 
       
       {/* ===== ZONA LIGA CHAMPIONS WIDGET ===== */}
-      {footNews.length > 0 && (
+      {(activeFilter === 'Semua' || activeFilter === 'Sepak Bola') && footNews.length > 0 && (
         <section className="lc-widget">
           <div className="lc-bg"></div>
           <div className="lc-inner">
@@ -732,7 +726,7 @@ export default function HomePage() {
       )}
 
       {/* ===== ZONA PREMIER LEAGUE WHEEL ===== */}
-      {plNews.length > 0 && (
+      {(activeFilter === 'Semua' || activeFilter === 'Sepak Bola') && plNews.length > 0 && (
         <section className="pl-zone">
           <div className="pl-inner">
             <img src="/pl-logo.webp" alt="Premier League" className="pl-logo-main" />
@@ -760,7 +754,7 @@ export default function HomePage() {
       {/* ===== END ZONA PREMIER LEAGUE WHEEL ===== */}
 
       {/* ===== ZONA SERIE A ===== */}
-      {saNews.length > 0 && (
+      {(activeFilter === 'Semua' || activeFilter === 'Sepak Bola') && saNews.length > 0 && (
         <section className="sa-section">
           <div className="sa-inner">
             <div className="sa-left">
@@ -794,7 +788,7 @@ export default function HomePage() {
       {/* ===== END ZONA SERIE A ===== */}
 
       {/* ===== ZONA INDONESIA FOOTBALL ===== */}
-      {indoNews.length > 0 && (
+      {(activeFilter === 'Semua' || activeFilter === 'Sepak Bola') && indoNews.length > 0 && (
         <section className="indo-section">
           <div className="indo-container">
             <h2 className="indo-title"><span>INDONESIA</span> FOOTBALL</h2>
@@ -839,7 +833,7 @@ export default function HomePage() {
       {/* ===== END ZONA INDONESIA FOOTBALL ===== */}
 
       {/* ===== ZONA MOTOGP ===== */}
-      {motogpNews.length > 0 && (
+      {(activeFilter === 'Semua' || activeFilter === 'Sport') && motogpNews.length > 0 && (
         <section className="motogp-section">
           <div className="motogp-container">
             <h2 className="motogp-title"><span>🏍️</span> MOTOGP</h2>
@@ -879,7 +873,7 @@ export default function HomePage() {
       {/* ===== END ZONA MOTOGP ===== */}
 
       {/* ===== ZONA BASKET ===== */}
-      {basketNews.length > 0 && <BasketWidget articles={basketNews} />}
+      {(activeFilter === 'Semua' || activeFilter === 'Basket') && basketNews.length > 0 && <BasketWidget articles={basketNews} />}
       {/* ===== END ZONA BASKET ===== */}
 
       
@@ -907,7 +901,5 @@ export default function HomePage() {
 </div>
   );
 }
-
-
 
 
