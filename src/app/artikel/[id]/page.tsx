@@ -299,6 +299,10 @@ export default async function ArticlePage({ params }: any) {
         .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
         .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
         .article-content p { margin: 0 0 16px 0; }
+        .article-nav-buttons { display: flex; gap: 10px; padding: 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.06); }
+        .article-nav-btn { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 13px 6px; background: #0a0a0a; border: 2px solid #ff6b00; border-radius: 7px; color: #ff6b00; text-decoration: none; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; line-height: 1.4; }
+        .article-nav-btn:hover { background: #ff6b00; color: #0a0a0a; }
+        @media (max-width: 380px) { .article-nav-buttons { gap: 6px; padding: 16px 10px; } .article-nav-btn { font-size: 9px; padding: 12px 3px; } }
         .share-section-bottom { padding: 30px 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.08); }
         .share-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; display: block; }
         .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -369,6 +373,11 @@ export default async function ArticlePage({ params }: any) {
         {split.second && (
           <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: split.second }} />
         )}
+        <nav className="article-nav-buttons" aria-label="Navigasi artikel">
+          <a href={String(article.category || "").toLowerCase().includes("basket") ? "/basket" : "/"} className="article-nav-btn">← KEMBALI</a>
+          <a href="/" className="article-nav-btn">⌂ HOME</a>
+          <a href="/basket" className="article-nav-btn">🏀 KATEGORI BASKET</a>
+        </nav>
         <ShareButtons title={article.title} url={articleUrl} />
       </div>
       <footer className="article-footer">
