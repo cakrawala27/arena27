@@ -10,6 +10,18 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ShareButtons from './ShareButtons';
 
+function getCategoryNavigation(category: string | null | undefined) {
+  const value = String(category || "").toLowerCase();
+
+  if (value.includes("motogp")) return { href: "/motogp", label: "MotoGP", icon: "🏁" };
+  if (value.includes("basket") || value.includes("nba")) return { href: "/basket", label: "Basket", icon: "🏀" };
+  if (value.includes("premier league")) return { href: "/premier-league", label: "Premier League", icon: "⚽" };
+  if (value.includes("liga champions") || value.includes("champions league")) return { href: "/liga-champions", label: "Liga Champions", icon: "🏆" };
+  if (value.includes("serie a")) return { href: "/serie-a", label: "Serie A", icon: "⚽" };
+  if (value.includes("indonesia football") || value.includes("sepak bola indonesia")) return { href: "/indonesia-football", label: "Sepak Bola Indonesia", icon: "🇮🇩" };
+
+  return { href: "/", label: "Berita Utama", icon: "📰" };
+}
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
 const SITE_URL = 'https://arena27.my.id';
 const SUPABASE_URL = 'https://pagsqpfcclokiypgwrwb.supabase.co';
@@ -287,23 +299,29 @@ export default async function ArticlePage({ params }: any) {
         body { margin: 0 !important; padding: 0 !important; background: #0a0a0a !important; }
         .article-wrap { max-width: 720px; margin: 0 auto; padding: 0 0 40px; }
         .article-topbar { position: sticky; top: 0; z-index: 999; background: #0a0a0a; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(229,57,53,0.15); }
-        .article-back { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); text-decoration: none; cursor: pointer; background: none; border: none; padding: 0; }
-        .article-back:hover { color: #ff6b00; }
-        .article-logo { font-size: 14px; font-weight: 900; letter-spacing: 2px; color: #fff; }
-        .article-logo span { color: #ff6b00; }
-        .article-hero { width: 100%; height: 400px; position: relative; overflow: hidden; }
-        .article-hero img { width: 100%; height: 100%; object-fit: cover; }
-        .article-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
-        .article-category { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: #ff6b00; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; align-self: flex-start; }
-        .article-title { font-size: 32px; font-weight: 900; color: '#fff'; line-height: 1.2; margin: 0 0 12px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-        .article-meta { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.5px; }
-        .article-content { background: #0e0e0e; padding: 24px 20px; line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.9); }
-        .article-content p { margin: 0 0 16px 0; }
-        .article-nav-buttons { display: flex; gap: 10px; padding: 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.06); }
-        .article-nav-btn { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 13px 6px; background: #0a0a0a; border: 2px solid #ff6b00; border-radius: 7px; color: #ff6b00; text-decoration: none; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; line-height: 1.4; }
-        .article-nav-btn:hover { background: #ff6b00; color: #0a0a0a; }
-        @media (max-width: 380px) { .article-nav-buttons { gap: 6px; padding: 16px 10px; } .article-nav-btn { font-size: 9px; padding: 12px 3px; } }
-        .share-section-bottom { padding: 30px 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.08); }
+        .article-back { display: inline-flex; align-items: center; gap: 5px; max-width: 75%; font-size: 10px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; color: #ff9a52; text-decoration: none; transition: color .2s ease; }
+        .article-back:hover { color: #fff; }
+        .article-nav-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 22px 16px; background: radial-gradient(ellipse at top, rgba(255,107,0,0.09), transparent 70%), #0b0b0b; border-top: 1px solid rgba(255,107,0,0.2); }
+        .article-nav-btn { position: relative; min-width: 0; min-height: 88px; display: flex; align-items: center; gap: 9px; padding: 13px 11px; overflow: hidden; background: linear-gradient(145deg, #191919, #0e0e0e); border: 1px solid #303030; border-radius: 10px; color: #fff; text-decoration: none; font-size: inherit; font-weight: inherit; letter-spacing: normal; line-height: normal; text-align: left; transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+        .article-nav-btn::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: #ff6b00; opacity: .8; }
+        .article-nav-btn:hover { transform: translateY(-3px); border-color: #ff6b00; background: linear-gradient(145deg, #292019, #111); color: #fff; box-shadow: 0 8px 24px rgba(255,107,0,.12); }
+        .article-nav-icon { flex: 0 0 30px; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: rgba(255,107,0,.12); font-size: 17px; }
+        .article-nav-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+        .article-nav-copy small { color: #ff9a52; font-size: 8px; font-weight: 800; letter-spacing: 1px; line-height: 1.3; }
+        .article-nav-copy strong { color: #f5f5f5; font-size: 11px; font-weight: 800; line-height: 1.35; overflow-wrap: anywhere; }
+        .article-nav-arrow { margin-left: auto; align-self: flex-start; color: #ff6b00; font-size: 14px; }
+        .article-nav-home { border-color: rgba(255,107,0,.55); }
+        .article-nav-explore { background: linear-gradient(145deg, rgba(255,107,0,.16), #111 75%); }
+        @media (max-width: 560px) {
+          .article-nav-buttons { grid-template-columns: 1fr; gap: 8px; padding: 18px 14px; }
+          .article-nav-btn { min-height: 66px; padding: 12px 14px; }
+          .article-nav-copy small { font-size: 8px; }
+          .article-nav-copy strong { font-size: 12px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .article-nav-btn { transition: none; }
+          .article-nav-btn:hover { transform: none; }
+        }        .share-section-bottom { padding: 30px 20px; background: #0e0e0e; border-top: 1px solid rgba(255,255,255,0.08); }
         .share-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; display: block; }
         .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
         .share-btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: 700; color: #fff; border: none; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; flex: 1; min-width: 140px; justify-content: center; }
@@ -330,7 +348,7 @@ export default async function ArticlePage({ params }: any) {
 
       <div className="article-wrap">
         <div className="article-topbar">
-          <Link href={String(article.category || "").toLowerCase().includes("basket") ? "/basket" : "/"} className="article-back">← Kembali</Link>
+          <Link href={getCategoryNavigation(article.category).href} className="article-back">← Kembali ke {getCategoryNavigation(article.category).label}</Link>
           <span className="article-logo"><span>ARENA</span>27</span>
         </div>
         <div className="article-hero">
@@ -374,9 +392,21 @@ export default async function ArticlePage({ params }: any) {
           <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: split.second }} />
         )}
         <nav className="article-nav-buttons" aria-label="Navigasi artikel">
-          <a href={String(article.category || "").toLowerCase().includes("basket") ? "/basket" : "/"} className="article-nav-btn">← KEMBALI</a>
-          <a href="/" className="article-nav-btn">⌂ HOME</a>
-          <a href="/basket" className="article-nav-btn">🏀 KATEGORI BASKET</a>
+          <Link href={getCategoryNavigation(article.category).href} className="article-nav-btn">
+            <span className="article-nav-icon">{getCategoryNavigation(article.category).icon}</span>
+            <span className="article-nav-copy"><small>KEMBALI KE</small><strong>{getCategoryNavigation(article.category).label}</strong></span>
+            <span className="article-nav-arrow">↗</span>
+          </Link>
+          <Link href="/" className="article-nav-btn article-nav-home">
+            <span className="article-nav-icon">⌂</span>
+            <span className="article-nav-copy"><small>JELAJAHI</small><strong>Beranda Arena27</strong></span>
+            <span className="article-nav-arrow">↗</span>
+          </Link>
+          <Link href={getCategoryNavigation(article.category).href} className="article-nav-btn article-nav-explore">
+            <span className="article-nav-icon">{getCategoryNavigation(article.category).icon}</span>
+            <span className="article-nav-copy"><small>LANJUTKAN EKSPLORASI</small><strong>Dunia {getCategoryNavigation(article.category).label}</strong></span>
+            <span className="article-nav-arrow">↗</span>
+          </Link>
         </nav>
         <ShareButtons title={article.title} url={articleUrl} />
       </div>
