@@ -1,4 +1,4 @@
-﻿// âš¡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
+// âš¡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
@@ -326,7 +326,7 @@ export default async function ArticlePage({ params }: any) {
 
       <div className="article-wrap">
         <div className="article-topbar">
-          <Link href="/" className="article-back">← Kembali</Link>
+          <Link href={String(article.category || "").toLowerCase().includes("basket") ? "/basket" : "/"} className="article-back">← Kembali</Link>
           <span className="article-logo"><span>ARENA</span>27</span>
         </div>
         <div className="article-hero">
@@ -379,4 +379,3 @@ export default async function ArticlePage({ params }: any) {
     </div>
   );
 }
-
