@@ -2022,3 +2022,44 @@ body { top: 0 !important; }
   transform: rotate(1deg);
   opacity: 0.6;
 }
+
+/* ================= ARENA27 ADMIN V2 (admv2-css) ================= */
+.rte-toolbar { flex-wrap: wrap; }
+.rte-btn-img {
+  background: linear-gradient(135deg, #ff6b00, #c2410c);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  border: none;
+  box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
+}
+.rte-btn-img:hover {
+  background: linear-gradient(135deg, #ff7d1f, #d9480f);
+  filter: brightness(1.1);
+  border-color: transparent;
+}
+.rte-btn-img:disabled { opacity: 0.65; box-shadow: none; }
+.rte-btn-img:active { transform: scale(0.96); }
+.rte-content .rte-fig { margin: 24px 0; }
+.rte-content .rte-fig img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+.rte-content .rte-inline-img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  margin: 16px 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 640px) {
+  .rte-btn { padding: 9px 11px; font-size: 13px; }
+  .rte-btn-img { padding: 10px 14px; font-size: 13px; }
+}
+/* =============== END ARENA27 ADMIN V2 =============== */

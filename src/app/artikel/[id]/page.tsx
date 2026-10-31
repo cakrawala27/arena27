@@ -1,4 +1,4 @@
-﻿// ⚡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
+﻿﻿// ⚡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
@@ -136,7 +136,9 @@ function parseInlineHtml(s: string): string {
       .replace(/\[B\]([\s\S]*?)\[\/B\]/gi, "<strong>$1</strong>")
       .replace(/\[I\]([\s\S]*?)\[\/I\]/gi, "<em>$1</em>");
   }
-  s = s.replace(/\[(B|I|H2|H3|ORANGE|WHITE)\]|\[\/(B|I|H2|H3|ORANGE|WHITE)\]/gi, "");
+  // ADMV2-IMG: gambar inline untuk paragraf campuran teks + gambar
+  s = s.replace(/\[IMG\](https?:\/\/[^\s\[\]]+?)\[\/IMG\]/gi, '<img class="rte-inline-img" src="$1" alt="Gambar artikel" loading="lazy" />');
+  s = s.replace(/\[(B|I|H2|H3|ORANGE|WHITE)\]|\[\/(B|I|H2|H3|ORANGE|WHITE)\]|\[\/?IMG\]/gi, "");
   return s;
 }
 
@@ -147,6 +149,8 @@ function renderRichContent(text: string): string {
   // 2. Paksa H2/H3 berdiri sendiri (kasih \n\n sebelum & sesudah)
   clean = clean.replace(/\[H2\]/gi, "\n\n[H2]").replace(/\[\/H2\]/gi, "[/H2]\n\n");
   clean = clean.replace(/\[H3\]/gi, "\n\n[H3]").replace(/\[\/H3\]/gi, "[/H3]\n\n");
+  // ADMV2-IMG: paksa tag [IMG] berdiri sendiri jadi paragraf
+  clean = clean.replace(/\[IMG\]/gi, "\n\n[IMG]").replace(/\[\/IMG\]/gi, "[/IMG]\n\n");
 
   // 3. Buang tag [B] & [I] yang nempel di H2 (biar parser gak bingung)
   clean = clean.replace(/\[B\]\s*\n*\s*(\[H[23]\])/gi, "$1");
@@ -159,6 +163,15 @@ function renderRichContent(text: string): string {
   // 5. Render tiap paragraf
   return paragraphs.map(function (p) {
     const trimmed = p.trim();
+
+    // ADMV2-IMG: paragraf yang isinya cuma gambar -> tampilkan sebagai figure
+    const imgMatch = trimmed.match(/^\[IMG\]([\s\S]*?)\[\/IMG\]$/i);
+    if (imgMatch) {
+      const imgUrl = imgMatch[1].trim().replace(/"/g, '%22');
+      if (imgUrl) {
+        return '<figure class="rte-fig"><img src="' + imgUrl + '" alt="Gambar artikel" loading="lazy" /></figure>';
+      }
+    }
 
     // Cek H2
     const h2Match = trimmed.match(/\[H2\]([\s\S]*?)\[\/H2\]/i);
@@ -385,4 +398,3 @@ export default async function ArticlePage({ params }: any) {
     </div>
   );
 }
-
