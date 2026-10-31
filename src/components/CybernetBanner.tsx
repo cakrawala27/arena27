@@ -1,4 +1,6 @@
-﻿// Banner iklan Cybernet Project - pasang di mana aja: <CybernetBanner />
+﻿// Banner iklan Cybernet Project - versi 2:
+// - HP (layar <= 640px): otomatis pakai versi KOTAK, teks besar & jelas
+// - Desktop: tetap versi lebar 1200x400
 // Klik langsung buka https://cybernet-project.vercel.app di tab baru.
 export default function CybernetBanner() {
   return (
@@ -16,12 +18,21 @@ export default function CybernetBanner() {
           transition: transform .25s ease, box-shadow .25s ease; }
         .cyb-banner:hover img { transform: scale(1.01);
           box-shadow: 0 14px 44px rgba(255,107,0,.35); }
+        @media (max-width: 640px) {
+          .cyb-banner { padding: 0 10px; margin: 16px auto; }
+        }
       `}</style>
-      <img
-        src="https://cybernet-project.vercel.app/images/iklan-cybernet-wide.png"
-        alt="Cybernet Project - Jasa Pembuatan Website & Web App"
-        loading="lazy"
-      />
+      <picture>
+        <source
+          media="(max-width: 640px)"
+          srcSet="https://cybernet-project.vercel.app/images/iklan-cybernet-square.png"
+        />
+        <img
+          src="https://cybernet-project.vercel.app/images/iklan-cybernet-wide.png"
+          alt="Cybernet Project - Jasa Pembuatan Website & Web App"
+          loading="lazy"
+        />
+      </picture>
     </a>
   );
 }
