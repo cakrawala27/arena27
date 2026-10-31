@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import BasketWidget from '@/components/BasketWidget';
 import CybernetBanner from '@/components/CybernetBanner';
+import EsportWidget from '@/components/EsportWidget';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
@@ -879,6 +880,10 @@ export default function HomePage() {
       {(activeFilter === 'Semua' || activeFilter === 'Basket') && basketNews.length > 0 && <BasketWidget articles={basketNews} />}
       {/* ===== END ZONA BASKET ===== */}
 
+      {/* ===== ZONA ESPORT PUBG ===== */}
+      <EsportWidget show={activeFilter === 'Semua' || activeFilter === 'Esports'} />
+      {/* ===== END ZONA ESPORT PUBG ===== */}
+
       
     
   {/* Floating Button: Buka Semua */}
@@ -904,6 +909,7 @@ export default function HomePage() {
 </div>
   );
 }
+
 
 
 
