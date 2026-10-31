@@ -1,4 +1,4 @@
-// âš¡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
+﻿// ⚡ FORCE DYNAMIC RENDERING - NO STATIC GENERATION!
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
@@ -9,6 +9,7 @@ export const runtime = 'nodejs';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import ShareButtons from './ShareButtons';
+import CybernetBanner from '@/components/CybernetBanner';
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80';
 const SITE_URL = 'https://arena27.my.id';
@@ -271,7 +272,7 @@ export default async function ArticlePage({ params }: any) {
     return (
       <div style={{minHeight: '100vh', background: '#0a0a0a', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
-          <p style={{fontSize: 24}}>ðŸ˜• Artikel tidak ditemukan</p>
+          <p style={{fontSize: 24}}>😕 Artikel tidak ditemukan</p>
           <Link href="/" style={{marginTop: 16, padding: '10px 20px', background: '#ff6b00', color: '#fff', borderRadius: 8, textDecoration: 'none', display: 'inline-block'}}>← Kembali ke Beranda</Link>
         </div>
       </div>
@@ -374,6 +375,7 @@ export default async function ArticlePage({ params }: any) {
           <div className="article-content rte-content" dangerouslySetInnerHTML={{ __html: split.second }} />
         )}
         <ShareButtons title={article.title} url={articleUrl} />
+        <CybernetBanner />
       </div>
       <footer className="article-footer">
         <div className="article-footer-title"><span>ARENA</span>27</div>
@@ -383,3 +385,4 @@ export default async function ArticlePage({ params }: any) {
     </div>
   );
 }
+

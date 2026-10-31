@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import BasketWidget from '@/components/BasketWidget';
+import CybernetBanner from '@/components/CybernetBanner';
 
 const FILTER_CATEGORIES = ['Semua', 'Sepak Bola', 'Basket', 'Sport', 'Esports', 'Mata Dunia'];
 
@@ -699,6 +700,8 @@ export default function HomePage() {
       </div>
 
       
+      <CybernetBanner />
+
       {/* ===== ZONA LIGA CHAMPIONS WIDGET ===== */}
       {(activeFilter === 'Semua' || activeFilter === 'Sepak Bola') && footNews.length > 0 && (
         <section className="lc-widget">
@@ -901,5 +904,6 @@ export default function HomePage() {
 </div>
   );
 }
+
 
 
