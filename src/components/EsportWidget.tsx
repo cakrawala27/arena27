@@ -2,10 +2,13 @@
 
 // ============================================================
 // ESPORT WIDGET - PUBG MOBILE (Arena27 x Cybernet Project)
-// Zona esports HUD tactical: hitam + gold, sudut terpotong,
-// scanline, badge berdenyut. Self-contained: fetch artikel
-// kategori "Esports - PUBG%" dari Supabase.
-// Widget otomatis sembunyi kalau belum ada artikel PUBG.
+// Zona esports tampilan HUD tactical: hitam + gold, sudut
+// terpotong, scanline, badge berdenyut. Self-contained:
+// fetch artikel kategori "Esports - PUBG%" dari Supabase.
+// v2: tombol LIHAT SEMUA -> /esport/pubg (arsip lengkap)
+// v3: tombol pindah ke strip bawah-kanan, font display Anton
+// Pakai di homepage: <EsportWidget show={activeFilter === 'Semua' || activeFilter === 'Esports'} />
+// Kalau belum ada artikel PUBG, widget otomatis sembunyi.
 // ============================================================
 
 import { useEffect, useState } from 'react';
@@ -25,6 +28,16 @@ function CrosshairIcon() {
   );
 }
 
+function AirdropIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12a9 9 0 0 1 18 0" />
+      <path d="M3 12l6.5 6M21 12l-6.5 6" />
+      <rect x="8" y="18" width="8" height="4" rx="1" />
+    </svg>
+  );
+}
+
 function fmtDate(s: string) {
   return new Date(s).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 }
@@ -33,6 +46,12 @@ function subCat(cat?: string) {
   if (!cat) return 'PUBG Mobile';
   const parts = cat.split(' - ');
   return parts[parts.length - 1] || cat;
+}
+
+function shortTitle(t: string) {
+  if (t.length <= 62) return t;
+  const cut = t.lastIndexOf(' ', 58);
+  return t.substring(0, cut > 0 ? cut : 62) + '...';
 }
 
 export default function EsportWidget({ show = true }: { show?: boolean }) {
@@ -87,6 +106,15 @@ export default function EsportWidget({ show = true }: { show?: boolean }) {
         .pubg-badge .pulse { width: 7px; height: 7px; border-radius: 50%; background: #ffc21a; animation: pubgPulse 1.6s infinite; }
         @keyframes pubgPulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,194,26,.5); }
           50% { opacity: .55; box-shadow: 0 0 0 6px rgba(255,194,26,0); } }
+        .pubg-more { display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px;
+          background: linear-gradient(135deg, #ffc21a, #e8930c); color: #141005; text-decoration: none;
+          font-family: var(--font-anton), Impact, sans-serif; font-size: 13px; font-weight: 400;
+          letter-spacing: 3px; text-transform: uppercase;
+          clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+          transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
+        .pubg-more:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(255,194,26,.45); filter: brightness(1.07); }
+        .pubg-more .arr { transition: transform .2s ease; }
+        .pubg-more:hover .arr { transform: translateX(3px); }
         .pubg-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; }
         .pubg-hero { position: relative; display: block; min-height: 380px; overflow: hidden; text-decoration: none;
           border: 1px solid rgba(255,194,26,.3); background: linear-gradient(135deg, #1a1204, #0d0a04);
@@ -164,9 +192,7 @@ export default function EsportWidget({ show = true }: { show?: boolean }) {
                     <span className="pubg-num">0{idx + 2}</span>
                   </div>
                   <div className="pubg-row-body">
-                    <div className="pubg-row-title">
-                      {item.title.length > 62 ? item.title.substring(0, item.title.lastIndexOf(' ', 58)) + '...' : item.title}
-                    </div>
+                    <div className="pubg-row-title">{shortTitle(item.title)}</div>
                     <div className="pubg-row-meta"><b>{subCat(item.category)}</b> &bull; {fmtDate(item.created_at)}</div>
                   </div>
                 </Link>
@@ -177,7 +203,11 @@ export default function EsportWidget({ show = true }: { show?: boolean }) {
 
         <div className="pubg-strip">
           <span><b>// DROP ZONE</b> &nbsp;ERANGEL &bull; MIRAMAR &bull; SANHOK &bull; VIKENDI</span>
-          <span>ARENA27 <b>ESPORTS</b></span>
+          <Link href="/esport/pubg" className="pubg-more">
+            <AirdropIcon />
+            <span>LIHAT SEMUA</span>
+            <span className="arr">&rarr;</span>
+          </Link>
         </div>
       </div>
     </section>
